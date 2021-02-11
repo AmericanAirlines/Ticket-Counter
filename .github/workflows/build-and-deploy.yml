@@ -1,0 +1,76 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build (Node.js 14.x)
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run build
+      - run: npm run lint
+      - run: npm run prettier
+
+  deploy:
+    name: Deploy to IBM CF
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: $APP_ARTIFACT_PREFIX
+          path: dist
+
+      - name: Install cf CLI and plugins
+        run: |
+          wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
+          echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+          sudo apt-get update
+          sudo apt-get install cf-cli
+          cf add-plugin-repo CF-Community https://plugins.cloudfoundry.org
+          cf install-plugin blue-green-deploy -f -r CF-Community
+          cf -v
+      - name: Login to IBM Cloud
+        run: |
+          cf login -a https://api.us-south.cf.cloud.ibm.com -o ${{ secrets.CF_ORG }} -s ${{ secrets.CF_SPACE }} -u apikey -p ${{ secrets.CF_API_KEY }}
+      - name: Create credentials file
+        uses: schdck/create-env-json@v1
+        id: create-env
+        with:
+          file-name: 'credentials.json'
+          SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          ADMINS: ${{ secrets.ADMINS }}
+          CHALLENGE_URL: ${{ secrets.CHALLENGE_URL }}
+          GITHUB_TOKEN: ${{ secrets._GITHUB_TOKEN }}
+          SLACK_NOTIFICATIONS_WEBHOOK_URL: ${{ secrets.SLACK_NOTIFICATIONS_WEBHOOK_URL }}
+          ADMIN_SECRET: ${{ secrets.ADMIN_SECRET}}
+          JUDGE_SECRET: ${{ secrets.JUDGE_SECRET}}
+
+      - name: Deploy to IBM Cloud
+        run: |
+          cf uups BE-Smart-Hangar-Secrets -p ./credentials.json
+          cf blue-green-deploy BE-Smart-Hangar --delete-old-apps
+      - name: Deploy logs on failure
+        if: ${{ failure() }}
+        run: |
+          cf logs BE-Smart-Hangar-new --recent
