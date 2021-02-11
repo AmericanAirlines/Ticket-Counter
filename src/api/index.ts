@@ -7,6 +7,6 @@ const api = express.Router();
 api.use(bodyParser.json());
 api.use(bodyParser.urlencoded({ extended: false }));
 
-api.use(health);
+api.use('/health', health);
 
 export default api;
