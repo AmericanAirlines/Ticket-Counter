@@ -7,15 +7,16 @@ module.exports = {
     node: true,
     'jest/globals': true,
   },
-  extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended'],
+  extends: ['airbnb-typescript/base', 'prettier', 'prettier/@typescript-eslint'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
   parserOptions: {
     ecmaVersion: 2018,
+    project: './tsconfig.json',
   },
-  ignorePatterns: ['node_modules'],
+  ignorePatterns: ['node_modules', '**/*.js'],
   rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.ts'] }],
     'max-len': ['error', 120],
@@ -32,6 +33,8 @@ module.exports = {
         ts: 'never',
       },
     ],
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': 'error',
   },
   settings: {
     'import/resolver': {

@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/first */
 import 'jest';
@@ -11,13 +10,13 @@ process.env.SLACK_SIGNING_SECRET = signingSecret;
 import { receiver, app } from '../../../app';
 import { callbackIds } from '../../../slack/constants';
 
-const trigger_id = '1234';
+const triggerId = '1234';
 const mockShortcutPayload: any = {
   type: 'shortcut',
   team: { id: 'XXX', domain: 'XXX' },
   user: { id: 'XXX', username: 'XXX', team_id: 'XXX' },
   callback_id: callbackIds.postAnonymousQuestion,
-  trigger_id,
+  trigger_id: triggerId,
 };
 
 const viewsOpenSpy = jest.spyOn(app.client.views, 'open').mockImplementation();
@@ -42,7 +41,7 @@ describe('ignore action listener', () => {
 
     expect(viewsOpenSpy).toBeCalled();
     const args = viewsOpenSpy.mock.calls[0][0];
-    expect(args.trigger_id).toEqual(trigger_id);
+    expect(args.trigger_id).toEqual(triggerId);
   });
 
   it("logs an error if the modal can't be opened", async () => {

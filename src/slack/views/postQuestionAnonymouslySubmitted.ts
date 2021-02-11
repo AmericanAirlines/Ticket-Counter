@@ -1,15 +1,12 @@
-/* eslint-disable camelcase */
-import { Middleware, ViewSubmitAction, SlackViewMiddlewareArgs } from '@slack/bolt';
+import { ViewSubmitAction, SlackViewMiddlewareArgs, App } from '@slack/bolt';
 import { InputBlock } from '@slack/types';
 import logger from '../../logger';
-import { app } from '../../app';
 import { env } from '../../env';
+import { AppMiddlewareFunction } from '../types';
 
-export const postQuestionAnonymouslySubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmitAction>> = async ({
-  ack,
-  body,
-  view,
-}) => {
+export const postQuestionAnonymouslySubmitted: AppMiddlewareFunction<SlackViewMiddlewareArgs<ViewSubmitAction>> = (
+  app: App,
+) => async ({ ack, body, view }) => {
   try {
     const { blocks, state } = view;
     const channelSelectBlockId = (blocks[0] as InputBlock).block_id;
@@ -33,11 +30,11 @@ If you can answer this question, post a response in a thread!`;
     logger.info(`Question asked by ${body.user.name}/${body.user.id}: ${question}`);
   } catch (error) {
     ack();
-    const { trigger_id } = (body as unknown) as { [id: string]: string };
+    const { trigger_id: triggerId } = (body as unknown) as { [id: string]: string };
     logger.error('Something went wrong trying to post to a channel: ', error);
     try {
       await app.client.views.open({
-        trigger_id,
+        trigger_id: triggerId,
         token: env.slackBotToken,
         view: {
           type: 'modal',

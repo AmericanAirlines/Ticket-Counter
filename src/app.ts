@@ -4,6 +4,7 @@ import { WebClient } from '@slack/web-api';
 import api from './api';
 import { actions, shortcuts, views } from './slack';
 import { env } from './env';
+import { initDatabase } from './database';
 
 export const receiver = new ExpressReceiver({ signingSecret: env.slackSigningSecret });
 let authorizeResult: AuthorizeResult;
@@ -69,5 +70,5 @@ shortcuts(app);
 views(app);
 
 export const init = async (): Promise<void> => {
-  // Do any async init stuff
+  await initDatabase();
 };

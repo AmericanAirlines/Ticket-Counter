@@ -4,5 +4,5 @@ import { postAnonymousQuestion } from './postAnonymousQuestion';
 
 export default function actions(bolt: App): void {
   // Register all action listeners
-  bolt.shortcut(callbackIds.postAnonymousQuestion, postAnonymousQuestion);
+  bolt.shortcut(callbackIds.postAnonymousQuestion, postAnonymousQuestion(bolt));
 }

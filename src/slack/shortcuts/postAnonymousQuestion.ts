@@ -1,15 +1,13 @@
-/* eslint-disable camelcase */
-import { Middleware, SlackShortcutMiddlewareArgs, SlackShortcut } from '@slack/bolt';
+import { SlackShortcutMiddlewareArgs, SlackShortcut } from '@slack/bolt';
 import logger from '../../logger';
-import { app } from '../../app';
 import { getPostAnonymousQuestionModalBlocks } from '../blocks/postAnonymousQuestion';
 import { callbackIds } from '../constants';
 import { env } from '../../env';
+import { AppMiddlewareFunction } from '../types';
 
-export const postAnonymousQuestion: Middleware<SlackShortcutMiddlewareArgs<SlackShortcut>> = async ({
-  shortcut,
-  ack,
-}) => {
+export const postAnonymousQuestion: AppMiddlewareFunction<SlackShortcutMiddlewareArgs<SlackShortcut>> = (
+  app,
+) => async ({ shortcut, ack }) => {
   ack();
   try {
     await app.client.views.open({
