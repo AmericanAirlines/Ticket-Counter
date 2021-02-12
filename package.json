@@ -13,6 +13,7 @@
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "lint:staged": "lint-staged",
+    "typecheck": "tsc",
     "prettier": "prettier -l \"src/**/*.ts\"",
     "prettier:fix": "npm run prettier -- --write",
     "typeorm": "ts-node --skip-project --compiler-options \"{\\\"experimentalDecorators\\\": true, \\\"emitDecoratorMetadata\\\": true, \\\"esModuleInterop\\\": true}\" ./node_modules/typeorm/cli.js"
@@ -32,6 +33,9 @@
     "src/**/*.{js,ts}": [
       "npm run prettier:fix",
       "npm run lint:fix"
+    ],
+    "src/**/*.ts": [
+      "npm run typecheck"
     ]
   },
   "nodemonConfig": {

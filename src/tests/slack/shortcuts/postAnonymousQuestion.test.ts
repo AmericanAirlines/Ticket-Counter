@@ -40,7 +40,7 @@ describe('ignore action listener', () => {
       .expect(200);
 
     expect(viewsOpenSpy).toBeCalled();
-    const args = viewsOpenSpy.mock.calls[0][0];
+    const args = viewsOpenSpy.mock.calls[0][0] ?? { trigger_id: '' };
     expect(args.trigger_id).toEqual(triggerId);
   });
 

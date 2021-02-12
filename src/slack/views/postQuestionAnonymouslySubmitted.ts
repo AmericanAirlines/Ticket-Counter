@@ -14,6 +14,10 @@ export const postQuestionAnonymouslySubmitted: AppMiddlewareFunction<SlackViewMi
     const questionBlockId = (blocks[1] as InputBlock).block_id;
     const questionActionId = (blocks[1] as InputBlock).element.action_id;
 
+    if (!channelSelectBlockId || !channelSelectActionId || !questionBlockId || !questionActionId) {
+      throw new Error('Missing channel or question block id');
+    }
+
     const channel = state.values[channelSelectBlockId][channelSelectActionId].selected_channel;
     const question = state.values[questionBlockId][questionActionId].value;
 
