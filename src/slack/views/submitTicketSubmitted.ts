@@ -4,7 +4,7 @@ import logger from '../../logger';
 import { env } from '../../env';
 import { AppMiddlewareFunction } from '../types';
 
-export const postQuestionAnonymouslySubmitted: AppMiddlewareFunction<SlackViewMiddlewareArgs<ViewSubmitAction>> = (
+export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArgs<ViewSubmitAction>> = (
   app: App,
 ) => async ({ ack, body, view }) => {
   try {

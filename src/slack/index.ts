@@ -1,5 +1,3 @@
-import actions from './actions';
-import shortcuts from './shortcuts';
-import views from './views';
-
-export { actions, shortcuts, views };
+export { actions } from './actions';
+export { shortcuts } from './shortcuts';
+export { views } from './views';

@@ -36,7 +36,7 @@ export const mockPostQuestionAnonymouslySubmission = {
         element: { type: 'plain_text_input', action_id: keys.actionIds.question },
       },
     ],
-    callback_id: callbackIds.postQuestionAnonymouslySubmitted,
+    callback_id: callbackIds.submitTicketSubmitted,
     state: {
       values: {
         [keys.blockIds.channelSelect]: {

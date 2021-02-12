@@ -1,8 +1,8 @@
 import { App } from '@slack/bolt';
 import { callbackIds } from '../constants';
-import { postAnonymousQuestion } from './postAnonymousQuestion';
+import { submitTicket } from './submitTicket';
 
-export default function actions(bolt: App): void {
+export function shortcuts(bolt: App): void {
   // Register all action listeners
-  bolt.shortcut(callbackIds.postAnonymousQuestion, postAnonymousQuestion(bolt));
+  bolt.shortcut(callbackIds.submitTicket, submitTicket(bolt));
 }

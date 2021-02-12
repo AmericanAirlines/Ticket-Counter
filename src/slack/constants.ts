@@ -5,6 +5,6 @@ export const actionIds = {
 
 // CALLBACK IDS
 export const callbackIds = {
-  postAnonymousQuestion: 'postAnonymousQuestion',
-  postQuestionAnonymouslySubmitted: 'postQuestionAnonymouslySubmitted',
+  submitTicket: 'submitTicket',
+  submitTicketSubmitted: 'submitTicketSubmitted',
 };

@@ -13,10 +13,11 @@ export enum Status {
 
 @Entity()
 export class Ticket extends BaseEntity {
-  constructor(author: string, issueId: string, platformPostId: string, platform: Platform) {
+  constructor(authorId: string, authorName: string, issueId: string, platformPostId: string, platform: Platform) {
     super();
 
-    this.author = author;
+    this.authorId = authorId;
+    this.authorName = authorName;
     this.issueId = issueId;
     this.platformPostId = platformPostId;
     this.platform = platform;
@@ -26,7 +27,10 @@ export class Ticket extends BaseEntity {
   id!: number;
 
   @Column()
-  author: string;
+  authorName: string;
+
+  @Column()
+  authorId: string;
 
   @Column()
   issueId: string;
