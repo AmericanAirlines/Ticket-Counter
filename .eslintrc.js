@@ -19,7 +19,6 @@ module.exports = {
   ignorePatterns: ['node_modules', '**/*.js'],
   rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.ts'] }],
-    'max-len': ['error', 120],
     'import/prefer-default-export': ['off'],
     'object-curly-newline': ['off'],
     '@typescript-eslint/no-use-before-define': ['off'],
@@ -35,6 +34,7 @@ module.exports = {
     ],
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
+    'class-methods-use-this': ['warn', { exceptMethods: ['up', 'down'] }],
   },
   settings: {
     'import/resolver': {

@@ -1,12 +1,10 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, Column } from 'typeorm';
 
-enum Platform {
-  GitHub = 'GitHub',
+export enum Platform {
   Slack = 'Slack',
-  Teams = 'Teams',
 }
 
-enum Status {
+export enum Status {
   Open = 'Open',
   InProgress = 'In Progress',
   Closed = 'Closed',
@@ -15,10 +13,13 @@ enum Status {
 
 @Entity()
 export class Ticket extends BaseEntity {
-  constructor(author: string) {
+  constructor(author: string, issueId: string, platformPostId: string, platform: Platform) {
     super();
 
     this.author = author;
+    this.issueId = issueId;
+    this.platformPostId = platformPostId;
+    this.platform = platform;
   }
 
   @PrimaryGeneratedColumn()
@@ -27,14 +28,20 @@ export class Ticket extends BaseEntity {
   @Column()
   author: string;
 
+  @Column()
+  issueId: string;
+
+  @Column()
+  platformPostId: string;
+
   @Column({ type: 'enum', enum: Platform })
   platform: Platform;
 
   @Column({ type: 'enum', enum: Status, default: Status.Open })
   status!: Status;
 
-  @Column()
-  closingSupportMember: string;
+  @Column({ type: 'varchar', array: true, default: [] })
+  supportMembers!: string[];
 
   @CreateDateColumn()
   lastClosedDate!: Date;
