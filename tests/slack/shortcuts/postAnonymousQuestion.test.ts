@@ -15,7 +15,7 @@ const mockShortcutPayload: any = {
   type: 'shortcut',
   team: { id: 'XXX', domain: 'XXX' },
   user: { id: 'XXX', username: 'XXX', team_id: 'XXX' },
-  callback_id: callbackIds.postAnonymousQuestion,
+  callback_id: callbackIds.submitTicket,
   trigger_id: triggerId,
 };
 

@@ -2,12 +2,12 @@
 /* eslint-disable import/first */
 import 'jest';
 import supertest from 'supertest';
-import { createHash } from '../utils/slack';
-import logger from '../../../logger';
+import { createHash } from '../../../src/tests/slack/utils/slack';
+import logger from '../../../src/logger';
 
 const signingSecret = 'Secret';
 process.env.SLACK_SIGNING_SECRET = signingSecret;
-import { app, receiver } from '../../../app';
+import { app, receiver } from '../../../src/app';
 import {
   mockPostQuestionAnonymouslySubmission,
   selectedChannel,

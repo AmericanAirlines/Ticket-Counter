@@ -5,6 +5,7 @@ import api from './api';
 import { actions, shortcuts, views } from './slack';
 import { env } from './env';
 import { initDatabase } from './database';
+import { github } from './github';
 
 export const receiver = new ExpressReceiver({ signingSecret: env.slackSigningSecret });
 let authorizeResult: AuthorizeResult;
@@ -54,6 +55,9 @@ export const app = new App({
 
 // Initialize /api routes
 receiver.app.use('/api', api);
+
+// Setup GitHub routes
+receiver.app.use('/github', github);
 
 receiver.app.get('/', (_req, res) => {
   res.sendStatus(200);

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { callbackIds } from '../../../slack/constants';
+import { callbackIds } from '../../../src/slack/constants';
 
 export const selectedChannel = 'ABCD';
 export const username = 'Someone';
