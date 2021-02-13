@@ -20,7 +20,11 @@ if (userDefinedCredentials) {
 const vcapPostgres = vcapServices['databases-for-postgresql']?.[0]?.credentials?.connection?.postgres
 if (vcapPostgres) {
   process.env.DATABASE_URL = vcapPostgres.composed[0]?.replace('?sslmode=verify-full', '');
-  process.env.DATABASE_CERT = Base64.decode(vcapPostgres.certificate?.certificate_base64);
+  try {
+    process.env.DATABASE_CERT = Base64.decode(vcapPostgres.certificate?.certificate_base64);
+  } catch (err) {
+    logger.error('Unable to decode cert: ', err);
+  }
 }
 
 export const env = setEnv({
