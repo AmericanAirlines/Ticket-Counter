@@ -45,6 +45,5 @@ export const env = setEnv({
     githubAppPemFile: 'GITHUB_APP_PEM_FILE',
     databaseUrl: 'DATABASE_URL',
     databaseCert: 'DATABASE_CERT',
-    mockGitHubLocally: 'MOCK_GITHUB_LOCALLY',
   },
 });
