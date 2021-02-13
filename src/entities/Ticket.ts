@@ -1,7 +1,6 @@
 import { Entity, BaseEntity, CreateDateColumn, UpdateDateColumn, Column, PrimaryColumn } from 'typeorm';
 
 export enum Platform {
-  GitHub = 'GitHub',
   Slack = 'Slack',
 }
 
