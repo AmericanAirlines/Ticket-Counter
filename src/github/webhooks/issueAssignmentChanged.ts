@@ -1,11 +1,7 @@
-import { Webhooks } from '@octokit/webhooks';
-import { app } from '../app';
-import { Ticket } from '../entities/Ticket';
-import { env } from '../env';
-
-const webhooks = new Webhooks({
-  secret: env.githubAppWebhookSecret,
-});
+import { webhooks } from '.';
+import { app } from '../../app';
+import { Ticket } from '../../entities/Ticket';
+import { env } from '../../env';
 
 webhooks.on(['issues.assigned', 'issues.unassigned'], async (event) => {
   const supportMembers = (event.payload.issue.assignees ?? []).map((user) => user.login);
@@ -35,5 +31,3 @@ webhooks.on(['issues.assigned', 'issues.unassigned'], async (event) => {
       .catch(() => {});
   }
 });
-
-export const githubWebhooks = webhooks.middleware;

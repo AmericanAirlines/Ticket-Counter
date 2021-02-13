@@ -36,6 +36,7 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'error',
     'class-methods-use-this': ['warn', { exceptMethods: ['up', 'down'] }],
     'no-restricted-syntax': 'off',
+    'import/no-cycle': 'off',
   },
   settings: {
     'import/resolver': {
