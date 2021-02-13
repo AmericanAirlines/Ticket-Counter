@@ -135,7 +135,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
   } catch (error) {
     ack();
     const { trigger_id: triggerId } = (body as unknown) as { [id: string]: string };
-    logger.error('Something went wrong trying to post to a channel: ', error);
+    logger.error('Something went wrong trying to create a ticket: ', error);
     try {
       await app.client.views.open({
         trigger_id: triggerId,
@@ -151,8 +151,8 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
               type: 'section',
               text: {
                 type: 'mrkdwn',
-                text: `:warning: unable to post question to channel.
-                \nWe're not totally sure what happened but this issue has been logged.`,
+                text: `:warning: Unable to open ticket.
+                \nWe're not totally sure what happened, but this issue has been logged.`,
               },
             },
           ],
