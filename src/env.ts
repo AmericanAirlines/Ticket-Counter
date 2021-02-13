@@ -47,3 +47,8 @@ export const env = setEnv({
     databaseCert: 'DATABASE_CERT',
   },
 });
+
+if (env.nodeEnv === 'production') {
+  // Make sure all required variables are set
+  Object.values(env);
+}

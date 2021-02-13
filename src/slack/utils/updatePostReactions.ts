@@ -10,17 +10,18 @@ export enum Emoji {
 }
 
 export async function updatePostReactions(status: Status, threadTs: string, isReopened = false) {
+  const reopenedEmojis = isReopened ? [Emoji.Reopened] : [];
   switch (status) {
     case Status.InProgress:
-      await updateReactions(threadTs, { remove: [Emoji.Closed], add: [Emoji.InProgress] });
+      await updateReactions(threadTs, { remove: [Emoji.Closed], add: [...reopenedEmojis, Emoji.InProgress] });
       break;
     case Status.Closed:
-      await updateReactions(threadTs, { remove: [Emoji.Reopened, Emoji.InProgress], add: [Emoji.Closed] });
+      await updateReactions(threadTs, { remove: [Emoji.InProgress], add: [Emoji.Closed] });
       break;
     case Status.Open:
       await updateReactions(threadTs, {
         remove: [Emoji.Closed, Emoji.InProgress],
-        add: isReopened ? [Emoji.Reopened] : [],
+        add: reopenedEmojis,
       });
       break;
     default:
@@ -38,7 +39,7 @@ async function updateReactions(threadTs: string, { remove, add }: { remove?: Emo
         channel: env.slackSupportChannel,
       });
     } catch (err) {
-      if (!['no_reaction', 'already_reacted'].includes(err.error)) {
+      if (!['no_reaction', 'already_reacted'].includes(err.data.error)) {
         logger.error(`Unable to ${action} emoji: ${name}`, err);
       }
     }
