@@ -61,7 +61,7 @@ Before being able to run the app locally, you'll need to create a Slack app and 
   - Scroll to "_Your App's Presence in Slack" and click "_Edit_" next to "_App Display Name_" (e.g., using `Ticket Counter` for the name and `Ticket-Counter` for the username is recommended)
   - We also recommend enabling "Always Show My Bot as Online"
   - Finally, in the _Show Tabs_ section, disable the _Messages Tab_
-- Using the sidebar, navigate to "_Basic Information  _", scroll down, copy the `Signing Secret` value and use it to replace the `SLACK_SIGNING_SECRET` value in your `.env`
+- Using the sidebar, navigate to "_Basic Information_", scroll down, copy the `Signing Secret` value and use it to replace the `SLACK_SIGNING_SECRET` value in your `.env`
 - Using the sidebar, navigate to "_Install App_" and click "Reinstall App"
   - Once finished, copy the `Bot User OAuth Access Token` value and use it to replace the `SLACK_TOKEN` value in your `.env`
 
