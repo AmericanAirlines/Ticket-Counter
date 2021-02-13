@@ -17,7 +17,7 @@ if (userDefinedCredentials) {
   logger.info('User Defined Credentials added to env');
 }
 
-const vcapPostgres = vcapServices['databases-for-postgresql']?.[0]?.credentials?.connection?.postgres
+const vcapPostgres = vcapServices['databases-for-postgresql']?.[0]?.credentials?.connection?.postgres;
 if (vcapPostgres) {
   process.env.DATABASE_URL = vcapPostgres.composed[0]?.replace('?sslmode=verify-full', '');
   try {
@@ -42,6 +42,6 @@ export const env = setEnv({
     port: 'PORT',
     githubAppPemFile: 'GITHUB_APP_PEM_FILE',
     databaseUrl: 'DATABASE_URL',
-    databaseCert: 'DATABASE_CERT'
+    databaseCert: 'DATABASE_CERT',
   },
 });
