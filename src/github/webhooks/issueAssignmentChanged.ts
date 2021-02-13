@@ -36,7 +36,7 @@ export const issueAssignmentChanged = (webhooks: Webhooks) => {
     const ticket = raw[0] as Ticket; // This is not enhanced, readonly
 
     const user = await fetchUser(login);
-    const assignedName = user.name ?? user.login ?? 'Someone';
+    const assignedName = user?.name ?? user?.login ?? 'Someone';
 
     if (ticket.platformPostId) {
       await app.client.chat

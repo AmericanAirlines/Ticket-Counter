@@ -14,7 +14,7 @@ export const issueClosed = (webhooks: Webhooks) => {
       status: Status.Closed,
     });
 
-    const { name, login } = await fetchUser(event.payload.sender.login);
+    const user = await fetchUser(event.payload.sender.login);
 
     const ticket = await Ticket.findOneOrFail(event.payload.issue.node_id);
 
@@ -23,7 +23,7 @@ export const issueClosed = (webhooks: Webhooks) => {
         .postMessage({
           token: env.slackBotToken,
           channel: env.slackSupportChannel,
-          text: `:${Emoji.Closed}: ${name ?? login ?? 'Someone'} closed this ticket`,
+          text: `:${Emoji.Closed}: ${user?.name ?? user?.login ?? 'Someone'} closed this ticket`,
           thread_ts: ticket.platformPostId,
         })
         .catch(() => {});

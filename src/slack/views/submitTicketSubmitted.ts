@@ -5,6 +5,7 @@ import { env } from '../../env';
 import { AppMiddlewareFunction } from '../types';
 import { githubGraphql } from '../../github/graphql';
 import { Platform, Ticket } from '../../entities/Ticket';
+import { fetchRepo } from '../../github/utils/fetchRepo';
 
 export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArgs<ViewSubmitAction>> = (
   app: App,
@@ -34,17 +35,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
     const description: string = state.values[descriptionBlockId][descriptionActionId].value;
     const stakeholders = state.values[stakeholdersBlockId][stakeholdersActionId].selected_users;
 
-    const { repository } = await githubGraphql(
-      `query getRepo($owner: String!, $repo: String!) {
-        repository(owner: $owner, repo: $repo) {
-          id
-        }
-      }`,
-      {
-        owner: env.githubRepoOwner,
-        name: env.githubRepoName,
-      },
-    );
+    const repository = await fetchRepo();
 
     if (!repository) {
       throw new Error('Repository does not exist; unable to process submission');
