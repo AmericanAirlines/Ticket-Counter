@@ -1,7 +1,7 @@
 {
-  "name": "asking-for-a-friend",
+  "name": "ticket-counter",
   "version": "0.0.1",
-  "description": "Helping our community ask questions without fear of being judged",
+  "description": "Getting tech support doesn't have to be difficult",
   "scripts": {
     "dev": "npm-run-all -l build -p build:watch start:watch",
     "start": "node dist/index.js",
