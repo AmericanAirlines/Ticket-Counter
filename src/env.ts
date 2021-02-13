@@ -1,4 +1,5 @@
 import setEnv from '@americanairlines/simple-env';
+import { Base64 } from 'js-base64';
 import logger from './logger';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,8 +17,10 @@ if (userDefinedCredentials) {
   logger.info('User Defined Credentials added to env');
 }
 
-if (vcapServices?['databases-for-postgresql']) {
-
+const vcapPostgres = vcapServices['databases-for-postgresql']?.[0]?.credentials?.connection?.postgres
+if (vcapPostgres) {
+  process.env.DATABASE_URL = vcapPostgres.composed[0]?.replace('?sslmode=verify-full', '');
+  process.env.DATABASE_CERT = Base64.decode(vcapPostgres.certificate?.certificate_base64);
 }
 
 export const env = setEnv({
@@ -34,6 +37,7 @@ export const env = setEnv({
   optional: {
     port: 'PORT',
     githubAppPemFile: 'GITHUB_APP_PEM_FILE',
-    databaseUrl: 'DATABASE_URL'
+    databaseUrl: 'DATABASE_URL',
+    databaseCert: 'DATABASE_CERT'
   },
 });
