@@ -1,9 +1,9 @@
 import { Webhooks } from '@octokit/webhooks';
 import { app } from '../../app';
-import { Ticket } from '../../entities/Ticket';
+import { Status, Ticket } from '../../entities/Ticket';
 import { env } from '../../env';
 import logger from '../../logger';
-import { updatePostReactions } from '../../slack/utils/updatePostReactions';
+import { Emoji, updatePostReactions } from '../../slack/utils/updatePostReactions';
 import { fetchUser } from '../utils/fetchUser';
 
 export const issueAssignmentChanged = (webhooks: Webhooks) => {
@@ -14,8 +14,12 @@ export const issueAssignmentChanged = (webhooks: Webhooks) => {
 
     const { affected, raw } = await Ticket.createQueryBuilder()
       .update()
-      .set({ supportMembers })
+      .set({
+        supportMembers,
+        status: supportMembers.length > 0 ? Status.InProgress : Status.Open,
+      })
       .where('issueId = :issueId', { issueId: event.payload.issue.node_id })
+      .andWhere('status <> :status', { status: Status.Closed })
       .returning('*')
       .execute();
 
@@ -39,7 +43,7 @@ export const issueAssignmentChanged = (webhooks: Webhooks) => {
         .postMessage({
           token: env.slackBotToken,
           channel: env.slackSupportChannel,
-          text: `${assignedName} has been ${event.payload.action} to this ticket`,
+          text: `:${Emoji.InProgress}: ${assignedName} has been ${event.payload.action} to this ticket`,
           thread_ts: ticket.platformPostId,
         })
         .catch(() => {});

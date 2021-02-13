@@ -3,49 +3,47 @@ import { Status } from '../../entities/Ticket';
 import { env } from '../../env';
 import logger from '../../logger';
 
-enum Emoji {
-  Eyes = 'eyes',
-  WhiteCheckMark = 'white_check_mark',
-  Repeat = 'leftwards_arrow_with_hook',
+export enum Emoji {
+  InProgress = 'eyes',
+  Closed = 'white_check_mark',
+  Reopened = 'leftwards_arrow_with_hook',
 }
 
-export async function updatePostReactions(status: Status, threadTs: string) {
+export async function updatePostReactions(status: Status, threadTs: string, isReopened = false) {
   switch (status) {
     case Status.InProgress:
-      await updateReaction('add', Emoji.Eyes, threadTs);
+      await updateReactions(threadTs, { remove: [Emoji.Closed], add: [Emoji.InProgress] });
       break;
     case Status.Closed:
-      await updateReaction('remove', Emoji.Eyes, threadTs);
-      await updateReaction('add', Emoji.WhiteCheckMark, threadTs);
+      await updateReactions(threadTs, { remove: [Emoji.Reopened, Emoji.InProgress], add: [Emoji.Closed] });
       break;
-    case Status.Reopened:
-      await updateReaction('remove', Emoji.WhiteCheckMark, threadTs);
-      await updateReaction('add', Emoji.Repeat, threadTs);
-      await updateReaction('add', Emoji.Eyes, threadTs);
+    case Status.Open:
+      await updateReactions(threadTs, {
+        remove: [Emoji.Closed, Emoji.InProgress],
+        add: isReopened ? [Emoji.Reopened] : [],
+      });
       break;
     default:
       break;
   }
 }
 
-async function updateReaction(action: 'remove' | 'add', name: string, threadTs: string) {
-  try {
-    if (action === 'add') {
-      await app.client.reactions.add({
+async function updateReactions(threadTs: string, { remove, add }: { remove?: Emoji[]; add?: Emoji[] }) {
+  const mapper = (action: 'remove' | 'add') => async (name: Emoji) => {
+    try {
+      await app.client.reactions[action]({
         token: env.slackBotToken,
         name,
-        thread_ts: threadTs,
+        timestamp: threadTs,
         channel: env.slackSupportChannel,
       });
-    } else {
-      await app.client.reactions.remove({
-        token: env.slackBotToken,
-        name,
-        thread_ts: threadTs,
-        channel: env.slackSupportChannel,
-      });
+    } catch (err) {
+      if (!['no_reaction', 'already_reacted'].includes(err.error)) {
+        logger.error(`Unable to ${action} emoji: ${name}`, err);
+      }
     }
-  } catch (err) {
-    logger.error(`Unable to ${action} emoji: ${name}`);
-  }
+  };
+
+  await Promise.all(remove?.map(mapper('remove')) ?? []);
+  await Promise.all(add?.map(mapper('add')) ?? []);
 }

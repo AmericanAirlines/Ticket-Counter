@@ -3,7 +3,7 @@ import { app } from '../../app';
 import { Status, Ticket } from '../../entities/Ticket';
 import { env } from '../../env';
 import logger from '../../logger';
-import { updatePostReactions } from '../../slack/utils/updatePostReactions';
+import { Emoji, updatePostReactions } from '../../slack/utils/updatePostReactions';
 import { fetchUser } from '../utils/fetchUser';
 
 export const issueClosed = (webhooks: Webhooks) => {
@@ -23,7 +23,7 @@ export const issueClosed = (webhooks: Webhooks) => {
         .postMessage({
           token: env.slackBotToken,
           channel: env.slackSupportChannel,
-          text: `${name ?? login ?? 'Someone'} closed this ticket`,
+          text: `:${Emoji.Closed}: ${name ?? login ?? 'Someone'} closed this ticket`,
           thread_ts: ticket.platformPostId,
         })
         .catch(() => {});

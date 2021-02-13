@@ -8,7 +8,6 @@ export enum Status {
   Open = 'Open',
   InProgress = 'In Progress',
   Closed = 'Closed',
-  Reopened = 'Reopened',
 }
 
 @Entity()

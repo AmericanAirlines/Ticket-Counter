@@ -60,7 +60,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
             Math.max(description.length, 200),
           )}...\n_(Full description can be found on the issue)_`
         : description;
-    const text = `*_<${createIssue.issue.url}|New Support Ticket Opened>_*
+    const text = `*_<${createIssue.issue.url}|Ticket #${createIssue.issue.number} Opened>_*
 *Title:* ${title}
 >${truncatedDescription}`;
 
@@ -124,7 +124,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
     );
     await ticket.save();
 
-    logger.info(`Question asked by ${body.user.name}/${body.user.id}: ${description}`);
+    logger.info(`Ticket opened by ${body.user.name}/${body.user.id}: ${description}`);
   } catch (error) {
     ack();
     // const { trigger_id: triggerId } = (body as unknown) as { [id: string]: string };
