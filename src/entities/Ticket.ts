@@ -1,4 +1,4 @@
-import { Entity, BaseEntity, CreateDateColumn, UpdateDateColumn, Column, PrimaryColumn, Generated } from 'typeorm';
+import { Entity, BaseEntity, CreateDateColumn, UpdateDateColumn, Column, PrimaryColumn } from 'typeorm';
 
 export enum Platform {
   Slack = 'Slack',
