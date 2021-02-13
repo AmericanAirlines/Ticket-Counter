@@ -1,4 +1,20 @@
 import setEnv from '@americanairlines/simple-env';
+import logger from './logger';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let vcapServices: { [id: string]: any } = {};
+if (process.env.VCAP_SERVICES) {
+  vcapServices = JSON.parse(process.env.VCAP_SERVICES as string);
+}
+
+// User defined credentials are provided via User Defined Services (cups and uups)
+const userDefinedCredentials: { [id: string]: string } = vcapServices['user-provided']?.[0]?.credentials;
+if (userDefinedCredentials) {
+  Object.keys(userDefinedCredentials).forEach((key: string) => {
+    process.env[key] = userDefinedCredentials[key];
+  });
+  logger.info('User Defined Credentials added to env');
+}
 
 export const env = setEnv({
   required: {

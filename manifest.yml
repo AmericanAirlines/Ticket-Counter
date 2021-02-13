@@ -1,0 +1,7 @@
+---
+applications:
+ - name: Ticketing-Bot
+   memory: 256M
+   buildpack: https://github.com/cloudfoundry/nodejs-buildpack/releases/download/v1.7.42/nodejs-buildpack-cflinuxfs3-v1.7.42.zip
+   services:
+       - Ticketing-Bot-Secrets

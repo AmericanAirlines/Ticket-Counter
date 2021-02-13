@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: '14'
       - uses: actions/checkout@v2
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -25,11 +26,20 @@ jobs:
       - run: npm run lint
       - run: npm run prettier
 
+      - name: Publish Artifacts # For use in other jobs in this workflow
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist
+
   deploy:
     name: Deploy to IBM CF
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [build]
     runs-on: ubuntu-latest
+    env:
+      APP_NAME: Ticketing-Bot
+      CREDENTIALS_SERVICE_NAME: Ticketing-Bot-Secrets
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -37,7 +47,7 @@ jobs:
       - name: Get Artifact
         uses: actions/download-artifact@v2
         with:
-          name: $APP_ARTIFACT_PREFIX
+          name: dist
           path: dist
 
       - name: Install cf CLI and plugins
@@ -49,11 +59,13 @@ jobs:
           cf add-plugin-repo CF-Community https://plugins.cloudfoundry.org
           cf install-plugin blue-green-deploy -f -r CF-Community
           cf -v
+
       - name: Login to IBM Cloud
         run: |
           cf login -a https://api.us-south.cf.cloud.ibm.com -o ${{ secrets.CF_ORG }} -s ${{ secrets.CF_SPACE }} -u apikey -p ${{ secrets.CF_API_KEY }}
+
       - name: Create credentials file
-        uses: schdck/create-env-json@v1
+        uses: schdck/create-env-json@v2
         id: create-env
         with:
           file-name: 'credentials.json'
@@ -68,9 +80,10 @@ jobs:
 
       - name: Deploy to IBM Cloud
         run: |
-          cf uups BE-Smart-Hangar-Secrets -p ./credentials.json
-          cf blue-green-deploy BE-Smart-Hangar --delete-old-apps
+          (cf CREDENTIALS_SERVICE_NAME && cf cups CREDENTIALS_SERVICE_NAME -p ./credentials.json) || cf uups CREDENTIALS_SERVICE_NAME -p ./credentials.json
+          cf blue-green-deploy $APP_NAME --delete-old-apps
+
       - name: Deploy logs on failure
         if: ${{ failure() }}
         run: |
-          cf logs BE-Smart-Hangar-new --recent
+          cf logs $APP_NAME-new --recent
