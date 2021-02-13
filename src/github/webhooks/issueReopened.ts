@@ -3,6 +3,7 @@ import { app } from '../../app';
 import { Status, Ticket } from '../../entities/Ticket';
 import { env } from '../../env';
 import logger from '../../logger';
+import { updatePostReactions } from '../../slack/utils/updatePostReactions';
 import { fetchUser } from '../utils/fetchUser';
 
 export const issueReopened = (webhooks: Webhooks) => {
@@ -26,6 +27,7 @@ export const issueReopened = (webhooks: Webhooks) => {
           thread_ts: ticket.platformPostId,
         })
         .catch(() => {});
+      await updatePostReactions(ticket.status, ticket.platformPostId);
     }
   });
 };
