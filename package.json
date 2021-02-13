@@ -22,7 +22,7 @@
     "Spencer Kaiser <spencer.kaiser@aa.com>"
   ],
   "engines": {
-    "node": ">=12.0.0"
+    "node": "14.x"
   },
   "husky": {
     "hooks": {
