@@ -32,5 +32,20 @@ export function getSubmitTicketModalBlocks(): KnownBlock[] {
       max_length: 500,
     },
   };
-  return [ticketTitleBlock, descriptionBlock];
+  const stakeholders: InputBlock = {
+    type: 'input',
+    label: {
+      type: 'plain_text',
+      text: 'Stakeholders',
+    },
+    hint: {
+      type: 'plain_text',
+      text: 'Add anyone else impacted or related to this ticket',
+    },
+    optional: true,
+    element: {
+      type: 'multi_users_select',
+    },
+  };
+  return [ticketTitleBlock, descriptionBlock, stakeholders];
 }

@@ -13,10 +13,18 @@ export enum Status {
 
 @Entity()
 export class Ticket extends BaseEntity {
-  constructor(issueId: string, authorId: string, authorName: string, platformPostId: string, platform: Platform) {
+  constructor(
+    issueId: string,
+    issueNumber: number,
+    authorId: string,
+    authorName: string,
+    platformPostId: string,
+    platform: Platform,
+  ) {
     super();
 
     this.issueId = issueId;
+    this.issueNumber = issueNumber;
     this.authorId = authorId;
     this.authorName = authorName;
     this.platformPostId = platformPostId;
@@ -26,8 +34,8 @@ export class Ticket extends BaseEntity {
   @PrimaryColumn()
   issueId: string;
 
-  @Column({ generated: 'increment' })
-  number!: number;
+  @Column()
+  issueNumber: number;
 
   @Column()
   authorName: string;
