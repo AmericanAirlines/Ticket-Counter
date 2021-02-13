@@ -1,4 +1,4 @@
-import { App, SlackEventMiddlewareArgs, subtype } from '@slack/bolt';
+import { App, SlackEventMiddlewareArgs } from '@slack/bolt';
 import { GenericMessageEvent } from '@slack/bolt/dist/types/events/message-events';
 import { AppMiddlewareFunction } from '../types';
 import { messageReplied } from './messageReplied';
