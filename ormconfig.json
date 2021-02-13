@@ -1,6 +1,6 @@
 {
   "type": "postgres",
-  "url": "postgres://localhost:5432/ticketing",
+  "url": "postgres://localhost:5432/ticket-counter",
   "entities": ["src/entities/**/*.ts"],
   "migrations": ["src/migrations/**/*.ts"],
   "cli": {
