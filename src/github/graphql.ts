@@ -14,7 +14,7 @@ if (env.githubAppPemFile) {
 const auth = createAppAuth({
   appId: env.githubAppId,
   privateKey,
-  installationId: 14693205,
+  installationId: env.githubAppInstallationId,
 });
 
 export const githubGraphql = graphql.defaults({

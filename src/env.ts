@@ -36,6 +36,7 @@ export const env = setEnv({
     githubAppClientId: 'GITHUB_APP_CLIENT_ID',
     githubAppClientSecret: 'GITHUB_APP_CLIENT_SECRET',
     githubAppWebhookSecret: 'GITHUB_APP_WEBHOOK_SECRET',
+    githubAppInstallationId: 'GITHUB_APP_INSTALLATION_ID',
     githubAppPrivateKey: 'GITHUB_APP_PRIVATE_KEY',
   },
   optional: {
