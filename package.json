@@ -1,7 +1,7 @@
 {
   "name": "ticket-counter",
   "version": "0.0.1",
-  "description": "Getting tech support doesn't have to be difficult",
+  "description": "Getting tech support should be easy",
   "scripts": {
     "dev": "npm-run-all -l build -p build:watch start:watch",
     "start": "node dist/index.js",

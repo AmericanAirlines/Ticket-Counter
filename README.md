@@ -1,11 +1,11 @@
 <!-- [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-![](https://github.com/AmericanAirlines/Ticketing-Bot/workflows/Build/badge.svg?branch=main)
-[![codecov](https://codecov.io/gh/AmericanAirlines/Ticketing-Bot/branch/main/graph/badge.svg)](https://codecov.io/gh/AmericanAirlines/Ticketing-Bot)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/AmericanAirlines/Ticketing-Bot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Ticketing-Bot/alerts/)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AmericanAirlines/Ticketing-Bot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Ticketing-Bot/context:javascript) -->
+![](https://github.com/AmericanAirlines/Ticket-Counter/workflows/Build/badge.svg?branch=main)
+[![codecov](https://codecov.io/gh/AmericanAirlines/Ticket-Counter/branch/main/graph/badge.svg)](https://codecov.io/gh/AmericanAirlines/Ticket-Counter)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/AmericanAirlines/Ticket-Counter.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Ticket-Counter/alerts/)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AmericanAirlines/Ticket-Counter.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Ticket-Counter/context:javascript) -->
 
-# Ticketing-Bot
-A bot to help with support ticketing in GitHub
+# Ticket Counter
+Getting tech support should be easy
 
 ## Development
 ### Environment Variables
@@ -25,7 +25,7 @@ Before being able to run the app locally, you'll need to create a Slack app and 
     - `chat:write`
     - `chat:write.public`
 - Using the sidebar, navigate to the "_App Home_"
-  - Scroll to "_Your App's Presence in Slack" and click "_Edit_" next to "_App Display Name_" (e.g., using `Ticketing Bot` for the name and `ticketing-bot` for the username is recommended)
+  - Scroll to "_Your App's Presence in Slack" and click "_Edit_" next to "_App Display Name_" (e.g., using `Ticketing Bot` for the name and `Ticket-Counter` for the username is recommended)
   - We also recommend enabling "Always Show My Bot as Online"
   - Finally, in the _Show Tabs_ section, disable the _Messages Tab_
 - Using the sidebar, navigate to the "_Basic Information_", scroll down, copy the `Signing Secret` value and use it to replace the `SLACK_SIGNING_SECRET` value in your `.env`

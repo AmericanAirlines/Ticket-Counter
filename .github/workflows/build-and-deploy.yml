@@ -71,12 +71,6 @@ jobs:
           file-name: 'credentials.json'
           SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          ADMINS: ${{ secrets.ADMINS }}
-          CHALLENGE_URL: ${{ secrets.CHALLENGE_URL }}
-          GITHUB_TOKEN: ${{ secrets._GITHUB_TOKEN }}
-          SLACK_NOTIFICATIONS_WEBHOOK_URL: ${{ secrets.SLACK_NOTIFICATIONS_WEBHOOK_URL }}
-          ADMIN_SECRET: ${{ secrets.ADMIN_SECRET}}
-          JUDGE_SECRET: ${{ secrets.JUDGE_SECRET}}
 
       - name: Deploy to IBM Cloud
         run: |
