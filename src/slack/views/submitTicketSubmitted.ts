@@ -120,8 +120,8 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
       createIssue.issue.number,
       body.user.id,
       body.user.name,
-      result.ts,
       Platform.Slack,
+      result.ts,
     );
     await ticket.save();
 
