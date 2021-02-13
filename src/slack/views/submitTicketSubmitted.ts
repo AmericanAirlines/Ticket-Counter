@@ -11,7 +11,6 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
 ) => async ({ ack, body, view }) => {
   try {
     const { blocks, state } = view;
-    // TODO: Disable this rule for this line
     const { trigger_id: triggerId } = (body as unknown) as { [id: string]: string };
     const ticketTitleBlockId = (blocks[0] as InputBlock).block_id;
     const ticketTitleActionId = (blocks[0] as InputBlock).element.action_id;
@@ -35,32 +34,24 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
     const description: string = state.values[descriptionBlockId][descriptionActionId].value;
     const stakeholders = state.values[stakeholdersBlockId][stakeholdersActionId].selected_users;
 
-    // const { createIssue } = await githubGraphql(
-    //   `mutation newIssue($input: CreateIssueInput!) {
-    //       createIssue(input: $input) {
-    //         issue {
-    //           id
-    //           url
-    //           number
-    //         }
-    //       }
-    //     }`,
-    //   {
-    //     input: {
-    //       title,
-    //       body: description,
-    //       repositoryId: 'MDEwOlJlcG9zaXRvcnkzMzgzNTY2ODE=',
-    //     },
-    //   },
-    // );
-
-    const createIssue: any = {
-      issue: {
-        url: 'https://google.com',
-        number: 12,
-        id: '123123',
+    const { createIssue } = await githubGraphql(
+      `mutation newIssue($input: CreateIssueInput!) {
+          createIssue(input: $input) {
+            issue {
+              id
+              url
+              number
+            }
+          }
+        }`,
+      {
+        input: {
+          title,
+          body: description,
+          repositoryId: 'MDEwOlJlcG9zaXRvcnkzMzgzNTY2ODE=',
+        },
       },
-    };
+    );
 
     const truncatedDescription =
       description.length > 200
