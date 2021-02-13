@@ -78,8 +78,30 @@ Once the above steps are finished, you'll need to connect your Slack app to your
 
 ---
 
-### Setup a Ticket Repo in GitHub
-# `DOCS NEEDED`
+### Create a GitHub App
+Before being able to run the app locally, you'll need to create a Slack app and configure it with the appropriate permissions:
+- Go to github.com
+- Go to your Settings
+- Go to Developer Settings
+- Go to GitHub Apps (should be the default page)
+- Click `New GitHub App`
+  - Sign in if needed
+- Leave everything default except for the following
+  - Enter a name for App Name (this must be unique across all of GitHub)
+  - Set `http://localhost:3000` for Homepage URL
+    - This can be any url, it's just for the App Page
+  - Put the same app url from the Slack setup in the `Webhook URL~ field, followed by `/github/webhook`
+  - Create a secret and put it in `Webhook Secret`
+    - You'll also want to put this in your `.env` file for `GITHUB_APP_WEBHOOK_SECRET`
+  - Change these settings on `Permissions`
+    - Set Issues to `Read & write`
+  - Check the box next to Issues under `Subscribe to events`
+- Click Create GitHub App
+- Copy the App ID into your `.env` file
+- Generate a private key and move the downloaded file to the root of the project
+- Set `GITHUB_APP_PEM_FILE` to the name of the file
+- Click `Install App` on the left side and install it to a repo (create a demo one if you don't have one)
+- After installing copy the number in the URL bar to `GITHUB_APP_INSTALLATION_ID` in your `.env` file
 
 ---
 

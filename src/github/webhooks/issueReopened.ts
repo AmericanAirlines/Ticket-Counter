@@ -17,7 +17,7 @@ export const issueReopened = (webhooks: Webhooks) => {
       supportMembers,
     });
 
-    const { name, login } = await fetchUser(event.payload.sender.login);
+    const user = await fetchUser(event.payload.sender.login);
 
     const ticket = await Ticket.findOneOrFail(event.payload.issue.node_id);
 
@@ -26,7 +26,7 @@ export const issueReopened = (webhooks: Webhooks) => {
         .postMessage({
           token: env.slackBotToken,
           channel: env.slackSupportChannel,
-          text: `:${Emoji.Reopened}: ${name ?? login ?? 'Someone'} reopened this ticket`,
+          text: `:${Emoji.Reopened}: ${user?.name ?? user?.login ?? 'Someone'} reopened this ticket`,
           thread_ts: ticket.platformPostId,
         })
         .catch(() => {});

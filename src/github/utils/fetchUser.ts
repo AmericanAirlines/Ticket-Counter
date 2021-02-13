@@ -6,7 +6,7 @@ interface GitHubUser {
   name: string | null;
 }
 
-export const fetchUser = async (login: string): Promise<GitHubUser> => {
+export const fetchUser = async (login: string): Promise<GitHubUser | null> => {
   const { user } = await githubGraphql(
     `query getUser($login: String!) {
         user(login: $login) {
