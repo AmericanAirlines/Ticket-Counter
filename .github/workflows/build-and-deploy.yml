@@ -71,6 +71,12 @@ jobs:
           file-name: 'credentials.json'
           SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          GITHUB_APP_PRIVATE_KEY: ${{ secrets._GITHUB_APP_PRIVATE_KEY }}
+          GITHUB_APP_ID: ${{ secrets._GITHUB_APP_ID }}
+          GITHUB_APP_CLIENT_ID: ${{ secrets._GITHUB_APP_CLIENT_ID }}
+          GITHUB_APP_CLIENT_SECRET: ${{ secrets._GITHUB_APP_CLIENT_SECRET }}
+          GITHUB_APP_WEBHOOK_SECRET: ${{ secrets._GITHUB_APP_WEBHOOK_SECRET }}
+          GITHUB_APP_INSTALLATION_ID: ${{ secrets._GITHUB_APP_INSTALLATION_ID }}
 
       - name: Deploy to IBM Cloud
         run: |
