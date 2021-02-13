@@ -16,6 +16,10 @@ if (userDefinedCredentials) {
   logger.info('User Defined Credentials added to env');
 }
 
+if (vcapServices?['databases-for-postgresql']) {
+
+}
+
 export const env = setEnv({
   required: {
     nodeEnv: 'NODE_ENV',
@@ -30,5 +34,6 @@ export const env = setEnv({
   optional: {
     port: 'PORT',
     githubAppPemFile: 'GITHUB_APP_PEM_FILE',
+    databaseUrl: 'DATABASE_URL'
   },
 });
