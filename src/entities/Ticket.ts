@@ -8,7 +8,6 @@ export enum Status {
   Open = 'Open',
   InProgress = 'In Progress',
   Closed = 'Closed',
-  Reopened = 'Reopened',
 }
 
 @Entity()
@@ -18,8 +17,8 @@ export class Ticket extends BaseEntity {
     issueNumber: number,
     authorId: string,
     authorName: string,
-    platformPostId: string,
     platform: Platform,
+    platformPostId: string | null = null,
   ) {
     super();
 
@@ -43,8 +42,8 @@ export class Ticket extends BaseEntity {
   @Column()
   authorId: string;
 
-  @Column()
-  platformPostId: string;
+  @Column({ type: 'text', nullable: true })
+  platformPostId: string | null;
 
   @Column({ type: 'enum', enum: Platform })
   platform: Platform;
