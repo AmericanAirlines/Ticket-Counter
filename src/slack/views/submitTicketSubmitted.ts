@@ -27,12 +27,28 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
       !stakeholdersBlockId ||
       !stakeholdersActionId
     ) {
-      throw new Error('Missing title or description block id');
+      throw new Error('Missing a required block id; unable to process submission');
     }
 
     const title = state.values[ticketTitleBlockId][ticketTitleActionId].value;
     const description: string = state.values[descriptionBlockId][descriptionActionId].value;
     const stakeholders = state.values[stakeholdersBlockId][stakeholdersActionId].selected_users;
+
+    const { repository } = await githubGraphql(
+      `query getRepo($owner: String!, $repo: String!) {
+        repository(owner: $owner, repo: $repo) {
+          id
+        }
+      }`,
+      {
+        owner: env.githubRepoOwner,
+        name: env.githubRepoName,
+      },
+    );
+
+    if (!repository) {
+      throw new Error('Repository does not exist; unable to process submission');
+    }
 
     const { createIssue } = await githubGraphql(
       `mutation newIssue($input: CreateIssueInput!) {
@@ -48,7 +64,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
         input: {
           title,
           body: description,
-          repositoryId: 'MDEwOlJlcG9zaXRvcnkzMzgzNTY2ODE=',
+          repositoryId: repository.id,
         },
       },
     );
@@ -127,30 +143,30 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
     logger.info(`Ticket opened by ${body.user.name}/${body.user.id}: ${description}`);
   } catch (error) {
     ack();
-    // const { trigger_id: triggerId } = (body as unknown) as { [id: string]: string };
+    const { trigger_id: triggerId } = (body as unknown) as { [id: string]: string };
     logger.error('Something went wrong trying to post to a channel: ', error);
     try {
-      // await app.client.views.open({
-      //   trigger_id: triggerId,
-      //   token: env.slackBotToken,
-      //   view: {
-      //     type: 'modal',
-      //     title: {
-      //       type: 'plain_text',
-      //       text: 'Error',
-      //     },
-      //     blocks: [
-      //       {
-      //         type: 'section',
-      //         text: {
-      //           type: 'mrkdwn',
-      //           text: `:warning: unable to post question to channel.
-      //           \nWe're not totally sure what happened but this issue has been logged.`,
-      //         },
-      //       },
-      //     ],
-      //   },
-      // });
+      await app.client.views.open({
+        trigger_id: triggerId,
+        token: env.slackBotToken,
+        view: {
+          type: 'modal',
+          title: {
+            type: 'plain_text',
+            text: 'Error',
+          },
+          blocks: [
+            {
+              type: 'section',
+              text: {
+                type: 'mrkdwn',
+                text: `:warning: unable to post question to channel.
+                \nWe're not totally sure what happened but this issue has been logged.`,
+              },
+            },
+          ],
+        },
+      });
     } catch (err) {
       logger.error("Something went really wrong and the error modal couldn't be opened");
     }

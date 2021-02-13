@@ -8,7 +8,7 @@ let privateKey: string;
 if (env.githubAppPemFile) {
   privateKey = fs.readFileSync(path.join(process.cwd(), env.githubAppPemFile), { encoding: 'utf-8' });
 } else {
-  privateKey = env.githubAppPrivateKey;
+  privateKey = env.githubAppPrivateKey ?? '';
 }
 
 const auth = createAppAuth({
