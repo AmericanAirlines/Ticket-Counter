@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { App, LogLevel, ExpressReceiver, AuthorizeResult } from '@slack/bolt';
 import { WebClient } from '@slack/web-api';
 import api from './api';
-import { actions, shortcuts, views } from './slack';
+import { actions, events, shortcuts, views } from './slack';
 import { env } from './env';
 import { initDatabase } from './database';
 import { github } from './github';
@@ -72,6 +72,7 @@ receiver.app.use('*', (_req, res) => {
 actions(app);
 shortcuts(app);
 views(app);
+events(app);
 
 export const init = async (): Promise<void> => {
   await initDatabase();
