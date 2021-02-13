@@ -53,6 +53,9 @@ Before being able to run the app locally, you'll need to create a Slack app and 
   - Under '_Scopes_' --> '_Bot Token Scopes_' click `Add an OAuth Scope` and add the following scope:
     - `chat:write`
     - `chat:write.public`
+    - `channels:history`
+    - `reactions:write`
+    - `users:read` (needed to obtain the bot's user ID)
 - Using the sidebar, navigate to "_Event Subscriptions_" enable them
   - Under "_Subscribe to bot Events_", add the `message.channels` scope
 - Using the sidebar, navigate to "_App Home_"

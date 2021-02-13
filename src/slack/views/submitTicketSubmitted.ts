@@ -11,7 +11,6 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
 ) => async ({ ack, body, view }) => {
   try {
     const { blocks, state } = view;
-    // TODO: Disable this rule for this line
     const { trigger_id: triggerId } = (body as unknown) as { [id: string]: string };
     const ticketTitleBlockId = (blocks[0] as InputBlock).block_id;
     const ticketTitleActionId = (blocks[0] as InputBlock).element.action_id;
