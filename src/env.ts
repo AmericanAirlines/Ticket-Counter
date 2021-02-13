@@ -32,6 +32,7 @@ export const env = setEnv({
     nodeEnv: 'NODE_ENV',
     slackBotToken: 'SLACK_BOT_TOKEN',
     slackSigningSecret: 'SLACK_SIGNING_SECRET',
+    slackSupportChannel: 'SLACK_SUPPORT_CHANNEL',
     githubAppId: 'GITHUB_APP_ID',
     githubAppClientId: 'GITHUB_APP_CLIENT_ID',
     githubAppClientSecret: 'GITHUB_APP_CLIENT_SECRET',

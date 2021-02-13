@@ -49,7 +49,7 @@ ${createIssue.issue.url}
 
     const result: { ts: string } = (await app.client.chat.postMessage({
       token: env.slackBotToken,
-      channel: 'C01MYGGAT8S',
+      channel: env.slackSupportChannel,
       text,
     })) as any;
     ack();

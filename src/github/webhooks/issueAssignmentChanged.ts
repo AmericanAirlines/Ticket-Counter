@@ -24,7 +24,7 @@ webhooks.on(['issues.assigned', 'issues.unassigned'], async (event) => {
     await app.client.chat
       .postMessage({
         token: env.slackBotToken,
-        channel: 'C01MYGGAT8S',
+        channel: env.slackSupportChannel,
         text: `Support Members Assigned: ${supportMembers.join(', ')}`,
         thread_ts: ticket.platformPostId,
       })
