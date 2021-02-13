@@ -74,7 +74,7 @@ jobs:
 
       - name: Deploy to IBM Cloud
         run: |
-          (cf CREDENTIALS_SERVICE_NAME && cf cups CREDENTIALS_SERVICE_NAME -p ./credentials.json) || cf uups CREDENTIALS_SERVICE_NAME -p ./credentials.json
+          (cf service CREDENTIALS_SERVICE_NAME && cf cups CREDENTIALS_SERVICE_NAME -p ./credentials.json) || cf uups CREDENTIALS_SERVICE_NAME -p ./credentials.json
           cf blue-green-deploy $APP_NAME --delete-old-apps
 
       - name: Deploy logs on failure
