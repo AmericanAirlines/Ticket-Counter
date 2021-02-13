@@ -71,6 +71,7 @@ jobs:
           file-name: 'credentials.json'
           SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_SUPPORT_CHANNEL: ${{ secrets.SLACK_SUPPORT_CHANNEL }}
           GITHUB_APP_PRIVATE_KEY: ${{ secrets._GITHUB_APP_PRIVATE_KEY }}
           GITHUB_APP_ID: ${{ secrets._GITHUB_APP_ID }}
           GITHUB_APP_CLIENT_ID: ${{ secrets._GITHUB_APP_CLIENT_ID }}
