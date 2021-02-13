@@ -38,8 +38,8 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     env:
-      APP_NAME: Ticketing-Bot
-      CREDENTIALS_SERVICE_NAME: Ticketing-Bot-Secrets
+      APP_NAME: Ticketing-Counter
+      CREDENTIALS_SERVICE_NAME: Ticket-Counter-Secrets
     steps:
       - name: Checkout
         uses: actions/checkout@v2
