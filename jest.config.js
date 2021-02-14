@@ -19,7 +19,7 @@ module.exports = {
     '!./src/index.ts',
     '!./src/app.ts',
     '!./src/migrations/**',
-    // '!./src/entities/*.ts',
+    '!./src/entities/*.ts',
   ],
   coverageDirectory: './coverage',
   coverageThreshold: {
