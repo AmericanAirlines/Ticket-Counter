@@ -2,7 +2,7 @@ import 'jest';
 import { AllMiddlewareArgs, App, Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
 import logger from '../../../logger';
 
-const loggerInfoSpy = jest.spyOn(logger, 'info').mockImplementation();
+jest.spyOn(logger, 'info').mockImplementation();
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 jest.spyOn(logger, 'debug').mockImplementation();
 jest.mock('../../../env');
