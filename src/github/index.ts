@@ -3,7 +3,7 @@ import { githubWebhooks } from './webhooks';
 
 export const github = Router();
 
-const noBotStuff = (req: Request, res: Response, next: NextFunction) => {
+export const ignoreBotEvents = (req: Request, res: Response, next: NextFunction) => {
   if (req.body.sender.type === 'Bot') {
     res.sendStatus(200);
     return;
@@ -13,4 +13,4 @@ const noBotStuff = (req: Request, res: Response, next: NextFunction) => {
 };
 
 github.use(json());
-github.use('/webhook', noBotStuff, githubWebhooks);
+github.use('/webhook', ignoreBotEvents, githubWebhooks);
