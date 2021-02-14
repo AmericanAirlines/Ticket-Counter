@@ -10,7 +10,6 @@ export const messageReplied: AppMiddlewareFunction<SlackEventMiddlewareArgs<'mes
   message,
 }) => {
   const { parent_user_id: parentUserId, text, ts, channel } = message as GenericMessageEvent;
-
   appUserId = appUserId ?? ((await app.client.auth.test({ token: env.slackBotToken })) as any).user_id;
   if (parentUserId !== appUserId || message.subtype === 'bot_message') {
     // The parent message is not something the bot wrote OR the reply is from a bot
@@ -18,7 +17,7 @@ export const messageReplied: AppMiddlewareFunction<SlackEventMiddlewareArgs<'mes
     return;
   }
 
-  logger.info(`${(message as GenericMessageEvent).user} replied with ${text}`);
+  logger.debug(`${(message as GenericMessageEvent).user} replied with ${text}`);
 
   try {
     await app.client.reactions.add({
