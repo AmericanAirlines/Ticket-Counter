@@ -3,6 +3,7 @@ import { env } from '../../env';
 import logger from '../../logger';
 import { issueAssignmentChanged } from './issueAssignmentChanged';
 import { issueClosed } from './issueClosed';
+import { issueCommentedOn } from './issueCommentedOn';
 import { issueReopened } from './issueReopened';
 
 export const webhooks = new Webhooks({
@@ -16,5 +17,6 @@ webhooks.onError((error) => {
 issueAssignmentChanged(webhooks);
 issueClosed(webhooks);
 issueReopened(webhooks);
+issueCommentedOn(webhooks);
 
 export const githubWebhooks = webhooks.middleware;
