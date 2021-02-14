@@ -18,6 +18,7 @@ module.exports = {
     '!./src/logger.ts',
     '!./src/index.ts',
     '!./src/app.ts',
+    '!./src/migrations/**',
     '!./src/entities/*.ts',
   ],
   coverageDirectory: './coverage',

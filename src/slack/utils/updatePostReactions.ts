@@ -24,12 +24,11 @@ export async function updatePostReactions(status: Status, threadTs: string, isRe
         add: reopenedEmojis,
       });
       break;
-    default:
-      break;
+    // no default
   }
 }
 
-async function updateReactions(threadTs: string, { remove, add }: { remove?: Emoji[]; add?: Emoji[] }) {
+async function updateReactions(threadTs: string, { remove, add }: { remove?: Emoji[]; add: Emoji[] }) {
   const mapper = (action: 'remove' | 'add') => async (name: Emoji) => {
     try {
       await app.client.reactions[action]({
@@ -39,12 +38,12 @@ async function updateReactions(threadTs: string, { remove, add }: { remove?: Emo
         channel: env.slackSupportChannel,
       });
     } catch (err) {
-      if (!['no_reaction', 'already_reacted'].includes(err.data.error)) {
+      if (!['no_reaction', 'already_reacted'].includes(err.data?.error)) {
         logger.error(`Unable to ${action} emoji: ${name}`, err);
       }
     }
   };
 
   await Promise.all(remove?.map(mapper('remove')) ?? []);
-  await Promise.all(add?.map(mapper('add')) ?? []);
+  await Promise.all(add.map(mapper('add')) ?? []);
 }

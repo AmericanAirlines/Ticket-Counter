@@ -22,6 +22,7 @@ export const issueReopened = (webhooks: Webhooks) => {
     const ticket = await Ticket.findOneOrFail(event.payload.issue.node_id);
 
     if (ticket.platformPostId) {
+      await new Promise((r) => setTimeout(r, 300));
       await app.client.chat
         .postMessage({
           token: env.slackBotToken,

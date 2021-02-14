@@ -7,6 +7,8 @@ import logger from '../../logger';
 import { AppMiddlewareFunction } from '../types';
 
 let appUserId: string;
+const getViewInSlackLink = (link: string) =>
+  ` - [View in <img width="55" alt="Slack" src="https://assets.brandfolder.com/pljt3c-dcwb20-c19uuy/v/2995547/view@2x.png?v=1611630737" />](${link})`;
 
 export const messageReplied: AppMiddlewareFunction<SlackEventMiddlewareArgs<'message'>> = (app: App) => async ({
   message,
@@ -18,6 +20,7 @@ export const messageReplied: AppMiddlewareFunction<SlackEventMiddlewareArgs<'mes
     thread_ts: threadTs,
     user: slackUserId,
     channel,
+    files,
   } = message as GenericMessageEvent;
 
   appUserId = appUserId ?? ((await app.client.auth.test({ token: env.slackBotToken })) as any).user_id;
@@ -27,7 +30,7 @@ export const messageReplied: AppMiddlewareFunction<SlackEventMiddlewareArgs<'mes
     return;
   }
 
-  logger.info(`${(message as GenericMessageEvent).user} replied with ${text}`);
+  logger.debug(`${(message as GenericMessageEvent).user} replied with ${text}`);
 
   const ticket = await Ticket.findOne({
     where: {
@@ -37,26 +40,31 @@ export const messageReplied: AppMiddlewareFunction<SlackEventMiddlewareArgs<'mes
   });
 
   if (!ticket) {
-    // error
+    logger.info(`No ticket found for message ${threadTs} (user: ${slackUserId})`, message);
     return;
   }
 
-  const { user } = (await app.client.users.info({ token: env.slackBotToken, user: slackUserId })) as Record<
-    string,
-    any
-  >;
-
   try {
+    const { user } = (await app.client.users.info({ token: env.slackBotToken, user: slackUserId })) as Record<
+      string,
+      any
+    >;
+
     const { permalink } = (await app.client.chat.getPermalink({
       token: env.slackBotToken,
       channel: env.slackSupportChannel,
-      message_ts: ticket.platformPostId!,
+      message_ts: ts,
     })) as Record<string, any>;
+
+    let messageText = text;
+    if (files?.length) {
+      messageText += `\n\n[\`Message contains file(s), see Slack to view them\`](${permalink})`;
+    }
 
     await postMessage(ticket.issueId!, {
       name: `${user.profile.real_name} (\`@${user.profile.display_name}\`)`,
-      message: text || '`Could not load text, please see this ticket in Slack for text`',
-      platformText: `[<img width="55" alt="Slack" src="https://assets.brandfolder.com/pljt3c-dcwb20-c19uuy/v/2995547/view@2x.png?v=1611630737" />](${permalink})`,
+      message: messageText || '`Could not load message, please see this ticket in Slack`',
+      platformText: getViewInSlackLink(permalink),
     });
 
     await app.client.reactions.add({
