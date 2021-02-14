@@ -95,7 +95,8 @@ Before being able to run the app locally, you'll need to create a Slack app and 
     - You'll also want to put this in your `.env` file for `GITHUB_APP_WEBHOOK_SECRET`
   - Change these settings on `Permissions`
     - Set Issues to `Read & write`
-  - Check the box next to Issues under `Subscribe to events`
+  - Check the box next to `Issues` under `Subscribe to events`
+  - Check the box next to `Issue comment` under `Subscribe to events`
 - Click Create GitHub App
 - Copy the App ID into your `.env` file
 - Generate a private key and move the downloaded file to the root of the project
