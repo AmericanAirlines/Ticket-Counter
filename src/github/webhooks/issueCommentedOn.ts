@@ -15,9 +15,9 @@ export const issueCommentedOn = (webhooks: Webhooks) => {
     let messageUserName = 'someone';
     if (user) {
       if (user.name) {
-        messageUserName = `${user.name} \`${user.login}\``;
+        messageUserName = `${user.name} (\`@${user.login}\`)`;
       } else {
-        messageUserName = `\`${user.login}\``;
+        messageUserName = `\`@${user.login}\``;
       }
     }
 
@@ -26,7 +26,7 @@ export const issueCommentedOn = (webhooks: Webhooks) => {
         .postMessage({
           token: env.slackBotToken,
           channel: env.slackSupportChannel,
-          text: `${event.payload.comment.body}\n\n> From ${messageUserName} in <${event.payload.comment.html_url}|GitHub>`,
+          text: `${event.payload.comment.body}\n\n> From ${messageUserName} - <${event.payload.comment.html_url}|View in GitHub>`,
           thread_ts: ticket.platformPostId,
         })
         .catch(() => {});

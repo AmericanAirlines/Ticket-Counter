@@ -3,12 +3,12 @@ import { githubGraphql } from '../graphql';
 interface PostMessageArgs {
   name: string;
   message: string;
-  platformText: string;
+  platformText?: string;
 }
 
 const createBody = (args: PostMessageArgs) => `${args.message}
 
-> From ${args.name || 'someone'} in ${args.platformText}`;
+> From ${args.name || 'someone'}${args.platformText ?? ''}`;
 
 export const postMessage = async (issueId: string, args: PostMessageArgs) => {
   await githubGraphql(

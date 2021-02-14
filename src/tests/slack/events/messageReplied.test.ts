@@ -2,15 +2,27 @@ import 'jest';
 import { AllMiddlewareArgs, App, Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
 import logger from '../../../logger';
 
+const loggerInfoSpy = jest.spyOn(logger, 'info').mockImplementation();
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 jest.spyOn(logger, 'debug').mockImplementation();
 jest.mock('../../../env');
 
+jest.mock('../../../github/utils/postMessage.ts', () => ({
+  postMessage: jest.fn(),
+}));
+
 const mockTs = '123456.789';
 const mockChannel = 'support';
 const mockAppId = '1234';
+const mockPermalink = 'chat-permalink';
+const mockRealName = 'Jane Doe';
+const mockDisplayName = 'jane.doe';
 const reactionsAddMock = jest.fn();
-const authTestMock = jest.fn().mockImplementation(() => ({ user_id: mockAppId }));
+const authTestMock = jest.fn(() => ({ user_id: mockAppId }));
+const getPermalinkMock = jest.fn(() => ({ permalink: mockPermalink }));
+const usersInfoMock = jest.fn(() => ({
+  user: { profile: { real_name: mockRealName, display_name: mockDisplayName } },
+}));
 const mockApp = {
   client: {
     reactions: {
@@ -19,8 +31,29 @@ const mockApp = {
     auth: {
       test: authTestMock,
     },
+    chat: {
+      getPermalink: getPermalinkMock,
+    },
+    users: {
+      info: usersInfoMock,
+    },
   },
 };
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const ticketFindOneMock = jest.fn((_args: any) => ({
+  platformPostId: mockTs,
+  issueId: 'KJFAKSJFKAHLKF',
+}));
+jest.mock('../../../entities/Ticket.ts', () => {
+  const { Platform } = jest.requireActual('../../../entities/Ticket.ts');
+  return {
+    Ticket: {
+      findOne: jest.fn((args) => ticketFindOneMock(args)),
+    },
+    Platform,
+  };
+});
 
 function getMockMessageEvent(parentUserId: string, text: string, ts: string, channel: string, subtype?: string) {
   return ({
@@ -49,6 +82,7 @@ describe('messageReplied event listener', () => {
 
     expect(authTestMock).toBeCalled();
     expect(reactionsAddMock).toBeCalled();
+    expect(usersInfoMock).toBeCalled();
     const { timestamp, channel, name } = reactionsAddMock.mock.calls[0][0];
     expect(timestamp).toEqual(mockTs);
     expect(channel).toEqual(mockChannel);

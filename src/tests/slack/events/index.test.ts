@@ -1,6 +1,8 @@
 import 'jest';
 import { isMessageReply } from '../../../slack/events/index';
 
+jest.mock('../../../env');
+
 describe('slack events registration', () => {
   it('will ignore non-message-reply events', async () => {
     const next = jest.fn();

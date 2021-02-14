@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions, global-require */
 import 'jest';
-import fs from 'fs';
-
-const fsReadFileSyncSpy = jest.spyOn(fs, 'readFileSync');
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const createAppAuthMock = jest.fn((args) => ({ auth: {} }));
 jest.mock('@octokit/auth', () => ({
   createAppAuth: jest.fn((args) => createAppAuthMock(args)),
+}));
+
+const fsReadFileSyncMock = jest.fn();
+jest.mock('fs', () => ({
+  readFileSync: jest.fn((...args) => fsReadFileSyncMock(...args)),
 }));
 
 describe('github fetch repo util', () => {
@@ -50,7 +52,7 @@ describe('github fetch repo util', () => {
 
   it('uses a pem file if one is provided', () => {
     const mockPemContents = 'super secret file contents';
-    fsReadFileSyncSpy.mockReturnValue(mockPemContents);
+    fsReadFileSyncMock.mockReturnValueOnce(mockPemContents);
     jest.mock('../../env', () => {
       const actualEnv = jest.requireActual('../../env');
       return {
