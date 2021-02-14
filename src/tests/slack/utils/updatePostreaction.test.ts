@@ -25,8 +25,8 @@ jest.mock('../../../app.ts', () => ({
   app: {
     client: {
       reactions: {
-        add: jest.fn().mockImplementation((args) => addReactionMock(args)),
-        remove: jest.fn().mockImplementation((args) => removeReactionMock(args)),
+        add: jest.fn((args) => addReactionMock(args)),
+        remove: jest.fn((args) => removeReactionMock(args)),
       },
     },
   },

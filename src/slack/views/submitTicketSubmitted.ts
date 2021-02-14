@@ -13,12 +13,12 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
   try {
     const { blocks, state } = view;
     const { trigger_id: triggerId } = (body as unknown) as { [id: string]: string };
-    const ticketTitleBlockId = (blocks[0] as InputBlock).block_id;
-    const ticketTitleActionId = (blocks[0] as InputBlock).element.action_id;
-    const descriptionBlockId = (blocks[1] as InputBlock).block_id;
-    const descriptionActionId = (blocks[1] as InputBlock).element.action_id;
-    const stakeholdersBlockId = (blocks[2] as InputBlock).block_id;
-    const stakeholdersActionId = (blocks[2] as InputBlock).element.action_id;
+    const ticketTitleBlockId = (blocks[0] as InputBlock)?.block_id;
+    const ticketTitleActionId = (blocks[0] as InputBlock)?.element.action_id;
+    const descriptionBlockId = (blocks[1] as InputBlock)?.block_id;
+    const descriptionActionId = (blocks[1] as InputBlock)?.element.action_id;
+    const stakeholdersBlockId = (blocks[2] as InputBlock)?.block_id;
+    const stakeholdersActionId = (blocks[2] as InputBlock)?.element.action_id;
 
     if (
       !ticketTitleBlockId ||
