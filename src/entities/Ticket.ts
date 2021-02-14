@@ -1,4 +1,4 @@
-import { Entity, BaseEntity, CreateDateColumn, UpdateDateColumn, Column, PrimaryColumn } from 'typeorm';
+import { Entity, BaseEntity, CreateDateColumn, UpdateDateColumn, Column, PrimaryColumn, Index } from 'typeorm';
 
 export enum Platform {
   Slack = 'Slack',
@@ -11,6 +11,7 @@ export enum Status {
 }
 
 @Entity()
+@Index(['platform', 'platformPostId'], { unique: true })
 export class Ticket extends BaseEntity {
   constructor(
     issueId: string,
@@ -18,7 +19,7 @@ export class Ticket extends BaseEntity {
     authorId: string,
     authorName: string,
     platform: Platform,
-    platformPostId: string | null = null,
+    platformPostId: string,
   ) {
     super();
 
@@ -42,8 +43,8 @@ export class Ticket extends BaseEntity {
   @Column()
   authorId: string;
 
-  @Column({ type: 'text', nullable: true })
-  platformPostId: string | null;
+  @Column({ type: 'text' })
+  platformPostId: string;
 
   @Column({ type: 'enum', enum: Platform })
   platform: Platform;

@@ -4,7 +4,7 @@ import { env } from '../../env';
 import logger from '../../logger';
 
 export enum Emoji {
-  InProgress = 'eyes',
+  InProgress = 'technologist',
   Closed = 'white_check_mark',
   Reopened = 'leftwards_arrow_with_hook',
 }
