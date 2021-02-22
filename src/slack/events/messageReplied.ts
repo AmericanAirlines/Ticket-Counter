@@ -56,7 +56,7 @@ export const messageReplied: AppMiddlewareFunction<SlackEventMiddlewareArgs<'mes
       message_ts: ts,
     })) as Record<string, any>;
 
-    let messageText = text;
+    let messageText = text?.replace(/```/g, '\n```\n');
     if (files?.length) {
       messageText += `\n\n[\`Message contains file(s), see Slack to view them\`](${permalink})`;
     }
