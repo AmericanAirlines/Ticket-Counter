@@ -25,7 +25,6 @@ describe('github fetch repo util', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.isolateModules(() => {
-      // eslint-disable-next-line global-require
       getIssueTemplates = require('../../../github/utils/fetchIssueTemplates').getIssueTemplates;
     });
   });
@@ -45,7 +44,6 @@ describe('github fetch repo util', () => {
     jest.isolateModules(async () => {
       githubGraphqlMock.mockRejectedValueOnce(new Error());
 
-      // eslint-disable-next-line global-require
       const isolatedGetIssueTemplates = require('../../../github/utils/fetchIssueTemplates').getIssueTemplates;
 
       // Wait for promises to resolve/reject before continuing

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires, global-require */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import 'jest';
 import supertest from 'supertest';
 import { app } from '../app';

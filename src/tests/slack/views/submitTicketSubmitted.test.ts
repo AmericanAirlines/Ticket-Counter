@@ -55,7 +55,6 @@ describe('submit ticket view submission handler', () => {
 
     // Get a clean copy of the module to avoid state being an issue
     jest.isolateModules(() => {
-      // eslint-disable-next-line global-require
       submitTicketSubmittedHandler = require('../../../slack/views/submitTicketSubmitted').submitTicketSubmitted(
         (mockApp as unknown) as App,
       );

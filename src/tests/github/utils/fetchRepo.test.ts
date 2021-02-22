@@ -14,7 +14,6 @@ describe('github fetch repo util', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.isolateModules(() => {
-      // eslint-disable-next-line global-require
       fetchRepo = require('../../../github/utils/fetchRepo').fetchRepo;
     });
   });

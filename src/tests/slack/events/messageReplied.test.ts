@@ -69,7 +69,6 @@ describe('messageReplied event listener', () => {
 
     // Get a clean copy of the module to avoid state being an issue
     jest.isolateModules(() => {
-      // eslint-disable-next-line global-require
       messageRepliedHandler = require('../../../slack/events/messageReplied').messageReplied(
         (mockApp as unknown) as App,
       );
