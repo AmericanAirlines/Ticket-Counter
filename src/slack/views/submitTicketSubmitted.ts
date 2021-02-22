@@ -1,39 +1,24 @@
 import { ViewSubmitAction, SlackViewMiddlewareArgs, App } from '@slack/bolt';
-import { InputBlock } from '@slack/types';
 import logger from '../../logger';
 import { env } from '../../env';
 import { AppMiddlewareFunction } from '../types';
 import { githubGraphql } from '../../github/graphql';
 import { Platform, Ticket } from '../../entities/Ticket';
 import { fetchRepo } from '../../github/utils/fetchRepo';
+import { ViewOutputUtils } from '../utils/ViewOutputUtils';
+import { SubmitTicketModalElement } from '../blocks/getSubmitTicketModalBlocks';
 
 export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArgs<ViewSubmitAction>> = (
   app: App,
 ) => async ({ ack, body, view }) => {
   try {
-    const { blocks, state } = view;
+    const viewUtils = new ViewOutputUtils(view);
     const { trigger_id: triggerId } = (body as unknown) as { [id: string]: string };
-    const ticketTitleBlockId = (blocks[0] as InputBlock)?.block_id;
-    const ticketTitleActionId = (blocks[0] as InputBlock)?.element.action_id;
-    const descriptionBlockId = (blocks[1] as InputBlock)?.block_id;
-    const descriptionActionId = (blocks[1] as InputBlock)?.element.action_id;
-    const stakeholdersBlockId = (blocks[2] as InputBlock)?.block_id;
-    const stakeholdersActionId = (blocks[2] as InputBlock)?.element.action_id;
 
-    if (
-      !ticketTitleBlockId ||
-      !ticketTitleActionId ||
-      !descriptionBlockId ||
-      !descriptionActionId ||
-      !stakeholdersBlockId ||
-      !stakeholdersActionId
-    ) {
-      throw new Error('Missing a required block id; unable to process submission');
-    }
-
-    const title = state.values[ticketTitleBlockId][ticketTitleActionId].value;
-    const description: string = state.values[descriptionBlockId][descriptionActionId].value;
-    const stakeholders = state.values[stakeholdersBlockId][stakeholdersActionId].selected_users;
+    const title = viewUtils.getInputValue(SubmitTicketModalElement.Title)?.value ?? '';
+    const description = viewUtils.getInputValue(SubmitTicketModalElement.Description)?.value ?? '';
+    const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)?.selected_option?.value;
+    const stakeholders = viewUtils.getInputValue(SubmitTicketModalElement.Stakeholders)?.selected_users ?? [];
 
     const repository = await fetchRepo();
 
@@ -56,6 +41,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
           title,
           body: description,
           repositoryId: repository.id,
+          issueTemplate: type,
         },
       },
     );

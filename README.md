@@ -73,6 +73,7 @@ Once the above steps are finished, you'll need to connect your Slack app to your
     - Name: `New support ticket`
     - Short Description: `Opens a support ticket and posts details in Slack`
     - Callback ID: `submitTicket`
+  - Under Select Menus, for the `Options Load URL` field, use your app's URL and then append `/slack/events` (same as the `Request URL`)
   - Click "_Save Changes_" at the bottom
 - After clicking save, you should see a banner at the top of the page suggesting you reinstall the app; click `Reinstall`
 
@@ -95,6 +96,7 @@ Before being able to run the app locally, you'll need to create a Slack app and 
     - You'll also want to put this in your `.env` file for `GITHUB_APP_WEBHOOK_SECRET`
   - Change these settings on `Permissions`
     - Set Issues to `Read & write`
+    - Set Contents to `Read-only`
   - Check the box next to `Issues` under `Subscribe to events`
   - Check the box next to `Issue comment` under `Subscribe to events`
 - Click Create GitHub App
