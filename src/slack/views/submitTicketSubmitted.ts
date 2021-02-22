@@ -54,7 +54,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
       {
         input: {
           title,
-          body: description,
+          body: `${description}\n\n Opened in Slack by \`@${body.user.name}\``,
           repositoryId: repository.id,
         },
       },
@@ -67,7 +67,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
             Math.max(description.length, 200),
           )}...\n_(Full description can be found on the issue)_`
         : description;
-    const text = `*_<${createIssue.issue.url}|Ticket #${createIssue.issue.number} Opened>_*
+    const text = `*_<${createIssue.issue.url}|Ticket #${createIssue.issue.number} Opened> by <@${body.user.id}>_*
 *Title:* ${title}
 >${truncatedDescription}`;
 
