@@ -1,7 +1,16 @@
 import 'jest';
 import logger from '../../../logger';
 
-jest.mock('../../../env.ts');
+jest.useFakeTimers();
+jest.mock('../../../env.ts', () => {
+  const actualEnv = jest.requireActual('../../../env').env;
+  return {
+    env: {
+      ...actualEnv,
+      nodeEnv: 'developer',
+    },
+  };
+});
 jest.spyOn(logger, 'error').mockImplementation();
 
 const githubGraphqlMock = jest.fn().mockResolvedValue({
@@ -19,6 +28,10 @@ describe('github fetch repo util', () => {
       // eslint-disable-next-line global-require
       getIssueTemplates = require('../../../github/utils/fetchIssueTemplates').getIssueTemplates;
     });
+  });
+
+  afterEach(() => {
+    jest.clearAllTimers();
   });
 
   it('will use the auto fetch templates cache', async () => {

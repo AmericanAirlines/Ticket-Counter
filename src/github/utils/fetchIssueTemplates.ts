@@ -49,8 +49,10 @@ const autoFetchTemplates = async () => {
   }
 };
 
-// Start auto fetching
-autoFetchTemplates();
+if (env.nodeEnv !== 'test') {
+  // Start auto fetching
+  autoFetchTemplates();
+}
 
 export const getIssueTemplates = async (): Promise<GitHubRepo['issueTemplates']> => {
   // Backup, for the edge case that someone requests this before the auto fetch finishes

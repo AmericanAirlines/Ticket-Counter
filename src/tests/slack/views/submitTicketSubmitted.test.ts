@@ -3,7 +3,11 @@ import 'jest';
 import logger from '../../../logger';
 import { SubmitTicketModalElement } from '../../../slack/blocks/getSubmitTicketModalBlocks';
 
-jest.mock('../../../env.ts');
+jest.mock('../../../env.ts', () => ({
+  env: {
+    nodeEnv: 'test',
+  },
+}));
 
 const graphqlMock = jest.fn();
 jest.mock('../../../github/graphql.ts', () => ({
