@@ -11,7 +11,8 @@ export enum SubmitTicketModalElement {
 export async function getSubmitTicketModalBlocks(): Promise<KnownBlock[]> {
   const templates = await getIssueTemplates();
 
-  if (templates.length === 0) {
+  const noTemplates = templates.length === 0;
+  if (noTemplates) {
     templates.unshift({ name: 'Generic', about: '', title: '', body: '' });
   }
 
@@ -20,7 +21,7 @@ export async function getSubmitTicketModalBlocks(): Promise<KnownBlock[]> {
       type: 'plain_text',
       text: template.name,
     },
-    value: template.name,
+    value: noTemplates ? ' ' : template.name,
   }));
 
   const ticketTitleBlock: InputBlock = {

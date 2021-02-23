@@ -17,7 +17,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
 
     const title = viewUtils.getInputValue(SubmitTicketModalElement.Title)?.value ?? '';
     const description = viewUtils.getInputValue(SubmitTicketModalElement.Description)?.value ?? '';
-    const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)?.selected_option?.value;
+    const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)?.selected_option?.value?.trim() || undefined;
     const stakeholders = viewUtils.getInputValue(SubmitTicketModalElement.Stakeholders)?.selected_users ?? [];
 
     const repository = await fetchRepo();
@@ -26,6 +26,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
       throw new Error('Repository does not exist; unable to process submission');
     }
 
+    const githubBody = `${description}\n\n> Opened in Slack by \`@${body.user.name}\`\n_Comments will be synced automatically between this Issue and the Slack thread_`;
     const { createIssue } = await githubGraphql(
       `mutation newIssue($input: CreateIssueInput!) {
           createIssue(input: $input) {
@@ -39,7 +40,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
       {
         input: {
           title,
-          body: `${description}\n\n Opened in Slack by \`@${body.user.name}\``,
+          body: githubBody,
           repositoryId: repository.id,
           issueTemplate: type,
         },
