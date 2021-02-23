@@ -17,7 +17,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
 
     const title = viewUtils.getInputValue(SubmitTicketModalElement.Title)?.value ?? '';
     const description = viewUtils.getInputValue(SubmitTicketModalElement.Description)?.value ?? '';
-    const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)?.selected_option?.value;
+    const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)?.selected_option?.value?.trim() || undefined;
     const stakeholders = viewUtils.getInputValue(SubmitTicketModalElement.Stakeholders)?.selected_users ?? [];
 
     const repository = await fetchRepo();
