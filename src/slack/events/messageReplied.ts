@@ -56,14 +56,15 @@ export const messageReplied: AppMiddlewareFunction<SlackEventMiddlewareArgs<'mes
       message_ts: ts,
     })) as Record<string, any>;
 
-    let messageText = text;
+    let messageText = text?.replace(/```/g, '\n```\n') ?? '';
     if (files?.length) {
+      // Note: Extra newlines are trimmed in GitHub so it's not an issue that the message could start with \n\n
       messageText += `\n\n[\`Message contains file(s), see Slack to view them\`](${permalink})`;
     }
 
     await postMessage(ticket.issueId!, {
       name: `${user.profile.real_name} (\`@${user.profile.display_name}\`)`,
-      message: messageText || '`Could not load message, please see this ticket in Slack`',
+      message: messageText || 'Could not load message, please see this ticket in Slack',
       platformText: getViewInSlackLink(permalink),
     });
 
