@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions, global-require */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import 'jest';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -21,7 +21,6 @@ describe('github fetch repo util', () => {
     jest.mock('../../env');
 
     jest.isolateModules(() => {
-      // eslint-disable-next-line global-require
       require('../../github/graphql').githubGraphql;
     });
     expect(createAppAuthMock).toBeCalled();
@@ -42,7 +41,6 @@ describe('github fetch repo util', () => {
     });
 
     jest.isolateModules(() => {
-      // eslint-disable-next-line global-require
       require('../../github/graphql').githubGraphql;
     });
     expect(createAppAuthMock).toBeCalled();
@@ -64,7 +62,6 @@ describe('github fetch repo util', () => {
     });
 
     jest.isolateModules(() => {
-      // eslint-disable-next-line global-require
       require('../../github/graphql').githubGraphql;
     });
     expect(createAppAuthMock).toBeCalled();

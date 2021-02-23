@@ -45,4 +45,12 @@ module.exports = {
       },
     },
   },
+  overrides: [
+    {
+      files: ['**/*.test.ts'],
+      rules: {
+        'global-require': 'off',
+      },
+    },
+  ],
 };

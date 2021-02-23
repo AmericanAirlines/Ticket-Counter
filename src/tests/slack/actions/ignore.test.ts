@@ -5,10 +5,12 @@ import supertest from 'supertest';
 import { createHash } from '../utils/slack';
 import logger from '../../../logger';
 
-const signingSecret = 'Secret';
-process.env.SLACK_SIGNING_SECRET = signingSecret;
+jest.mock('../../../env.ts');
+jest.mock('../../../github/graphql.ts');
+
 import { receiver } from '../../../app';
 import { actionIds } from '../../../slack/constants';
+import { env } from '../../../env';
 
 const mockIgnoreEvent: any = {
   type: 'block_actions',
@@ -32,7 +34,7 @@ describe('ignore action listener', () => {
 
   it('successfully ignores the issue', async () => {
     const timestamp = new Date().valueOf();
-    const signature = createHash(mockIgnoreEvent, timestamp, signingSecret);
+    const signature = createHash(mockIgnoreEvent, timestamp, env.slackSigningSecret);
     await supertest(receiver.app)
       .post('/slack/events')
       .send(mockIgnoreEvent)

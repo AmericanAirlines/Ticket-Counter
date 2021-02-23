@@ -4,6 +4,9 @@ import { submitTicket } from '../../../slack/shortcuts/submitTicket';
 import logger from '../../../logger';
 
 jest.mock('../../../env.ts');
+jest.mock('../../../github/utils/fetchIssueTemplates.ts', () => ({
+  getIssueTemplates: jest.fn().mockReturnValue([]),
+}));
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 const viewsOpenMock = jest.fn();

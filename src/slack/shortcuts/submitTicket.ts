@@ -21,7 +21,7 @@ export const submitTicket: AppMiddlewareFunction<SlackShortcutMiddlewareArgs<Sla
           type: 'plain_text',
           text: 'Submit a Support Ticket',
         },
-        blocks: getSubmitTicketModalBlocks(),
+        blocks: await getSubmitTicketModalBlocks(),
         submit: {
           type: 'plain_text',
           text: 'Submit Ticket',
