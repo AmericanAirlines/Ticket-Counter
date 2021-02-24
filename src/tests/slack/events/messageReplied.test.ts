@@ -12,18 +12,29 @@ jest.mock('../../../github/utils/postMessage.ts', () => ({
   postMessage: postMessageMock,
 }));
 
+const makeUserMentionsReadableMock = jest.fn((text) => text);
+jest.mock('../../../slack/utils/makeUserMentionsReadable.ts', () => ({
+  makeUserMentionsReadable: makeUserMentionsReadableMock,
+}));
+
+const mockRealName = 'Jane Doe';
+const mockDisplayName = 'jane.doe';
+const getUserDetailsMock = jest.fn(async () => ({
+  real_name: mockRealName,
+  profile: { real_name: mockRealName, display_name: mockDisplayName },
+}));
+jest.mock('../../../slack/utils/userCache.ts', () => ({
+  getUserDetails: getUserDetailsMock,
+}));
+
 const mockTs = '123456.789';
 const mockChannel = 'support';
 const mockAppId = '1234';
 const mockPermalink = 'chat-permalink';
-const mockRealName = 'Jane Doe';
-const mockDisplayName = 'jane.doe';
+
 const reactionsAddMock = jest.fn();
 const authTestMock = jest.fn(() => ({ user_id: mockAppId }));
 const getPermalinkMock = jest.fn(() => ({ permalink: mockPermalink }));
-const usersInfoMock = jest.fn(() => ({
-  user: { profile: { real_name: mockRealName, display_name: mockDisplayName } },
-}));
 const mockApp = {
   client: {
     reactions: {
@@ -34,9 +45,6 @@ const mockApp = {
     },
     chat: {
       getPermalink: getPermalinkMock,
-    },
-    users: {
-      info: usersInfoMock,
     },
   },
 };
@@ -91,7 +99,7 @@ describe('messageReplied event listener', () => {
 
     expect(authTestMock).toBeCalled();
     expect(reactionsAddMock).toBeCalled();
-    expect(usersInfoMock).toBeCalled();
+    expect(getUserDetailsMock).toBeCalled();
     expect(postMessageMock).toBeCalledTimes(1);
     const { timestamp, channel, name } = reactionsAddMock.mock.calls[0][0];
     expect(timestamp).toEqual(mockTs);
