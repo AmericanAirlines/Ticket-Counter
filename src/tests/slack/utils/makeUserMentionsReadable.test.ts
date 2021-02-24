@@ -1,7 +1,11 @@
+import logger from '../../../logger';
 import { makeUserMentionsReadable } from '../../../slack/utils/makeUserMentionsReadable';
 
+const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
+
+const getUserDetailsMock = jest.fn();
 jest.mock('../../../slack/utils/userCache.ts', () => ({
-  getUserDetails: jest.fn(async () => undefined),
+  getUserDetails: jest.fn(async () => getUserDetailsMock()),
 }));
 
 const getExternalUserDisplayTextMock = jest.fn();
@@ -24,9 +28,8 @@ describe('make user mentions readable util', () => {
 
   it('replaces multiple user names', async () => {
     const displayText1 = 'Jane Smith';
-    getExternalUserDisplayTextMock.mockReturnValueOnce(displayText1);
     const displayText2 = 'Jane Smith';
-    getExternalUserDisplayTextMock.mockReturnValueOnce(displayText2);
+    getExternalUserDisplayTextMock.mockReturnValueOnce(displayText1).mockReturnValueOnce(displayText2);
 
     const text = await makeUserMentionsReadable('Hello <@ABC123> and <@DEF456>!', {} as any);
     expect(getExternalUserDisplayTextMock).toBeCalledTimes(2);
@@ -34,7 +37,7 @@ describe('make user mentions readable util', () => {
   });
   it('replaces multiple instances of the same name without multiple calls to get user details', async () => {
     const displayText = 'Jane Smith';
-    getExternalUserDisplayTextMock.mockReturnValue(displayText);
+    getExternalUserDisplayTextMock.mockReturnValueOnce(displayText);
     const userId = 'ABC123';
     const text = await makeUserMentionsReadable(`Hello <@${userId}>! How do you do, <@${userId}>?`, {} as any);
     expect(getExternalUserDisplayTextMock).toBeCalledTimes(1);
@@ -46,5 +49,14 @@ describe('make user mentions readable util', () => {
     const text = await makeUserMentionsReadable(originalText, {} as any);
     expect(text).toEqual(originalText);
     expect(getExternalUserDisplayTextMock).not.toBeCalled();
+  });
+
+  it('leaves user mentions as is if the associated user can\t be found', async () => {
+    const originalText = "Slack doesn't know who <@BREAKME> is";
+    getUserDetailsMock.mockRejectedValueOnce(new Error('Who is that???'));
+    const text = await makeUserMentionsReadable(originalText, {} as any);
+    expect(text).toEqual(originalText.replace('<@BREAKME>', '@BREAKME (Unknown User)'));
+    expect(getExternalUserDisplayTextMock).not.toBeCalled();
+    expect(loggerErrorSpy).toBeCalledTimes(1);
   });
 });
