@@ -55,8 +55,8 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     env:
-      APP_NAME: Ticket-Counter
-      CREDENTIALS_SERVICE_NAME: Ticket-Counter-Secrets
+      APP_NAME: TicketCounter
+      CREDENTIALS_SERVICE_NAME: TicketCounter-Secrets
     steps:
       - name: Checkout
         uses: actions/checkout@v2
