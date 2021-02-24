@@ -8,24 +8,35 @@ on:
 
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
-
     steps:
-      - name: Build (Node.js 14.x)
+      - uses: actions/checkout@v2
+      - name: Setup Node.js v14
         uses: actions/setup-node@v1
         with:
           node-version: '14'
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - name: Restore node_modules
+        uses: actions/cache@v2
+        id: restore-node-modules
+        env:
+          cache-name: node_modules
         with:
-          node-version: ${{ matrix.node-version }}
-      - name: Test
-        run: |
-          npm ci
-          npm run test:coverage
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+      - name: Restore NPM cache
+        uses: actions/cache@v2
+        if: steps.restore-node-modules.outputs.cache-hit != 'true'
+        env:
+          cache-name: yarn-cache
         with:
-          file: ./coverage/clover.xml
-          name: codecov-${{ matrix.node-version }}
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
+      - name: Install dependencies
+        if: steps.restore-node-modules.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Run tests
+        run: npm run test
