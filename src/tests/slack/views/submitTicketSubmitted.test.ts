@@ -146,7 +146,12 @@ describe('submit ticket view submission handler', () => {
 
     await submitTicketSubmittedHandler(viewSubmission);
     const { text } = chatPostMessageMock.mock.calls[0][0];
-    expect(text).toContain('Full description can be found on the issue');
+    const extraCharsAdded = '...\n_(Full description can be found on the issue)_';
+    expect(text).toContain(extraCharsAdded);
+    const [truncatedTextWithFormatting] = text.split(extraCharsAdded);
+    const last200Chars = truncatedTextWithFormatting.substr(truncatedTextWithFormatting.length - 200, 200);
+    const first200CharsOfOriginalDescription = description.substr(0, 200);
+    expect(last200Chars).toEqual(first200CharsOfOriginalDescription);
   });
 
   it('sends an issue template if there is one', async () => {

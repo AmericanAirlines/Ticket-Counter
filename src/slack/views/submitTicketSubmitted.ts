@@ -51,7 +51,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
       description.length > 200
         ? `${description.substr(
             0,
-            Math.max(description.length, 200),
+            Math.min(description.length, 200),
           )}...\n_(Full description can be found on the issue)_`
         : description;
     const text = `*_<${createIssue.issue.url}|Ticket #${createIssue.issue.number} Opened> by <@${body.user.id}>_*
