@@ -8,30 +8,47 @@ on:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Build (Node.js 14.x)
+      - uses: actions/checkout@v2
+      - name: Setup Node.js v14
         uses: actions/setup-node@v1
         with:
           node-version: '14'
-      - uses: actions/checkout@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - name: Restore node_modules
+        uses: actions/cache@v2
+        id: restore-node-modules
+        env:
+          cache-name: node_modules
         with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm run build
-      - run: npm run lint
-      - run: npm run prettier
-
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+      - name: Restore NPM cache
+        uses: actions/cache@v2
+        if: steps.restore-node-modules.outputs.cache-hit != 'true'
+        env:
+          cache-name: yarn-cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
+      - name: Install dependencies
+        if: steps.restore-node-modules.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Lint
+        run: npm run lint
+      - name: Checkstyle Prettier
+        run: npm run prettier
       - name: Publish Artifacts # For use in other jobs in this workflow
         uses: actions/upload-artifact@v2
         with:
           name: dist
           path: dist
-
   deploy:
     name: Deploy to IBM CF
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
