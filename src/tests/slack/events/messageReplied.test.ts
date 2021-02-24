@@ -35,9 +35,6 @@ const mockPermalink = 'chat-permalink';
 const reactionsAddMock = jest.fn();
 const authTestMock = jest.fn(() => ({ user_id: mockAppId }));
 const getPermalinkMock = jest.fn(() => ({ permalink: mockPermalink }));
-// const usersInfoMock = jest.fn(() => ({
-//   user: { profile: { real_name: mockRealName, display_name: mockDisplayName } },
-// }));
 const mockApp = {
   client: {
     reactions: {
@@ -49,9 +46,6 @@ const mockApp = {
     chat: {
       getPermalink: getPermalinkMock,
     },
-    // users: {
-    //   info: usersInfoMock,
-    // },
   },
 };
 
