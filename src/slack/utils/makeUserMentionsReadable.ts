@@ -2,17 +2,17 @@ import { App } from '@slack/bolt';
 import { getExternalUserDisplayText } from './getExternalUserDisplayText';
 import { getUserDetails } from './userCache';
 
-const userMentionRegex = /<@(\w*)>/g;
-
 export async function makeUserMentionsReadable(text: string, app: App): Promise<string> {
+  const userMentionRegex = "<@(\\w*)>";
   let readableString = text;
 
-  let match = userMentionRegex.exec(readableString);
+  let match = RegExp(userMentionRegex, 'g').exec(readableString);
   while (match) {
+    const atMention = match[0];
     const userId = match[1];
     const userText = getExternalUserDisplayText(await getUserDetails(userId, app));
-    readableString = readableString.replace(new RegExp(`<@${userId}>`, 'g'), userText);
-    match = userMentionRegex.exec(readableString);
+    readableString = readableString.split(atMention).join(userText); // Replace all instances
+    match = RegExp(userMentionRegex, 'g').exec(readableString);
   }
   return readableString;
 }
