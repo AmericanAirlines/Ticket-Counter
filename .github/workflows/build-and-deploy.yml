@@ -89,12 +89,12 @@ jobs:
           SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_SUPPORT_CHANNEL: ${{ secrets.SLACK_SUPPORT_CHANNEL }}
-          GITHUB_APP_PRIVATE_KEY: ${{ secrets._GIT_APP_PRIVATE_KEY }}
-          GITHUB_APP_ID: ${{ secrets._GIT_APP_ID }}
-          GITHUB_APP_WEBHOOK_SECRET: ${{ secrets._GIT_APP_WEBHOOK_SECRET }}
-          GITHUB_APP_INSTALLATION_ID: ${{ secrets._GIT_APP_INSTALLATION_ID }}
-          GITHUB_REPO_NAME: ${{ secrets._GIT_REPO_NAME }}
-          GITHUB_REPO_OWNER: ${{ secrets._GIT_REPO_OWNER }}
+          GITHUB_APP_PRIVATE_KEY: ${{ secrets.GIT_APP_PRIVATE_KEY }}
+          GITHUB_APP_ID: ${{ secrets.GIT_APP_ID }}
+          GITHUB_APP_WEBHOOK_SECRET: ${{ secrets.GIT_APP_WEBHOOK_SECRET }}
+          GITHUB_APP_INSTALLATION_ID: ${{ secrets.GIT_APP_INSTALLATION_ID }}
+          GITHUB_REPO_NAME: ${{ secrets.GIT_REPO_NAME }}
+          GITHUB_REPO_OWNER: ${{ secrets.GIT_REPO_OWNER }}
 
       - name: Deploy to IBM Cloud
         run: |
