@@ -49,9 +49,11 @@ export async function getSubmitTicketModalBlocks(): Promise<KnownBlock[]> {
     },
     hint: {
       type: 'plain_text',
-      text: 'A longer description of your ticket. If you are filling out an EMFT request please'
-      + ' provide the relevant information from the EMFT Request Template found in GitHub '
-      + '(https://github.com/AAInternal/tnt-ops-docs/blob/master/data-movement/eMFT/EMFT%20Request%20Templatev2.xlsx)',
+      text:
+        'A longer description of your ticket. If you are filling out an EMFT request please' +
+        ' provide the relevant information from the EMFT Request Template found in GitHub ' +
+        '(https://github.com/AAInternal/tnt-ops-docs/blob/master/data-movement/eMFT/EMFT%20' +
+        'Request%20Templatev2.xlsx)',
     },
     element: {
       action_id: SubmitTicketModalElement.Description,
