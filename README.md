@@ -119,7 +119,7 @@ Before being able to run the app locally, you'll need to create a Slack app and 
 - Using the sidebar, navigate to "_Install App_" and click "Reinstall App"
   - Once finished, copy the `Bot User OAuth Access Token` value and use it to replace the `SLACK_TOKEN` value in your `.env`
 
-Once the above steps are finished, you'll need to connect your Slack app to your app running locally. Follow the steps in the [Starting the App](#starting-the-app) section below. After the app is running, you can use [ngrok] to create a publicly accessible URL. Copy that URL and head back to your app's settings:
+Once the above steps are finished, you'll need to connect your Slack app to your app running locally. Follow the steps in the [Starting the App](#starting-the-app) section below. After the app is running, you can use [ngrok](#ngrok) to create a publicly accessible URL. Copy that URL and head back to your app's settings:
 - Using the sidebar, navigate to "_Interactivity & Shortcuts_" and enable them
   - For the `Request URL` field, use your [ngrok URL] and then append `/slack/events`
   - Under Shortcuts, chose "_Create New Shortcut_", chose "_Global_", and use the following values:
