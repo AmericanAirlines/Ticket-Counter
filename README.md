@@ -47,6 +47,29 @@ When the app is deployed to a cloud environment, the `DATABASE_URL` `.env` var w
 
 ---
 
+### [ngrok]
+
+[ngrok]: https://ngrok.com
+[ngrok URL]: #ngrok
+
+Both GitHub and Slack require that they can call your app for webhooks. To do this in local development a tool like [ngrok] is required to tunnel requests to your local instance.
+
+> :two-exlamation-mark: If you are using the free version of [ngrok] then each time you run it you will be given a different URL. This means you will need to update both GitHub and Slack with your new URL every time.
+
+#### Run this to start your ngrok tunnel
+
+```bash
+ngrok http 3000 # Use whatever port your app is listening on
+```
+
+You will get this output after running. You'll want to use the `Forwarding https` URL on the left side of the arrow.
+
+> Going forward when this documentation says "ngrok URL" it is referring to that URL.
+
+![ngrok output showing the URL](./docs/ngrok-output.png)
+
+---
+
 ### Create a GitHub App
 Before being able to run the app locally, you'll need to create a Slack app and configure it with the appropriate permissions:
 - Go to github.com
@@ -58,8 +81,8 @@ Before being able to run the app locally, you'll need to create a Slack app and 
 - Leave everything default except for the following
   - Enter a name for App Name (this must be unique across all of GitHub)
   - Set `http://localhost:3000` for Homepage URL
-    - This can be any url, it's just for the App Page
-  - Put the same app url from the Slack setup in the `Webhook URL` field, followed by `/github/webhook`
+    - This can be any URL, it's just for the App Page
+  - Put your [ngrok URL] in the `Webhook URL` field, followed by `/github/webhook`
   - Create a secret and put it in `Webhook Secret`
     - You'll also want to put this in your `.env` file for `GITHUB_APP_WEBHOOK_SECRET`
   - Change these settings on `Permissions`
@@ -96,9 +119,9 @@ Before being able to run the app locally, you'll need to create a Slack app and 
 - Using the sidebar, navigate to "_Install App_" and click "Reinstall App"
   - Once finished, copy the `Bot User OAuth Access Token` value and use it to replace the `SLACK_TOKEN` value in your `.env`
 
-Once the above steps are finished, you'll need to connect your Slack app to your app running locally. Follow the steps in the [Starting the App](#starting-the-app) section below. After the app is running, you can use [`ngrok`](https://ngrok.com) to create a publicly accessible URL. Copy that URL and head back to your app's settings:
+Once the above steps are finished, you'll need to connect your Slack app to your app running locally. Follow the steps in the [Starting the App](#starting-the-app) section below. After the app is running, you can use [ngrok] to create a publicly accessible URL. Copy that URL and head back to your app's settings:
 - Using the sidebar, navigate to "_Interactivity & Shortcuts_" and enable them
-  - For the `Request URL` field, use your app's URL and then append `/slack/events`
+  - For the `Request URL` field, use your [ngrok URL] and then append `/slack/events`
   - Under Shortcuts, chose "_Create New Shortcut_", chose "_Global_", and use the following values:
     - Name: `New support ticket`
     - Short Description: `Opens a support ticket and posts details in Slack`
