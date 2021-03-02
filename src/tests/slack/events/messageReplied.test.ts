@@ -7,9 +7,9 @@ const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 jest.spyOn(logger, 'debug').mockImplementation();
 jest.mock('../../../env');
 
-const postMessageMock = jest.fn();
-jest.mock('../../../github/utils/postMessage.ts', () => ({
-  postMessage: postMessageMock,
+const commentOnIssueMock = jest.fn();
+jest.mock('../../../github/utils/commentOnIssue.ts', () => ({
+  commentOnIssue: commentOnIssueMock,
 }));
 
 const makeUserMentionsReadableMock = jest.fn((text) => text);
@@ -100,7 +100,7 @@ describe('messageReplied event listener', () => {
     expect(authTestMock).toBeCalled();
     expect(reactionsAddMock).toBeCalled();
     expect(getUserDetailsMock).toBeCalled();
-    expect(postMessageMock).toBeCalledTimes(1);
+    expect(commentOnIssueMock).toBeCalledTimes(1);
     const { timestamp, channel, name } = reactionsAddMock.mock.calls[0][0];
     expect(timestamp).toEqual(mockTs);
     expect(channel).toEqual(mockChannel);
@@ -147,8 +147,8 @@ describe('messageReplied event listener', () => {
     const mockMessageEvent = getMockMessageEvent(mockAppId, undefined, mockTs, mockChannel);
     await messageRepliedHandler(mockMessageEvent);
 
-    expect(postMessageMock).toBeCalledTimes(1);
-    const { message } = postMessageMock.mock.calls[0][1];
+    expect(commentOnIssueMock).toBeCalledTimes(1);
+    const { message } = commentOnIssueMock.mock.calls[0][1];
     expect(message).toEqual('Could not load message, please see this ticket in Slack');
   });
 
@@ -163,8 +163,8 @@ describe('messageReplied event listener', () => {
     );
     await messageRepliedHandler(mockMessageEvent);
 
-    expect(postMessageMock).toBeCalledTimes(1);
-    const { message } = postMessageMock.mock.calls[0][1];
+    expect(commentOnIssueMock).toBeCalledTimes(1);
+    const { message } = commentOnIssueMock.mock.calls[0][1];
     expect(message).toContain('Message contains file(s), see Slack to view them');
   });
 
@@ -173,7 +173,7 @@ describe('messageReplied event listener', () => {
     ticketFindOneMock.mockResolvedValueOnce(undefined);
     await messageRepliedHandler(mockMessageEvent);
 
-    expect(postMessageMock).not.toBeCalled();
+    expect(commentOnIssueMock).not.toBeCalled();
     expect(loggerInfoSpy).toBeCalled();
   });
 });

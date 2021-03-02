@@ -10,7 +10,7 @@ const createBody = (args: PostMessageArgs) => `${args.message}
 
 > From ${args.name || 'someone'}${args.platformText ?? ''}`;
 
-export const postMessage = async (issueId: string, args: PostMessageArgs) => {
+export const commentOnIssue = async (issueId: string, args: PostMessageArgs) => {
   await githubGraphql(
     `mutation newIssue($input: AddCommentInput!) {
       addComment(input: $input) {
