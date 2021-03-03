@@ -18,7 +18,21 @@ Getting tech support should be easy
 
 ---
 ## Local Development
-Before getting started, make sure to install [Node (LTS)](https://nodejs.org/en/download/) (v14.0+) and run `npm i` to install all necessary dependencies.
+Before getting started, make sure to set up the prerequisites.
+1. Install [Node (LTS)](https://nodejs.org/en/download/) (v14.0+).
+1. Authenticate npm to packages.aa.com to install dependencies
+
+   1. Login to [American Airlines Artifactory instance - https://packages.aa.com](https://packages.aa.com)
+   1. Click `Welcome, <AA ID>` > `Edit Profile` > Generate API Key if you haven't done already
+   1. From `Ticket-Counter` project root directory, run `npm login`
+
+   ```
+   $ npm login
+   Username: <8 digit AA ID> (e.g. 00600348)
+   Password: <API_KEY>
+   Email: <your email>
+   ```
+1. Run `npm i` to install all necessary dependencies
 
 ---
 ### Environment Variables
