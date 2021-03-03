@@ -8,7 +8,7 @@ import { fetchUser } from '../utils/fetchUser';
 
 export const issueAssignmentChanged = (webhooks: Webhooks) => {
   webhooks.on(['issues.assigned', 'issues.unassigned'], async (event) => {
-    logger.info(`Received an issue ${event.payload.action} event`);
+    logger.debug(`Received an issue ${event.payload.action} event`);
 
     const supportMembers = (event.payload.issue.assignees ?? []).map((user) => user.login);
 

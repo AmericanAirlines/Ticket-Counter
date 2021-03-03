@@ -11,7 +11,9 @@ jest.mock('../../../env.ts', () => {
     },
   };
 });
+
 jest.spyOn(logger, 'error').mockImplementation();
+jest.spyOn(logger, 'debug').mockImplementation();
 
 const githubGraphqlMock = jest.fn().mockResolvedValue({
   repository: {},
