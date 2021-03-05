@@ -44,6 +44,7 @@ const autoFetchTemplates = async () => {
 
     setTimeout(() => autoFetchTemplates(), 60000);
   } catch (err) {
+    /* istanbul ignore next */
     if (env.nodeEnv !== 'test') {
       logger.error('Unable to fetch new templates, waiting 30 minutes before trying again', err);
     }

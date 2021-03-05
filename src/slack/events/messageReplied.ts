@@ -2,7 +2,7 @@ import { App, SlackEventMiddlewareArgs } from '@slack/bolt';
 import { GenericMessageEvent } from '@slack/bolt/dist/types/events/message-events';
 import { Platform, Ticket } from '../../entities/Ticket';
 import { env } from '../../env';
-import { postMessage } from '../../github/utils/postMessage';
+import { commentOnIssue } from '../../github/utils/commentOnIssue';
 import logger from '../../logger';
 import { AppMiddlewareFunction } from '../types';
 import { getExternalUserDisplayText } from '../utils/getExternalUserDisplayText';
@@ -65,7 +65,7 @@ export const messageReplied: AppMiddlewareFunction<SlackEventMiddlewareArgs<'mes
     }
 
     const nameText = getExternalUserDisplayText(user);
-    await postMessage(ticket.issueId!, {
+    await commentOnIssue(ticket.issueId!, {
       name: nameText,
       message: messageText || 'Could not load message, please see this ticket in Slack',
       platformText: getViewInSlackLink(permalink),

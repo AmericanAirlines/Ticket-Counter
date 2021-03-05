@@ -28,7 +28,7 @@ export async function updatePostReactions(status: Status, threadTs: string, isRe
   }
 }
 
-async function updateReactions(threadTs: string, { remove, add }: { remove?: Emoji[]; add: Emoji[] }) {
+async function updateReactions(threadTs: string, { remove, add }: { remove: Emoji[]; add: Emoji[] }) {
   const mapper = (action: 'remove' | 'add') => async (name: Emoji) => {
     try {
       await app.client.reactions[action]({
@@ -44,6 +44,6 @@ async function updateReactions(threadTs: string, { remove, add }: { remove?: Emo
     }
   };
 
-  await Promise.all(remove?.map(mapper('remove')) ?? []);
-  await Promise.all(add.map(mapper('add')) ?? []);
+  await Promise.all(remove.map(mapper('remove')));
+  await Promise.all(add.map(mapper('add')));
 }
