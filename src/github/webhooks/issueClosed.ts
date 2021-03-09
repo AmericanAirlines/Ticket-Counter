@@ -18,17 +18,23 @@ export const issueClosed = (webhooks: Webhooks) => {
 
     const ticket = await Ticket.findOneOrFail(event.payload.issue.node_id);
 
-    if (ticket.platformPostId) {
-      await new Promise((r) => setTimeout(r, 300));
-      await app.client.chat
-        .postMessage({
-          token: env.slackBotToken,
-          channel: env.slackSupportChannel,
-          text: `:${Emoji.Closed}: ${user?.name ?? user?.login ?? 'Someone'} closed this ticket`,
-          thread_ts: ticket.platformPostId,
-        })
-        .catch(() => {});
-      await updatePostReactions(ticket.status, ticket.platformPostId);
+    if (!ticket.platformPostId) {
+      return;
     }
+
+    await new Promise((r) => setTimeout(r, 300));
+
+    await app.client.chat
+      .postMessage({
+        token: env.slackBotToken,
+        channel: env.slackSupportChannel,
+        text: `:${Emoji.Closed}: ${user?.name ?? user?.login ?? 'Someone'} closed this ticket`,
+        thread_ts: ticket.platformPostId,
+      })
+      .catch((err: Error) => {
+        logger.error('Could not post message to Slack', err);
+      });
+
+    await updatePostReactions(ticket.status, ticket.platformPostId);
   });
 };
