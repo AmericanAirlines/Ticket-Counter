@@ -29,7 +29,9 @@ export const issueCommentedOn = (webhooks: Webhooks) => {
           text: `${event.payload.comment.body}\n\n> From ${messageUserName} - <${event.payload.comment.html_url}|View in GitHub>`,
           thread_ts: ticket.platformPostId,
         })
-        .catch(() => {});
+        .catch((err: Error) => {
+          logger.error('Could not post message to Slack', err);
+        });
     }
   });
 };
