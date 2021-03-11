@@ -54,7 +54,7 @@ When the app is deployed to a cloud environment, the `DATABASE_URL` `.env` var w
 
 Both GitHub and Slack require that they can call your app for webhooks. To do this in local development a tool like [ngrok] is required to tunnel requests to your local instance.
 
-> :two-exlamation-mark: If you are using the free version of [ngrok] then each time you run it you will be given a different URL. This means you will need to update both GitHub and Slack with your new URL every time.
+> ❗ If you are using the free version of [ngrok] then each time you run it you will be given a different URL. This means you will need to update both GitHub and Slack with your new URL every time.
 
 #### Run this to start your ngrok tunnel
 
