@@ -1,5 +1,6 @@
-import { KnownBlock, InputBlock, Option, SectionBlock } from '@slack/types';
+import { KnownBlock, InputBlock, Option, SectionBlock, HeaderBlock } from '@slack/types';
 import { getIssueTemplates } from '../../github/utils/fetchIssueTemplates';
+import { getAnnouncement } from '../../github/utils/fetchAnnouncement';
 
 export enum SubmitTicketModalElement {
   Title = 'title',
@@ -9,14 +10,19 @@ export enum SubmitTicketModalElement {
 }
 
 export async function getSubmitTicketModalBlocks(): Promise<KnownBlock[]> {
-  const templates = await getIssueTemplates();
+  const templatesCall = getIssueTemplates();
+  const announcementCall = getAnnouncement();
+  const templates = await templatesCall;
+  let announcement = await announcementCall;
 
   const noTemplates = templates.length === 0;
   if (noTemplates) {
     templates.unshift({ name: 'Generic', about: '', title: '', body: '' });
   }
 
-  const options: Option[] = templates.map((template) => ({
+  announcement = announcement.trim();
+
+  const ticketOptions: Option[] = templates.map((template) => ({
     text: {
       type: 'plain_text',
       text: template.name,
@@ -58,6 +64,7 @@ export async function getSubmitTicketModalBlocks(): Promise<KnownBlock[]> {
       max_length: 500,
     },
   };
+
   const descriptionInfoBlock: SectionBlock = {
     type: 'section',
     text: {
@@ -81,8 +88,8 @@ export async function getSubmitTicketModalBlocks(): Promise<KnownBlock[]> {
     element: {
       action_id: SubmitTicketModalElement.Type,
       type: 'static_select',
-      options,
-      initial_option: options[0],
+      options: ticketOptions,
+      initial_option: ticketOptions[0],
     },
   };
 
@@ -103,5 +110,23 @@ export async function getSubmitTicketModalBlocks(): Promise<KnownBlock[]> {
     },
   };
 
-  return [ticketTitleBlock, descriptionBlock, descriptionInfoBlock, ticketType, stakeholders];
+  const modal: KnownBlock[] = [ticketTitleBlock, descriptionBlock, descriptionInfoBlock, ticketType, stakeholders];
+  if (announcement !== '') {
+    modal.unshift({
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: announcement,
+      },
+    } as SectionBlock);
+    modal.unshift({
+      type: 'header',
+      text: {
+        type: 'plain_text',
+        text: 'Announcement!',
+      },
+    } as HeaderBlock);
+  }
+
+  return modal;
 }

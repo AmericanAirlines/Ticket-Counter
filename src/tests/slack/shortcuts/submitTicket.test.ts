@@ -7,6 +7,9 @@ jest.mock('../../../env.ts');
 jest.mock('../../../github/utils/fetchIssueTemplates.ts', () => ({
   getIssueTemplates: jest.fn().mockReturnValue([]),
 }));
+jest.mock('../../../github/utils/fetchAnnouncement.ts', () => ({
+  getAnnouncement: jest.fn().mockReturnValue(''),
+}));
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 const viewsOpenMock = jest.fn();
