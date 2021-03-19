@@ -65,6 +65,15 @@ export async function getSubmitTicketModalBlocks(): Promise<KnownBlock[]> {
     },
   };
 
+  const supportedProductsInfoBlock: SectionBlock = {
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text:
+        'Please continue to use <https://technologyservices.aa.com/|Cherwell> for FAR, AD, GPO, and Security requests. View <https://wiki.aa.com/bin/view/TnT%20Technology%20and%20Platform%20Support/|TnT products> for more info on what is supported with this request form.',
+    },
+  };
+
   const descriptionInfoBlock: SectionBlock = {
     type: 'section',
     text: {
@@ -110,7 +119,14 @@ export async function getSubmitTicketModalBlocks(): Promise<KnownBlock[]> {
     },
   };
 
-  const modal: KnownBlock[] = [ticketTitleBlock, descriptionBlock, descriptionInfoBlock, ticketType, stakeholders];
+  const modal: KnownBlock[] = [
+    ticketTitleBlock,
+    descriptionBlock,
+    supportedProductsInfoBlock,
+    descriptionInfoBlock,
+    ticketType,
+    stakeholders,
+  ];
   if (announcement !== '') {
     modal.unshift({
       type: 'section',
