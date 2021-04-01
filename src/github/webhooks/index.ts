@@ -5,6 +5,7 @@ import { issueAssignmentChanged } from './issueAssignmentChanged';
 import { issueClosed } from './issueClosed';
 import { issueCommentedOn } from './issueCommentedOn';
 import { issueReopened } from './issueReopened';
+import { issueTransferred } from './issueTransferred';
 
 export const webhooks = new Webhooks({
   secret: env.githubAppWebhookSecret,
@@ -18,5 +19,6 @@ issueAssignmentChanged(webhooks);
 issueClosed(webhooks);
 issueReopened(webhooks);
 issueCommentedOn(webhooks);
+issueTransferred(webhooks);
 
 export const githubWebhooks = webhooks.middleware;

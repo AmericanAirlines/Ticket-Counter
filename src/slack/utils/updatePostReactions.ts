@@ -7,6 +7,7 @@ export enum Emoji {
   InProgress = 'technologist',
   Closed = 'white_check_mark',
   Reopened = 'leftwards_arrow_with_hook',
+  Transferred = 'truck'
 }
 
 export async function updatePostReactions(status: Status, threadTs: string, isReopened = false) {
