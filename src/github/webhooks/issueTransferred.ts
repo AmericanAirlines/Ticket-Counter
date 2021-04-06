@@ -23,14 +23,17 @@ export const issueTransferred = (webhooks: Webhooks) => {
     const newId = payload.changes.new_issue.node_id;
     const newUrl = payload.changes.new_issue.html_url;
 
-    const ticket = await Ticket.findOne({ where: { issueId: oldId } });
+    const { affected } = await Ticket.update({
+      issueId: oldId
+    }, {
+      issueId: newId
+    });
 
-    if (!ticket) {
+    const ticket = await Ticket.findOne(newId);
+
+    if (!ticket || (affected ?? 0) === 0) {
       return;
     }
-
-    ticket.issueId = newId;
-    await ticket.save();
 
     const eventUser = payload.sender?.name ?? payload.sender?.login ?? 'Someone';
 
