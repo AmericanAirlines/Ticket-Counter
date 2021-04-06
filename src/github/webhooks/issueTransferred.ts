@@ -12,8 +12,8 @@ export const issueTransferred = (webhooks: Webhooks) => {
     type IssueTransferredEventWithChanges = typeof event.payload & {
       changes: {
         new_issue: typeof event.payload.issue;
-      }
-    }
+      };
+    };
 
     const payload: IssueTransferredEventWithChanges = event.payload as IssueTransferredEventWithChanges;
 
@@ -21,11 +21,14 @@ export const issueTransferred = (webhooks: Webhooks) => {
     const newId = payload.changes.new_issue.node_id;
     const newUrl = payload.changes.new_issue.html_url;
 
-    const { affected } = await Ticket.update({
-      issueId: oldId
-    }, {
-      issueId: newId
-    });
+    const { affected } = await Ticket.update(
+      {
+        issueId: oldId,
+      },
+      {
+        issueId: newId,
+      },
+    );
 
     const ticket = await Ticket.findOne(newId);
 
