@@ -1,11 +1,9 @@
 import { Webhooks } from '@octokit/webhooks';
 import { app } from '../../app';
-import { Status, Ticket } from '../../entities/Ticket';
+import { Ticket } from '../../entities/Ticket';
 import { env } from '../../env';
 import logger from '../../logger';
-import { Emoji, updatePostReactions } from '../../slack/utils/updatePostReactions';
-import { fetchUser } from '../utils/fetchUser';
-
+import { Emoji } from '../../slack/utils/updatePostReactions';
 
 export const issueTransferred = (webhooks: Webhooks) => {
   webhooks.on('issues.transferred', async (event) => {
