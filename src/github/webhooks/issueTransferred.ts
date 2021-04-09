@@ -18,8 +18,7 @@ export const issueTransferred = (webhooks: Webhooks) => {
     const payload: IssueTransferredEventWithChanges = event.payload as IssueTransferredEventWithChanges;
 
     const oldId = payload.issue.node_id;
-    const newId = payload.changes.new_issue.node_id;
-    const newUrl = payload.changes.new_issue.html_url;
+    const { node_id: newId, html_url: newUrl } = payload.changes.new_issue;
 
     const { affected } = await Ticket.update(
       {
