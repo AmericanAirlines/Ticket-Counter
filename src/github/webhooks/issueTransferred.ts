@@ -42,7 +42,7 @@ export const issueTransferred = (webhooks: Webhooks) => {
         .postMessage({
           token: env.slackBotToken,
           channel: env.slackSupportChannel,
-          text: `:${Emoji.Transferred}: ${eventUser} transferred this issue to ${newUrl}`,
+          text: `:${Emoji.Transferred}: ${eventUser} transferred this issue to ${newUrl}. The ticket will be considered for prioritization during the product's next iteration planning.`,
           thread_ts: ticket.platformPostId,
         })
         .catch(() => {});
