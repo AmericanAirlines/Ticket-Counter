@@ -79,7 +79,7 @@ export async function getSubmitTicketModalBlocks(): Promise<KnownBlock[]> {
     text: {
       type: 'mrkdwn',
       text:
-        'If you are filling out an EMFT request, please provide the relevant information from the <https://github.com/AAInternal/tnt-ops-docs/raw/master/data-movement/eMFT/EMFT%20Request%20Template.xlsx|the EMFT Request Template found in GitHub>.',
+        'If you are filling out an EMFT request, please provide the relevant information from the <https://cepdocs.drke.ok8s.aa.com/triage/media/EMFT%20Request%20Template.xlsx|the EMFT Request Template (requires VPN)>.',
     },
   };
 
