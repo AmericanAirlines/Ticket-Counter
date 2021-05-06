@@ -18,6 +18,6 @@ export const isMessageReply: AppMiddlewareFunction<SlackEventMiddlewareArgs<'mes
   next,
 }) => {
   if ((message as GenericMessageEvent).thread_ts) {
-    next?.();
+    await next?.();
   }
 };

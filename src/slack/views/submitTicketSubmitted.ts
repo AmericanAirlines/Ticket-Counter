@@ -64,7 +64,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
       text,
     })) as any;
 
-    ack();
+    void ack();
 
     await app.client.views.open({
       view: {
@@ -120,7 +120,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
 
     logger.info(`Ticket opened by ${body.user.name}/${body.user.id}: ${description}`);
   } catch (error) {
-    ack();
+    void ack();
     const { trigger_id: triggerId } = (body as unknown) as { [id: string]: string };
     logger.error('Something went wrong trying to create a ticket: ', error);
     try {
