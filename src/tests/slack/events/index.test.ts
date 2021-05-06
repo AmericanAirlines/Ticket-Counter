@@ -18,6 +18,6 @@ describe('slack events registration', () => {
   });
 
   it('will', async () => {
-    expect(isMessageReply({} as any)({ message: { thread_ts: '123' } as any } as any)).resolves.not.toThrow();
+    await expect(isMessageReply({} as any)({ message: { thread_ts: '123' } as any } as any)).resolves.not.toThrow();
   });
 });

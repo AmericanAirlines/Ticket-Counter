@@ -35,7 +35,7 @@ describe('github fetch repo util', () => {
   });
 
   it('will call graphql mutation without platform text and not error', async () => {
-    expect(commentOnIssue(issueId, { name, message })).resolves.not.toThrow();
+    await expect(commentOnIssue(issueId, { name, message })).resolves.not.toThrow();
   });
 
   it('will default name', async () => {
