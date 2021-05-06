@@ -9,7 +9,7 @@ export const submitTicket: AppMiddlewareFunction<SlackShortcutMiddlewareArgs<Sla
   shortcut,
   ack,
 }) => {
-  ack();
+  void ack();
   try {
     await app.client.views.open({
       token: env.slackBotToken,

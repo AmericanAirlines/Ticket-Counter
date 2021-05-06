@@ -54,7 +54,7 @@ const autoFetchTemplates = async () => {
 
 if (env.nodeEnv !== 'test') {
   // Start auto fetching
-  autoFetchTemplates();
+  void autoFetchTemplates();
 }
 
 export const getIssueTemplates = async (): Promise<GitHubRepo['issueTemplates']> => {

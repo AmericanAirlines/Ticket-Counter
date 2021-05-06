@@ -18,6 +18,8 @@ module.exports = {
   },
   ignorePatterns: ['node_modules', '**/*.js'],
   rules: {
+    '@typescript-eslint/no-floating-promises': ['error'],
+    'no-void': ['error', { allowAsStatement: true }],
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.ts'] }],
     'import/prefer-default-export': ['off'],
     'object-curly-newline': ['off'],
