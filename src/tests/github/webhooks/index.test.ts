@@ -22,6 +22,7 @@ jest.mock('../../../github/webhooks/issueAssignmentChanged', () => ({ issueAssig
 jest.mock('../../../github/webhooks/issueClosed', () => ({ issueClosed: jest.fn() }));
 jest.mock('../../../github/webhooks/issueCommentedOn', () => ({ issueCommentedOn: jest.fn() }));
 jest.mock('../../../github/webhooks/issueReopened', () => ({ issueReopened: jest.fn() }));
+jest.mock('../../../github/webhooks/issueTransferred', () => ({ issueTransferred: jest.fn() }));
 
 describe('GitHub Webhooks', () => {
   beforeEach(() => {

@@ -7,7 +7,7 @@ import { Emoji, updatePostReactions } from '../../slack/utils/updatePostReaction
 import { fetchUser } from '../utils/fetchUser';
 
 export const issueReopened = (webhooks: Webhooks) => {
-  webhooks.on('issues.reopened', async (event) => {
+  webhooks.on(['issues.reopened', 'issues.transferred'], async (event) => {
     logger.info(`Received an issue reopened event`);
 
     const supportMembers = (event.payload.issue.assignees ?? []).map((user) => user.login);

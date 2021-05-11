@@ -47,7 +47,7 @@ jest.mock('../../../env.ts', () => ({
   },
 }));
 
-describe('issue closed webhook handler', () => {
+describe('issue commented on webhook handler', () => {
   issueCommentedOn(mockWebhooks as any);
   const [events, issueCommentedOnHandler] = mockWebhookOnAddListener.mock.calls[0];
 
