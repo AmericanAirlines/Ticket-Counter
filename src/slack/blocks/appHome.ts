@@ -5,7 +5,7 @@ import { githubGraphql } from '../../github/graphql';
 import { headerBlock } from '../common/blocks/commonBlocks';
 import { issueBlocks } from './issueBlocks';
 import { noIssuesBlock } from './noIssuesOpen';
-import { dividerBlock, dividerBlockWithPadding } from '../common/blocks/dividerBlock';
+import { dividerBlockWithPadding } from '../common/blocks/dividerBlock';
 
 export interface GithubIssueInfo {
   id: string;

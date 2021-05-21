@@ -46,7 +46,7 @@ const autoFetchAnnouncement = async () => {
 
 if (env.nodeEnv !== 'test') {
   // Start auto fetching
-  autoFetchAnnouncement();
+  void autoFetchAnnouncement();
 }
 
 export const getAnnouncement = async (): Promise<string> => {
