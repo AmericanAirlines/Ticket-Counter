@@ -1,6 +1,7 @@
 // ACTION IDS
 export const actionIds = {
   ignore: 'ignore',
+  resetAppHome: 'resetAppHome',
 };
 
 // CALLBACK IDS
