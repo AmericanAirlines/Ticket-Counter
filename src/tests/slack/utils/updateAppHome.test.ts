@@ -30,7 +30,7 @@ describe('update app home util', () => {
         type: 'home',
         callback_id: actionIds.ignore,
         title: {
-          text: 'GitHub Discussions',
+          text: 'Ticket Counter',
         },
       },
     });

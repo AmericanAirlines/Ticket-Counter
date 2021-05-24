@@ -1,6 +1,6 @@
 import { KnownBlock } from '@slack/types';
 
-export const noIssuesBlock = (): KnownBlock => ({
+export const noIssuesBlock: KnownBlock = {
   type: 'section',
   fields: [
     {
@@ -8,4 +8,4 @@ export const noIssuesBlock = (): KnownBlock => ({
       text: 'You currently have no tickets opened at this time. 😊',
     },
   ],
-});
+};

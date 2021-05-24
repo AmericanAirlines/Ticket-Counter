@@ -4,7 +4,7 @@ import { GithubIssueInfo } from './appHome';
 import { Ticket } from '../../entities/Ticket';
 import { actionIds } from '../constants';
 import { env } from '../../env';
-import { dividerBlockWithPadding } from '../common/blocks/dividerBlock';
+import { dividerBlockWithPadding } from '../common/blocks/commonBlocks';
 
 const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] => {
   const issueText = `*Issue Number:*  ${ticket.number}\n*Opened At:*  ${ticket.createdAt}\n*Last Updated:*  ${ticket.updatedAt}\n*State:* ${ticket.state}`;

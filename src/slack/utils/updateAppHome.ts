@@ -11,7 +11,7 @@ export const updateAppHome = async (client: WebClient, userId: string, blocks?: 
       callback_id: actionIds.ignore,
       title: {
         type: 'plain_text',
-        text: 'GitHub Discussions',
+        text: 'Ticket Counter',
       },
       blocks: blocks ?? (await appHomeBlocks(userId, client)),
     },

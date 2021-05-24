@@ -6,9 +6,7 @@ describe('Common blocks used across slack', () => {
   });
 
   it('correctly forms a section block', async () => {
-    const blocks = noIssuesBlock();
-
-    expect(blocks).toEqual(
+    expect(noIssuesBlock).toEqual(
       expect.objectContaining({
         fields: expect.arrayContaining([
           expect.objectContaining({

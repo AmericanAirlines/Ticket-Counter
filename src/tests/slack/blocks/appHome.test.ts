@@ -5,7 +5,6 @@ import { githubGraphql } from '../../../github/graphql';
 import { appHomeBlocks } from '../../../slack/blocks/appHome';
 import { issueBlocks } from '../../../slack/blocks/issueBlocks';
 import { getMock } from '../../test-utils/getMock';
-import { noIssuesBlock } from '../../../slack/blocks/noIssuesOpen';
 
 jest.mock('../../../github/graphql.ts', () => ({
   githubGraphql: jest.fn(),
@@ -22,7 +21,7 @@ jest.mock('../../../slack/blocks/issueBlocks.ts', () => ({
 }));
 
 jest.mock('../../../slack/blocks/noIssuesOpen.ts', () => ({
-  noIssuesBlock: jest.fn().mockResolvedValue({}),
+  noIssuesBlock: jest.fn().mockReturnValue({}),
 }));
 
 const mockSlackId = 'SLACK_ID';
@@ -74,6 +73,6 @@ describe('appHome blocks', () => {
     getMock(githubGraphql).mockResolvedValueOnce({ nodes: [] });
     getMock(Ticket.find).mockResolvedValueOnce([]);
     await appHomeBlocks(mockSlackId, mockClient);
-    expect(noIssuesBlock).toBeCalledTimes(1);
+    expect(issueBlocks).toBeCalledTimes(0);
   });
 });
