@@ -1,4 +1,4 @@
-import { KnownBlock , DividerBlock, HeaderBlock } from '@slack/types';
+import { KnownBlock, DividerBlock, HeaderBlock } from '@slack/types';
 
 export const headerBlock = (text: string, emoji: boolean): KnownBlock => ({
   type: 'header',
