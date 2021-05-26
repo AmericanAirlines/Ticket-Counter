@@ -5,7 +5,7 @@ export const noIssuesBlock: SectionBlock = {
   fields: [
     {
       type: 'mrkdwn',
-      text: 'You currently have no tickets opened at this time. 😊',
+      text: 'You have no open tickets :tada:',
     },
   ],
 };
