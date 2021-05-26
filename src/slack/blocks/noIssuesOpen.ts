@@ -1,6 +1,6 @@
-import { KnownBlock } from '@slack/types';
+import { SectionBlock } from '@slack/types';
 
-export const noIssuesBlock: KnownBlock = {
+export const noIssuesBlock: SectionBlock = {
   type: 'section',
   fields: [
     {
