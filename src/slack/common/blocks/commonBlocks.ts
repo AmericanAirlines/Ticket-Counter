@@ -9,7 +9,7 @@ export const headerBlock = (text: string, emoji: boolean): HeaderBlock => ({
   },
 });
 
-export const sectionBlock = (text: string): KnownBlock => ({
+export const sectionBlock = (text: string): SectionBlock => ({
   type: 'section',
   text: {
     type: 'mrkdwn',
