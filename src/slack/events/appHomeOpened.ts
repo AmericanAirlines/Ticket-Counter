@@ -6,6 +6,6 @@ export const appHomeOpened: Middleware<SlackEventMiddlewareArgs<'app_home_opened
   try {
     await updateAppHome(client, event.user);
   } catch (error) {
-    logger.error('Something went wrong publishing a view to Slack: ', error);
+    logger.error('Something went wrong updating app home: ', error);
   }
 };
