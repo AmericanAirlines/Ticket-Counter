@@ -3,25 +3,16 @@ import { WebClient } from '@slack/web-api';
 import { Ticket } from '../../entities/Ticket';
 import { githubGraphql } from '../../github/graphql';
 import { dividerBlockWithPadding, headerBlock } from '../common/blocks/commonBlocks';
+import { problemLoadingIssuesBlock } from '../common/blocks/errors/corruptIssueError';
+import { GithubIssueInfo } from '../common/blocks/types/githubIssueInfo';
 import { issueBlocks } from './issueBlocks';
 import { noIssuesBlock } from './noIssuesOpen';
 
-export interface GithubIssueInfo {
-  id: string;
-  url: string;
-  body: string;
-  createdAt: string;
-  number: string;
-  state: string;
-  title: string;
-  updatedAt: string;
-}
-
 export const appHomeBlocks = async (slackId: string, client: WebClient): Promise<KnownBlock[]> => {
-  const blocks: KnownBlock[] = [];
+  const homeBlocks: KnownBlock[] = [];
   const tickets = await Ticket.find({ where: { authorId: slackId } });
   const issueIds = tickets.map((ticket) => ticket.issueId);
-  blocks.push(headerBlock('Open Tickets :ticket:', true));
+  homeBlocks.push(headerBlock('Open Tickets :ticket:', true));
 
   if (issueIds.length > 0) {
     const issues: { nodes: (GithubIssueInfo | null)[] } = await githubGraphql(
@@ -42,9 +33,14 @@ export const appHomeBlocks = async (slackId: string, client: WebClient): Promise
       { issueIds },
     );
     const issueInfo = issues.nodes.filter((issue) => issue !== null) as GithubIssueInfo[];
-    blocks.push(...(await issueBlocks(issueInfo, tickets, client)));
+    const blocks = await issueBlocks(issueInfo, tickets, client);
+    if (blocks) {
+      homeBlocks.push(...blocks);
+    } else {
+      homeBlocks.push(problemLoadingIssuesBlock());
+    }
   } else {
-    blocks.push(...dividerBlockWithPadding, noIssuesBlock);
+    homeBlocks.push(...dividerBlockWithPadding, noIssuesBlock);
   }
-  return blocks;
+  return homeBlocks;
 };

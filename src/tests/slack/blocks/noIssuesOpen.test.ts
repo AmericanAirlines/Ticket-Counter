@@ -10,7 +10,7 @@ describe('Common blocks used across slack', () => {
       expect.objectContaining({
         fields: expect.arrayContaining([
           expect.objectContaining({
-            text: expect.stringContaining('You currently have no tickets opened at this time. 😊'),
+            text: expect.stringContaining('You have no open tickets :tada:'),
           }),
         ]),
       }),

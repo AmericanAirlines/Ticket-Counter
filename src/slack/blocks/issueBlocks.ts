@@ -1,10 +1,11 @@
 import { KnownBlock } from '@slack/types';
 import { WebClient } from '@slack/web-api';
-import { GithubIssueInfo } from './appHome';
 import { Ticket } from '../../entities/Ticket';
 import { actionIds } from '../constants';
 import { env } from '../../env';
 import { dividerBlockWithPadding } from '../common/blocks/commonBlocks';
+import { GithubIssueInfo } from '../common/blocks/types/githubIssueInfo';
+import logger from '../../logger';
 
 const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] => {
   const issueText = `*Issue Number:*  ${ticket.number}\n*Opened At:*  ${ticket.createdAt}\n*Last Updated:*  ${ticket.updatedAt}\n*State:* ${ticket.state}`;
@@ -58,7 +59,7 @@ export const issueBlocks = async (githubIssuesInfo: GithubIssueInfo[], storedTic
       .sort((a, b) => (a.number > b.number ? 1 : -1))
       .filter((issue) => issue.state === 'OPEN')
       .map(async (issue) => {
-        const threadTs = storedTickets.filter((ticket) => ticket.issueId === issue.id)[0].platformPostId;
+        const threadTs = storedTickets.find((ticket) => ticket.issueId === issue.id)?.platformPostId!;
         const thread: { permalink: string } = ((await client.chat.getPermalink({
           channel: env.slackSupportChannel,
           message_ts: threadTs,
@@ -66,4 +67,8 @@ export const issueBlocks = async (githubIssuesInfo: GithubIssueInfo[], storedTic
 
         return issueBlock(issue, thread.permalink);
       }),
-  ).then((arr) => arr.flat());
+  )
+    .then((arr) => arr.flat())
+    .catch((err) => {
+      logger.error(`Something went wrong creating the issue blocks: ${err}`);
+    });

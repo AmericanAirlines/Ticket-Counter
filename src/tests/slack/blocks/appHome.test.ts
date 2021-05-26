@@ -5,6 +5,7 @@ import { githubGraphql } from '../../../github/graphql';
 import { appHomeBlocks } from '../../../slack/blocks/appHome';
 import { issueBlocks } from '../../../slack/blocks/issueBlocks';
 import { getMock } from '../../test-utils/getMock';
+import { problemLoadingIssuesBlock } from '../../../slack/common/blocks/errors/corruptIssueError';
 
 jest.mock('../../../github/graphql.ts', () => ({
   githubGraphql: jest.fn(),
@@ -22,6 +23,10 @@ jest.mock('../../../slack/blocks/issueBlocks.ts', () => ({
 
 jest.mock('../../../slack/blocks/noIssuesOpen.ts', () => ({
   noIssuesBlock: jest.fn().mockReturnValue({}),
+}));
+
+jest.mock('../../../slack/common/blocks/errors/corruptIssueError.ts', () => ({
+  problemLoadingIssuesBlock: jest.fn().mockReturnValue({}),
 }));
 
 const mockSlackId = 'SLACK_ID';
@@ -67,6 +72,14 @@ describe('appHome blocks', () => {
     getMock(Ticket.find).mockResolvedValueOnce(mockTickets);
     await expect(appHomeBlocks(mockSlackId, mockClient)).resolves.not.toThrowError();
     expect(issueBlocks).toBeCalledTimes(1);
+  });
+
+  it('calls the error block if there is a problem loading the issue blocks', async () => {
+    getMock(githubGraphql).mockResolvedValueOnce(mockOpenGithubIssue);
+    getMock(Ticket.find).mockResolvedValueOnce(mockTickets);
+    getMock(issueBlocks).mockResolvedValue(undefined);
+    await expect(appHomeBlocks(mockSlackId, mockClient)).resolves.not.toThrowError();
+    expect(getMock(problemLoadingIssuesBlock)).toBeCalledTimes(1);
   });
 
   it("calls the block generators related to judging and doesn't throw", async () => {
