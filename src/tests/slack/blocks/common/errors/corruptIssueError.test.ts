@@ -1,4 +1,4 @@
-import { problemLoadingIssuesBlock } from "../../../../../slack/common/blocks/errors/corruptIssueError";
+import { problemLoadingIssuesBlock } from '../../../../../slack/common/blocks/errors/corruptIssueError';
 
 describe('corrupt ', () => {
   beforeEach(async () => {
