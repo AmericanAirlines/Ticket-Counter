@@ -21,7 +21,7 @@ const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] =
         {
           type: 'mrkdwn',
           text: `${issueText}\n${
-            description.length > maxTextLength ? `${description.substring(0, maxTextLength)}...` : description
+            description.length > truncatedDescriptionLength ? `${description.substring(0, truncatedDescriptionLength)}...` : description
           }`,
         },
       ],
