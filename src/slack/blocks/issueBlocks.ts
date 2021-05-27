@@ -11,7 +11,8 @@ const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] =
   const issueText = `*Issue Number:*  ${ticket.number}\n*Opened At:*  ${ticket.createdAt}\n*Last Updated:*  ${ticket.updatedAt}\n*State:* ${ticket.state}`;
   const description = `*Description:* ${ticket.body.substring(0, ticket.body.indexOf('\n'))}`;
   const maxSectionBlockFieldTextLength = 2000;
-  const maxTextLength = slackMaxTextLength - issueText.length + 4;
+  // The longest allowable description length including the issue text and a newline character
+  const truncatedDescriptionLength = 300;
   return [
     ...dividerBlockWithPadding,
     {
