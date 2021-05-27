@@ -71,5 +71,6 @@ export const issueBlocks = async (githubIssuesInfo: GithubIssueInfo[], storedTic
   )
     .then((arr) => arr.flat())
     .catch((err) => {
-      logger.error(`Something went wrong creating the issue blocks: ${err}`);
+      logger.error(`Something went wrong getting a permalink for a Slack message: `, err);
+      throw err;
     });
