@@ -1,6 +1,6 @@
 import { KnownBlock } from '@slack/types';
 import { WebClient } from '@slack/web-api';
-import { Ticket } from '../../entities/Ticket';
+import { Ticket, Status } from '../../entities/Ticket';
 import { githubGraphql } from '../../github/graphql';
 import { dividerBlockWithPadding, headerBlock } from '../common/blocks/commonBlocks';
 import { problemLoadingIssuesBlock } from '../common/blocks/errors/corruptIssueError';
