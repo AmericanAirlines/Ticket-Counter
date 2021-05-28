@@ -75,7 +75,7 @@ describe('appHome blocks', () => {
     getMock(Ticket.find).mockResolvedValueOnce(mockTickets);
     getMock(issueBlocks).mockResolvedValue(undefined);
     const blocks = await appHomeBlocks(mockSlackId, mockClient);
-    expect(getMock(problemLoadingIssuesBlock)).toBeCalledTimes(1);
+    expect(blocks).toEqual(expect.arrayContaining(expect.anything(), dividerWithPadding, problemLoadingIssuesBlock));
   });
 
   it("calls the block generators related to judging and doesn't throw", async () => {
