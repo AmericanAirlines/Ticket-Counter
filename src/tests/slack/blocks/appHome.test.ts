@@ -25,10 +25,6 @@ jest.mock('../../../slack/blocks/noIssuesOpen.ts', () => ({
   noIssuesBlock: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock('../../../slack/common/blocks/errors/corruptIssueError.ts', () => ({
-  problemLoadingIssuesBlock: jest.fn().mockReturnValue({}),
-}));
-
 const mockSlackId = 'SLACK_ID';
 const mockClient = ({
   views: {
