@@ -7,9 +7,7 @@ describe('corrupt ', () => {
 
   it('correctly forms a error block', async () => {
     const testWord = 'Whoops, Something went wrong while loading your tickets.';
-    const blocks = problemLoadingIssuesBlock();
-
-    expect(blocks).toEqual(
+    expect(problemLoadingIssuesBlock).toEqual(
       expect.objectContaining({
         text: expect.objectContaining({
           text: expect.stringContaining(testWord),

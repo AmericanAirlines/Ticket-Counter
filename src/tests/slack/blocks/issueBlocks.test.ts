@@ -1,8 +1,6 @@
 import { WebClient } from '@slack/web-api';
 import { Platform, Ticket } from '../../../entities/Ticket';
-import logger from '../../../logger';
 import { issueBlocks } from '../../../slack/blocks/issueBlocks';
-import { getMock } from '../../test-utils/getMock';
 
 const mockPermalink = 'chat-permalink';
 
@@ -11,8 +9,6 @@ const mockClient = ({
     getPermalink: jest.fn().mockResolvedValue({ permalink: mockPermalink }),
   },
 } as unknown) as WebClient;
-
-const errorLoggerSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 const mockOpenGithubIssue = [
   {
@@ -105,12 +101,5 @@ describe('Issue blocks used in app home', () => {
         }),
       ]),
     );
-  });
-
-  it('logs an error when something goes wrong creating the issueBlocks', async () => {
-    getMock(mockClient.chat.getPermalink).mockRejectedValue('I broke something');
-    await issueBlocks(mockOpenGithubIssue, mockTickets, mockClient);
-    expect(errorLoggerSpy).toBeCalledTimes(1);
-    expect(errorLoggerSpy).toBeCalledWith(expect.stringContaining('Something went wrong creating the issue'));
   });
 });

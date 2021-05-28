@@ -7,10 +7,9 @@ import { dividerBlockWithPadding } from '../common/blocks/commonBlocks';
 import { GithubIssueInfo } from '../common/blocks/types/githubIssueInfo';
 import logger from '../../logger';
 
-const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] => {
+export const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] => {
   const issueText = `*Issue Number:*  ${ticket.number}\n*Opened At:*  ${ticket.createdAt}\n*Last Updated:*  ${ticket.updatedAt}\n*State:* ${ticket.state}`;
   const description = `*Description:* ${ticket.body.substring(0, ticket.body.indexOf('\n'))}`;
-  const maxSectionBlockFieldTextLength = 2000;
   // The longest allowable description length including the issue text and a newline character
   const truncatedDescriptionLength = 300;
   return [
@@ -21,7 +20,9 @@ const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] =
         {
           type: 'mrkdwn',
           text: `${issueText}\n${
-            description.length > truncatedDescriptionLength ? `${description.substring(0, truncatedDescriptionLength)}...` : description
+            description.length > truncatedDescriptionLength
+              ? `${description.substring(0, truncatedDescriptionLength)}...`
+              : description
           }`,
         },
       ],

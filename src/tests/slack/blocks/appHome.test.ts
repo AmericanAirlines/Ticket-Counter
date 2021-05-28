@@ -3,9 +3,10 @@ import 'jest';
 import { Platform, Ticket } from '../../../entities/Ticket';
 import { githubGraphql } from '../../../github/graphql';
 import { appHomeBlocks } from '../../../slack/blocks/appHome';
-import { issueBlocks } from '../../../slack/blocks/issueBlocks';
 import { getMock } from '../../test-utils/getMock';
+import { GithubIssueInfo } from '../../../slack/common/blocks/types/githubIssueInfo';
 import { problemLoadingIssuesBlock } from '../../../slack/common/blocks/errors/corruptIssueError';
+import { noIssuesBlock } from '../../../slack/blocks/noIssuesOpen';
 
 jest.mock('../../../github/graphql.ts', () => ({
   githubGraphql: jest.fn(),
@@ -17,33 +18,31 @@ jest.mock('../../../../src/entities/Ticket.ts', () => ({
   },
 }));
 
-jest.mock('../../../slack/blocks/issueBlocks.ts', () => ({
-  issueBlocks: jest.fn().mockResolvedValue([]),
-}));
-
-jest.mock('../../../slack/blocks/noIssuesOpen.ts', () => ({
-  noIssuesBlock: jest.fn().mockReturnValue({}),
-}));
+jest.mock('../../../env.ts');
 
 const mockSlackId = 'SLACK_ID';
 const mockClient = ({
   views: {
     publish: jest.fn(),
   },
+  chat: {
+    getPermalink: jest.fn(() => 'slack://link'),
+  },
 } as unknown) as WebClient;
 
+const mockUrl = 'TEST_URL.com';
 const mockOpenGithubIssue = {
   nodes: [
     {
       id: 'MOCK_ID',
-      url: 'TEST_URL.com',
-      body: 'Test body of issue',
+      url: mockUrl,
+      body: 'Test body of issue\n',
       createdAt: '2021-05-19 16:49:39.609229',
       number: '1',
-      state: 'OPEN',
+      state: 'Open',
       title: 'Mock Open Ticket',
       updatedAt: '2021-05-19 16:49:39.609229',
-    },
+    } as GithubIssueInfo,
   ],
 };
 
@@ -66,22 +65,32 @@ describe('appHome blocks', () => {
   it("calls the block generator related to the standard app home doesn't throw", async () => {
     getMock(githubGraphql).mockResolvedValueOnce(mockOpenGithubIssue);
     getMock(Ticket.find).mockResolvedValueOnce(mockTickets);
-    await expect(appHomeBlocks(mockSlackId, mockClient)).resolves.not.toThrowError();
-    expect(issueBlocks).toBeCalledTimes(1);
+    const blocks = await appHomeBlocks(mockSlackId, mockClient);
+    expect(blocks).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fields: expect.arrayContaining([
+            expect.objectContaining({
+              text: expect.stringContaining('Test body of issue'),
+            }),
+          ]),
+        }),
+      ]),
+    );
   });
 
   it('calls the error block if there is a problem loading the issue blocks', async () => {
     getMock(githubGraphql).mockResolvedValueOnce(mockOpenGithubIssue);
     getMock(Ticket.find).mockResolvedValueOnce(mockTickets);
-    getMock(issueBlocks).mockResolvedValue(undefined);
+    getMock(mockClient.chat.getPermalink).mockRejectedValue('Something broke');
     const blocks = await appHomeBlocks(mockSlackId, mockClient);
-    expect(blocks).toEqual(expect.arrayContaining(expect.anything(), dividerWithPadding, problemLoadingIssuesBlock));
+    expect(blocks).toEqual(expect.arrayContaining([expect.objectContaining(problemLoadingIssuesBlock)]));
   });
 
-  it("calls the block generators related to judging and doesn't throw", async () => {
+  it('generates the no issues available block', async () => {
     getMock(githubGraphql).mockResolvedValueOnce({ nodes: [] });
     getMock(Ticket.find).mockResolvedValueOnce([]);
-    await appHomeBlocks(mockSlackId, mockClient);
-    expect(issueBlocks).toBeCalledTimes(0);
+    const blocks = await appHomeBlocks(mockSlackId, mockClient);
+    expect(blocks).toEqual(expect.arrayContaining([expect.objectContaining(noIssuesBlock)]));
   });
 });
