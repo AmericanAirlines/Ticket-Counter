@@ -13,7 +13,7 @@ export const appHomeBlocks = async (slackId: string, client: WebClient): Promise
   const tickets = await Ticket.find({ where: { authorId: slackId, status: Status.Open} });
   const issueIds = tickets.map((ticket) => ticket.issueId);
   homeBlocks.push(headerBlock('Open Tickets :ticket:', true));
-
+let issueBlocks: KnownBlock[];
   if (issueIds.length > 0) {
     const issues: { nodes: (GithubIssueInfo | null)[] } = await githubGraphql(
       `query RepoInfo($issueIds: [ID!]!) {
