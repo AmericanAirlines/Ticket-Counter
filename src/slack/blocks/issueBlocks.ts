@@ -58,7 +58,6 @@ export const issueBlocks = async (githubIssuesInfo: GithubIssueInfo[], storedTic
   Promise.all(
     githubIssuesInfo
       .sort((a, b) => (a.number > b.number ? 1 : -1))
-      .filter((issue) => issue.state === 'OPEN')
       .map(async (issue) => {
         const threadTs = storedTickets.find((ticket) => ticket.issueId === issue.id)?.platformPostId!;
         const thread: { permalink: string } = ((await client.chat.getPermalink({
