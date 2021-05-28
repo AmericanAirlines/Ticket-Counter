@@ -74,7 +74,7 @@ describe('appHome blocks', () => {
     getMock(githubGraphql).mockResolvedValueOnce(mockOpenGithubIssue);
     getMock(Ticket.find).mockResolvedValueOnce(mockTickets);
     getMock(issueBlocks).mockResolvedValue(undefined);
-    await expect(appHomeBlocks(mockSlackId, mockClient)).resolves.not.toThrowError();
+    const blocks = await appHomeBlocks(mockSlackId, mockClient);
     expect(getMock(problemLoadingIssuesBlock)).toBeCalledTimes(1);
   });
 
