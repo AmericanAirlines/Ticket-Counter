@@ -7,7 +7,7 @@ import { updateAppHome } from '../../../slack/utils/updateAppHome';
 
 jest.mock('../../../env');
 jest.mock('../../../slack/utils/updateAppHome.ts');
-const loggerErrorSpy = jest.spyOn(logger, 'error');
+const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 const mockClient = ({} as unknown) as WebClient;
 const mockUser = {} as any;
