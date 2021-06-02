@@ -33,9 +33,8 @@ export const appHomeBlocks = async (slackId: string, client: WebClient): Promise
       { issueIds },
     );
     const issueInfo = issues.nodes.filter((issue) => issue !== null) as GithubIssueInfo[];
-    let blocks: KnownBlock[];
     try {
-      blocks = await issueBlocks(issueInfo, tickets, client);
+      const blocks = await issueBlocks(issueInfo, tickets, client);
       homeBlocks.push(...blocks);
     } catch (err) {
       logger.error('Something went wrong trying to create issue blocks:', err);
