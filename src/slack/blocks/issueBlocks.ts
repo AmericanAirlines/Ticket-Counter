@@ -7,7 +7,7 @@ import { dividerBlockWithPadding } from '../common/blocks/commonBlocks';
 import { GithubIssueInfo } from '../common/blocks/types/githubIssueInfo';
 import logger from '../../logger';
 
-export const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] => {
+const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] => {
   const issueText = `*Issue Number:*  ${ticket.number}\n*Opened At:*  ${ticket.createdAt}\n*Last Updated:*  ${ticket.updatedAt}\n*State:* ${ticket.state}`;
   const description = `*Description:* ${ticket.body.substring(0, ticket.body.indexOf('\n'))}`;
   const truncatedDescriptionLength = 300;
