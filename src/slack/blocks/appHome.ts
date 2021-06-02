@@ -10,7 +10,7 @@ import logger from '../../logger';
 import { issueBlocks } from './issueBlocks';
 
 export const appHomeBlocks = async (slackId: string, client: WebClient): Promise<KnownBlock[]> => {
-  const homeBlocks: KnownBlock[] = [];
+  const homeBlocks: KnownBlock[] = [headerBlock('Open Tickets :ticket:', true)];
   const tickets = await Ticket.find({ where: { authorId: slackId, status: 'Open' } });
   const issueIds = tickets.map((ticket) => ticket.issueId);
   homeBlocks.push(headerBlock('Open Tickets :ticket:', true));
