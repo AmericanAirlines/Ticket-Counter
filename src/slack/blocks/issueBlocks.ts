@@ -43,7 +43,7 @@ const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] =
           type: 'button',
           text: {
             type: 'plain_text',
-            text: 'Go to Issue :github-neutral:',
+            text: 'Go to Issue,
             emoji: true,
           },
           url: ticket.url,
