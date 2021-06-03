@@ -31,7 +31,7 @@ const mockClient = ({
 } as unknown) as WebClient;
 
 const mockUrl = 'TEST_URL.com';
-const mockOpenGithubIssue = {
+const mockGitHubIssuesPayload = {
   nodes: [
     {
       id: 'MOCK_ID',
@@ -53,7 +53,7 @@ const mockTickets: Ticket[] = [
     authorId: 'AUTHOR_ID',
     authorName: 'TEST_NAME',
     platformPostId: 'SLACK_THREAD_TS',
-    platform: {} as Platform,
+    platform: Platform.Slack,
   } as Ticket,
 ];
 
@@ -62,7 +62,7 @@ describe('appHome blocks', () => {
     jest.clearAllMocks();
   });
 
-  it("calls the block generator related to the standard app home doesn't throw", async () => {
+  it("returns an array of blocks containing fields including issue data", async () => {
     getMock(githubGraphql).mockResolvedValueOnce(mockOpenGithubIssue);
     getMock(Ticket.find).mockResolvedValueOnce(mockTickets);
     const blocks = await appHomeBlocks(mockSlackId, mockClient);
@@ -71,7 +71,7 @@ describe('appHome blocks', () => {
         expect.objectContaining({
           fields: expect.arrayContaining([
             expect.objectContaining({
-              text: expect.stringContaining('Test body of issue'),
+              text: expect.stringContaining(mockIssue.nodes[0].body),
             }),
           ]),
         }),
@@ -79,7 +79,7 @@ describe('appHome blocks', () => {
     );
   });
 
-  it('calls the error block if there is a problem loading the issue blocks', async () => {
+  it('returns a response that includes an error block if there is a problem loading the issue blocks', async () => {
     getMock(githubGraphql).mockResolvedValueOnce(mockOpenGithubIssue);
     getMock(Ticket.find).mockResolvedValueOnce(mockTickets);
     getMock(mockClient.chat.getPermalink).mockRejectedValue('Something broke');
@@ -87,7 +87,7 @@ describe('appHome blocks', () => {
     expect(blocks).toEqual(expect.arrayContaining([expect.objectContaining(problemLoadingIssuesBlock)]));
   });
 
-  it('generates the no issues available block', async () => {
+  it("returns an array of blocks containing the 'no issues' block when no issues are provided", async () => {
     getMock(githubGraphql).mockResolvedValueOnce({ nodes: [] });
     getMock(Ticket.find).mockResolvedValueOnce([]);
     const blocks = await appHomeBlocks(mockSlackId, mockClient);
