@@ -14,27 +14,27 @@ const mockOpenGithubIssue = [
   {
     id: 'ISSUE_ID',
     url: 'TEST_URL.com',
-    body: 'Test body of issue\n send by someone in slack',
-    createdAt: '2021-05-19 16:49:39.609229',
+    body: 'Second Test body of issue\n send by someone in slack',
+    createdAt: '2021-05-21 16:49:39.609229',
     number: '1',
     state: 'OPEN',
     title: 'Mock Open Ticket',
-    updatedAt: '2021-05-19 16:49:39.609229',
+    updatedAt: '2021-05-21 16:49:39.609229',
   },
   {
     id: 'ISSUE_ID_3',
     url: 'TEST_URL_3.com',
-    body: `${'A really large string'.repeat(3000)}\n`,
-    createdAt: '2021-05-21 16:49:39.609229',
+    body: 'First Test body of issue\n send by someone in slack',
+    createdAt: '2021-05-19 16:49:39.609229',
     number: '3',
     state: 'OPEN',
     title: 'Mock Open Ticket 3',
-    updatedAt: '2021-05-21 16:49:39.609229',
+    updatedAt: '2021-05-19 16:49:39.609229',
   },
   {
     id: 'ISSUE_ID_2',
     url: 'TEST_URL_2.com',
-    body: 'Test body of issue\n send by someone in slack',
+    body: `${'A really large string'.repeat(3000)}\n`,
     createdAt: '2021-05-20 16:49:39.609229',
     number: '2',
     state: 'OPEN',
@@ -78,15 +78,36 @@ describe('Issue blocks used in app home', () => {
   });
 
   it('correctly forms a list of issue blocks', async () => {
-    const blocks = await issueBlocks(mockOpenGithubIssue, mockTickets, mockClient);
+    const blocks = await issueBlocks(mockOpenGithubIssue.slice(0, 2), mockTickets, mockClient);
 
     expect(blocks).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           fields: expect.arrayContaining([
-            expect.objectContaining({ text: expect.stringContaining('Test body of issue') }),
+            expect.objectContaining({ text: expect.stringContaining('First Test body of issue') }),
           ]),
         }),
+        expect.objectContaining({
+          fields: expect.arrayContaining([
+            expect.objectContaining({ text: expect.stringContaining('Second Test body of issue') }),
+          ]),
+        }),
+        expect.objectContaining({
+          elements: expect.arrayContaining([
+            expect.objectContaining({
+              text: expect.objectContaining({ text: expect.stringContaining('Go to Thread :slack:') }),
+            }),
+          ]),
+        }),
+      ]),
+    );
+  });
+
+  it('correctly forms a list of issue blocks when description is too long', async () => {
+    const blocks = await issueBlocks(mockOpenGithubIssue, mockTickets, mockClient);
+
+    expect(blocks).toEqual(
+      expect.arrayContaining([
         expect.objectContaining({
           fields: expect.arrayContaining([
             expect.objectContaining({ text: expect.stringContaining('A really large string') }),
