@@ -6,4 +6,4 @@ export const noIssuesBlock: SectionBlock = {
     type: 'mrkdwn',
     text: 'You have no open tickets :tada:',
   },
-};
+} as const;

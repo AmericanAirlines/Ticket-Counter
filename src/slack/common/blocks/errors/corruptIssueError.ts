@@ -6,4 +6,4 @@ export const problemLoadingIssuesBlock: SectionBlock = {
     type: 'mrkdwn',
     text: 'Whoops, Something went wrong while loading your tickets. Please try again Later...',
   },
-};
+} as const;

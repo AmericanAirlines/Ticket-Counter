@@ -19,7 +19,7 @@ export const sectionBlock = (text: string): SectionBlock => ({
 
 export const dividerBlock: DividerBlock = {
   type: 'divider',
-};
+} as const;
 
 export const spacerBlock: HeaderBlock = {
   type: 'header',
@@ -27,6 +27,6 @@ export const spacerBlock: HeaderBlock = {
     type: 'plain_text',
     text: ' ',
   },
-};
+} as const;
 
-export const dividerBlockWithPadding: [HeaderBlock, DividerBlock] = [spacerBlock, dividerBlock];
+export const dividerBlockWithPadding: [HeaderBlock, DividerBlock] = [spacerBlock, dividerBlock]  as const;
