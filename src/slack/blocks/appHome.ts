@@ -4,10 +4,10 @@ import { Ticket } from '../../entities/Ticket';
 import { githubGraphql } from '../../github/graphql';
 import { dividerBlockWithPadding, headerBlock } from '../common/blocks/commonBlocks';
 import { problemLoadingIssuesBlock } from '../common/blocks/errors/corruptIssueError';
-import { GithubIssueInfo } from '../common/blocks/types/githubIssueInfo';
 import { noIssuesBlock } from './noIssuesOpen';
 import logger from '../../logger';
 import { issueBlocks } from './issueBlocks';
+import { GithubIssueInfo } from '../../github/types';
 
 export const appHomeBlocks = async (slackId: string, client: WebClient): Promise<KnownBlock[]> => {
   const homeBlocks: KnownBlock[] = [headerBlock('Open Tickets :ticket:', true)];

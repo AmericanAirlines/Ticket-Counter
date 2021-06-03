@@ -83,14 +83,10 @@ describe('Issue blocks used in app home', () => {
     expect(blocks).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          fields: expect.arrayContaining([
-            expect.objectContaining({ text: expect.stringContaining('First Test body of issue') }),
-          ]),
+          text: expect.objectContaining({ text: expect.stringContaining('First Test body of issue') }),
         }),
         expect.objectContaining({
-          fields: expect.arrayContaining([
-            expect.objectContaining({ text: expect.stringContaining('Second Test body of issue') }),
-          ]),
+          text: expect.objectContaining({ text: expect.stringContaining('Second Test body of issue') }),
         }),
         expect.objectContaining({
           elements: expect.arrayContaining([
@@ -109,9 +105,7 @@ describe('Issue blocks used in app home', () => {
     expect(blocks).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          fields: expect.arrayContaining([
-            expect.objectContaining({ text: expect.stringContaining('A really large string') }),
-          ]),
+          text: expect.objectContaining({ text: expect.stringContaining('A really large string') }),
         }),
         expect.objectContaining({
           elements: expect.arrayContaining([

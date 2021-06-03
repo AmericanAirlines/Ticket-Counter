@@ -1,12 +1,12 @@
 import { WebClient } from '@slack/web-api';
 import 'jest';
-import { Platform, Ticket } from '../../../entities/Ticket';
+import { Ticket } from '../../../entities/Ticket';
 import { githubGraphql } from '../../../github/graphql';
 import { appHomeBlocks } from '../../../slack/blocks/appHome';
 import { getMock } from '../../test-utils/getMock';
-import { GithubIssueInfo } from '../../../slack/common/blocks/types/githubIssueInfo';
 import { problemLoadingIssuesBlock } from '../../../slack/common/blocks/errors/corruptIssueError';
 import { noIssuesBlock } from '../../../slack/blocks/noIssuesOpen';
+import { GithubIssueInfo } from '../../../github/types';
 
 jest.mock('../../../github/graphql.ts', () => ({
   githubGraphql: jest.fn(),
@@ -53,7 +53,6 @@ const mockTickets: Ticket[] = [
     authorId: 'AUTHOR_ID',
     authorName: 'TEST_NAME',
     platformPostId: 'SLACK_THREAD_TS',
-    platform: Platform.Slack,
   } as Ticket,
 ];
 
@@ -62,25 +61,24 @@ describe('appHome blocks', () => {
     jest.clearAllMocks();
   });
 
-  it("returns an array of blocks containing fields including issue data", async () => {
-    getMock(githubGraphql).mockResolvedValueOnce(mockOpenGithubIssue);
+  it('returns an array of blocks containing fields including issue data', async () => {
+    getMock(githubGraphql).mockResolvedValueOnce(mockGitHubIssuesPayload);
     getMock(Ticket.find).mockResolvedValueOnce(mockTickets);
     const blocks = await appHomeBlocks(mockSlackId, mockClient);
+    const expectedDescription = mockGitHubIssuesPayload.nodes[0].body.split('\n')[0];
     expect(blocks).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          fields: expect.arrayContaining([
-            expect.objectContaining({
-              text: expect.stringContaining(mockIssue.nodes[0].body),
-            }),
-          ]),
+          text: expect.objectContaining({
+            text: expect.stringContaining(expectedDescription),
+          }),
         }),
       ]),
     );
   });
 
   it('returns a response that includes an error block if there is a problem loading the issue blocks', async () => {
-    getMock(githubGraphql).mockResolvedValueOnce(mockOpenGithubIssue);
+    getMock(githubGraphql).mockResolvedValueOnce(mockGitHubIssuesPayload);
     getMock(Ticket.find).mockResolvedValueOnce(mockTickets);
     getMock(mockClient.chat.getPermalink).mockRejectedValue('Something broke');
     const blocks = await appHomeBlocks(mockSlackId, mockClient);

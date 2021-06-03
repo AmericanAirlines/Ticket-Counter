@@ -5,29 +5,46 @@ describe('Common blocks used across slack', () => {
     jest.clearAllMocks();
   });
 
-  it('correctly forms a header block', async () => {
-    const testWord = 'test Word';
-    const blocks = headerBlock(testWord, true);
+  describe('Header Block', () => {
+    it('correctly sets the emoji to true', async () => {
+      const blocks = headerBlock('text', true);
 
-    expect(blocks).toEqual(
-      expect.objectContaining({
-        text: expect.objectContaining({
-          text: expect.stringContaining(testWord),
+      expect(blocks).toEqual(
+        expect.objectContaining({
+          text: expect.objectContaining({
+            emoji: true,
+          }),
         }),
-      }),
-    );
+      );
+    });
+
+    it('has the correct form and correctly uses the emoji argument', async () => {
+      const testWord = 'test Word 🙂';
+      const blocks = headerBlock(testWord, false);
+
+      expect(blocks).toEqual(
+        expect.objectContaining({
+          text: expect.objectContaining({
+            text: expect.stringContaining(testWord),
+            emoji: false,
+          }),
+        }),
+      );
+    });
   });
 
-  it('correctly forms a section block', async () => {
-    const testWord = 'test Word';
-    const blocks = sectionBlock(testWord);
+  describe('Section Block', () => {
+    it('has the correct form', async () => {
+      const testWord = 'test Word';
+      const blocks = sectionBlock(testWord);
 
-    expect(blocks).toEqual(
-      expect.objectContaining({
-        text: expect.objectContaining({
-          text: expect.stringContaining(testWord),
+      expect(blocks).toEqual(
+        expect.objectContaining({
+          text: expect.objectContaining({
+            text: expect.stringContaining(testWord),
+          }),
         }),
-      }),
-    );
+      );
+    });
   });
 });

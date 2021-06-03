@@ -4,27 +4,25 @@ import { Ticket } from '../../entities/Ticket';
 import { actionIds } from '../constants';
 import { env } from '../../env';
 import { dividerBlockWithPadding } from '../common/blocks/commonBlocks';
-import { GithubIssueInfo } from '../common/blocks/types/githubIssueInfo';
 import logger from '../../logger';
+import { GithubIssueInfo } from '../../github/types';
 
 const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] => {
-  const issueText = `*Issue Number:*  ${ticket.number}\n*Opened At:*  ${ticket.createdAt}\n*Last Updated:*  ${ticket.updatedAt}\n*State:* ${ticket.state}`;
-  const description = `*Description:* ${ticket.body.substring(0, ticket.body.indexOf('\n'))}`;
+  const issueText = `*Title:* ${ticket.title}\n *Issue Number:*  ${ticket.number}\n*Opened At:*  ${ticket.createdAt}\n*Last Updated:*  ${ticket.updatedAt}\n*State:* ${ticket.state}`;
+  const description = `*Description:* ${ticket.body.split('\n')[0]}`;
   const truncatedDescriptionLength = 300;
   return [
     ...dividerBlockWithPadding,
     {
       type: 'section',
-      fields: [
-        {
-          type: 'mrkdwn',
-          text: `${issueText}\n${
-            description.length > truncatedDescriptionLength
-              ? `${description.substring(0, truncatedDescriptionLength)}...`
-              : description
-          }`,
-        },
-      ],
+      text: {
+        type: 'mrkdwn',
+        text: `${issueText}\n${
+          description.length > truncatedDescriptionLength
+            ? `${description.substring(0, truncatedDescriptionLength)}...`
+            : description
+        }`,
+      },
     },
     {
       type: 'actions',

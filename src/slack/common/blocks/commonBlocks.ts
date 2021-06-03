@@ -29,4 +29,4 @@ export const spacerBlock: HeaderBlock = {
   },
 } as const;
 
-export const dividerBlockWithPadding: [HeaderBlock, DividerBlock] = [spacerBlock, dividerBlock]  as const;
+export const dividerBlockWithPadding: readonly [HeaderBlock, DividerBlock] = [spacerBlock, dividerBlock] as const;
