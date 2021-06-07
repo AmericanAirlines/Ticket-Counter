@@ -26,6 +26,19 @@ const mockIgnoreEvent: any = {
 };
 
 const loggerSpy = jest.spyOn(logger, 'debug').mockImplementation();
+jest.mock('../../../env', () => {
+  const actualEnv = jest.requireActual('../../../env');
+  return {
+    env: {
+      ...actualEnv,
+      githubAppId: 'APP_ID',
+      githubAppPrivateKey: 'super secret key',
+      githubAppInstallationId: 'INSTALLATION_ID',
+      githubAppWebhookSecret: 'GITHUB_WEBHOOK_SECRET',
+      slackSigningSecret: 'SLACK_SIGNING_SECRET',
+    },
+  };
+});
 
 describe('ignore action listener', () => {
   beforeEach(() => {

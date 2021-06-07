@@ -18,8 +18,19 @@ jest.mock('../../../../src/entities/Ticket.ts', () => ({
   },
 }));
 
-jest.mock('../../../env.ts');
-
+jest.mock('../../../env', () => {
+  const actualEnv = jest.requireActual('../../../env');
+  return {
+    env: {
+      ...actualEnv,
+      githubAppId: 'APP_ID',
+      githubAppPrivateKey: 'super secret key',
+      githubAppInstallationId: 'INSTALLATION_ID',
+      githubAppWebhookSecret: 'GITHUB_WEBHOOK_SECRET',
+      slackSigningSecret: 'SLACK_SIGNING_SECRET',
+    },
+  };
+});
 const mockUser = {
   user: {
     real_name: 'Test Name',
