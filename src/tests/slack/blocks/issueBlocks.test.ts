@@ -9,6 +9,7 @@ const mockClient = ({
     getPermalink: jest.fn().mockResolvedValue({ permalink: mockPermalink }),
   },
 } as unknown) as WebClient;
+const mockTimeZone = 'America/Los_Angeles';
 
 const mockOpenGithubIssue = [
   {
@@ -78,7 +79,7 @@ describe('Issue blocks used in app home', () => {
   });
 
   it('correctly forms a list of issue blocks', async () => {
-    const blocks = await issueBlocks(mockOpenGithubIssue.slice(0, 2), mockTickets, mockClient);
+    const blocks = await issueBlocks(mockOpenGithubIssue.slice(0, 2), mockTickets, mockClient, mockTimeZone);
 
     expect(blocks).toEqual(
       expect.arrayContaining([
@@ -100,7 +101,7 @@ describe('Issue blocks used in app home', () => {
   });
 
   it('correctly forms a list of issue blocks when description is too long', async () => {
-    const blocks = await issueBlocks(mockOpenGithubIssue, mockTickets, mockClient);
+    const blocks = await issueBlocks(mockOpenGithubIssue, mockTickets, mockClient, mockTimeZone);
 
     expect(blocks).toEqual(
       expect.arrayContaining([

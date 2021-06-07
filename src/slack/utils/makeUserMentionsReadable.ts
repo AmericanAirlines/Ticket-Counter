@@ -1,9 +1,9 @@
-import { App } from '@slack/bolt';
+import { WebClient } from '@slack/web-api';
 import logger from '../../logger';
 import { getExternalUserDisplayText } from './getExternalUserDisplayText';
 import { getUserDetails } from './userCache';
 
-export async function makeUserMentionsReadable(text: string, app: App): Promise<string> {
+export async function makeUserMentionsReadable(text: string, client: WebClient): Promise<string> {
   const userMentionRegex = '<@(\\w*)>';
   let readableString = text;
 
@@ -13,7 +13,7 @@ export async function makeUserMentionsReadable(text: string, app: App): Promise<
     let userText = `@${userId} (Unknown User)`;
 
     try {
-      const user = await getUserDetails(userId, app);
+      const user = await getUserDetails(userId, client);
       userText = getExternalUserDisplayText(user);
     } catch (err) {
       logger.error('Unable to retrieve user and format external display text: ', err);

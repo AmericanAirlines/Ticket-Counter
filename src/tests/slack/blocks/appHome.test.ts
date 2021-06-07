@@ -20,6 +20,16 @@ jest.mock('../../../../src/entities/Ticket.ts', () => ({
 
 jest.mock('../../../env.ts');
 
+const mockUser = {
+  user: {
+    real_name: 'Test Name',
+    name: 'Test Name',
+    id: 'UserId',
+    profile: { real_name: 'Test Name', display_name: 'Test Display' },
+    tz: 'America/Los_Angeles',
+  },
+};
+
 const mockSlackId = 'SLACK_ID';
 const mockClient = ({
   views: {
@@ -27,6 +37,9 @@ const mockClient = ({
   },
   chat: {
     getPermalink: jest.fn(() => 'slack://link'),
+  },
+  users: {
+    info: jest.fn(() => mockUser),
   },
 } as unknown) as WebClient;
 

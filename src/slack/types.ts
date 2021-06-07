@@ -1,6 +1,8 @@
 import { App, Middleware } from '@slack/bolt';
+import { WebClient } from '@slack/web-api';
 
 export type AppMiddlewareFunction<Args> = (app: App) => Middleware<Args>;
+export type ClientMiddlewareFunction<Args> = (client: WebClient) => Middleware<Args>;
 
 export interface UserInfo {
   id: string;
@@ -10,4 +12,5 @@ export interface UserInfo {
     real_name: string;
     display_name: string;
   };
+  tz: string;
 }
