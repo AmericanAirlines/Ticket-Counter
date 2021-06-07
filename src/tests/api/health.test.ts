@@ -15,6 +15,9 @@ jest.mock('../../env.ts', () => {
     },
   };
 });
+jest.mock('../../github/graphql.ts', () => ({
+  githubGraphql: jest.fn().mockResolvedValueOnce({ repository: {} }),
+}));
 
 describe('/api/health', () => {
   it('returns status, details, and timestamp', async () => {

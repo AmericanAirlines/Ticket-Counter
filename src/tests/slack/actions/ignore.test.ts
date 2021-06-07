@@ -25,6 +25,10 @@ const mockIgnoreEvent: any = {
   ],
 };
 
+jest.mock('../../../github/graphql.ts', () => ({
+  githubGraphql: jest.fn().mockResolvedValueOnce({ repository: {} }),
+}));
+
 const loggerSpy = jest.spyOn(logger, 'debug').mockImplementation();
 jest.mock('../../../env', () => {
   const actualEnv = jest.requireActual('../../../env');
