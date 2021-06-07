@@ -9,7 +9,7 @@ import { GithubIssueInfo } from '../../github/types';
 import { formatDate } from '../utils/dateFormatter';
 
 const issueBlock = (ticket: GithubIssueInfo, threadLink: string, timezone: string): KnownBlock[] => {
-  const issueText = `*Title:* ${ticket.title}\n *Issue Number:*  ${ticket.number}\n*Opened At:*  ${formatDate(
+  const issueText = `*Title:* <${ticket.url}|${ticket.title}>\n *Opened At:*  ${formatDate(
     ticket.createdAt,
     timezone,
   )}\n*Last Updated:*  ${formatDate(ticket.updatedAt, timezone)}\n*State:* ${ticket.state}`;
@@ -45,7 +45,7 @@ const issueBlock = (ticket: GithubIssueInfo, threadLink: string, timezone: strin
           type: 'button',
           text: {
             type: 'plain_text',
-            text: 'Go to Issue :memo:',
+            text: `Go to Issue #${ticket.number} :memo:`,
             emoji: true,
           },
           url: ticket.url,
@@ -67,10 +67,10 @@ export const issueBlocks = async (
       .sort((a, b) => (a.number > b.number ? 1 : -1))
       .map(async (issue) => {
         const threadTs = storedTickets.find((ticket) => ticket.issueId === issue.id)?.platformPostId!;
-        const thread: { permalink: string } = (await client.chat.getPermalink({
+        const thread: { permalink: string } = ((await client.chat.getPermalink({
           channel: env.slackSupportChannel,
           message_ts: threadTs,
-        })) as unknown as { permalink: string };
+        })) as unknown) as { permalink: string };
 
         return issueBlock(issue, thread.permalink, timezone);
       }),
