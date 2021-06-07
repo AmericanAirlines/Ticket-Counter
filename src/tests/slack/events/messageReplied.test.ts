@@ -1,5 +1,5 @@
 import 'jest';
-import { AllMiddlewareArgs, App, Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
+import { AllMiddlewareArgs, Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
 import { WebClient } from '@slack/web-api';
 import logger from '../../../logger';
 

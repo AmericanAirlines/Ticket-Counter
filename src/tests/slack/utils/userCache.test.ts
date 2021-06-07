@@ -1,4 +1,3 @@
-import { App } from '@slack/bolt';
 import { WebClient } from '@slack/web-api';
 
 jest.mock('../../../env.ts');
