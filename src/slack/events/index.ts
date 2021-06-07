@@ -13,11 +13,10 @@ export function events(bolt: App): void {
   // bolt.message(subtype('message_replied'), messageReplied(bolt));
 }
 
-export const isMessageReply: AppMiddlewareFunction<SlackEventMiddlewareArgs<'message'>> = () => async ({
-  message,
-  next,
-}) => {
-  if ((message as GenericMessageEvent).thread_ts) {
-    await next?.();
-  }
-};
+export const isMessageReply: AppMiddlewareFunction<SlackEventMiddlewareArgs<'message'>> =
+  () =>
+  async ({ message, next }) => {
+    if ((message as GenericMessageEvent).thread_ts) {
+      await next?.();
+    }
+  };
