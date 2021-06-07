@@ -12,6 +12,19 @@ import { receiver } from '../../../app';
 import { actionIds } from '../../../slack/constants';
 import { env } from '../../../env';
 
+jest.mock('../../../env.ts', () => {
+  const actualEnv = jest.requireActual('../../../env.ts');
+  return {
+    env: {
+      ...actualEnv,
+      githubAppId: 'APP_ID',
+      githubAppPrivateKey: 'super secret key',
+      githubAppInstallationId: 'INSTALLATION_ID',
+      githubAppWebhookSecret: 'GITHUB_WEBHOOK_SECRET',
+      slackSigningSecret: 'SLACK_SIGNING_SECRET',
+    },
+  };
+});
 const mockIgnoreEvent: any = {
   type: 'block_actions',
   user: { id: 'XXX', username: 'XXX', name: 'XXX', team_id: 'XXX' },

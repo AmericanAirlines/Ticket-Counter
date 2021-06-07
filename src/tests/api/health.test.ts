@@ -2,7 +2,19 @@ import 'jest';
 import supertest from 'supertest';
 import { receiver } from '../../app';
 
-jest.mock('../../env.ts');
+jest.mock('../../env.ts', () => {
+  const actualEnv = jest.requireActual('../../env.ts');
+  return {
+    env: {
+      ...actualEnv,
+      githubAppId: 'APP_ID',
+      githubAppPrivateKey: 'super secret key',
+      githubAppInstallationId: 'INSTALLATION_ID',
+      githubAppWebhookSecret: 'GITHUB_WEBHOOK_SECRET',
+      slackSigningSecret: 'SLACK_SIGNING_SECRET',
+    },
+  };
+});
 
 describe('/api/health', () => {
   it('returns status, details, and timestamp', async () => {
