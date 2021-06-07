@@ -73,9 +73,9 @@ function getMockMessageEvent(
   subtype?: string,
   files?: string[],
 ) {
-  return ({
+  return {
     message: { parent_user_id: parentUserId, text, ts, channel, subtype, files },
-  } as unknown) as SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs;
+  } as unknown as SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs;
 }
 
 let messageRepliedHandler: Middleware<SlackEventMiddlewareArgs<'message'>>;
@@ -87,7 +87,7 @@ describe('messageReplied event listener', () => {
     // Get a clean copy of the module to avoid state being an issue
     jest.isolateModules(() => {
       messageRepliedHandler = require('../../../slack/events/messageReplied').messageReplied(
-        (mockClient as unknown) as WebClient,
+        mockClient as unknown as WebClient,
       );
     });
   });

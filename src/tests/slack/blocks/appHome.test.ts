@@ -42,7 +42,7 @@ const mockUser = {
 };
 
 const mockSlackId = 'SLACK_ID';
-const mockClient = ({
+const mockClient = {
   views: {
     publish: jest.fn(),
   },
@@ -52,7 +52,7 @@ const mockClient = ({
   users: {
     info: jest.fn(() => mockUser),
   },
-} as unknown) as WebClient;
+} as unknown as WebClient;
 
 const mockUrl = 'TEST_URL.com';
 const mockGitHubIssuesPayload = {
