@@ -5,7 +5,20 @@ import logger from '../../../logger';
 import { appHomeOpened } from '../../../slack/events/appHomeOpened';
 import { updateAppHome } from '../../../slack/utils/updateAppHome';
 
-jest.mock('../../../env');
+jest.mock('../../../env.ts', () => {
+  const actualEnv = jest.requireActual('../../../env.ts');
+  return {
+    env: {
+      ...actualEnv,
+      githubAppId: 'APP_ID',
+      githubAppPrivateKey: 'super secret key',
+      githubAppInstallationId: 'INSTALLATION_ID',
+      githubAppWebhookSecret: 'GITHUB_WEBHOOK_SECRET',
+      slackSigningSecret: 'SLACK_SIGNING_SECRET',
+    },
+  };
+});
+
 jest.mock('../../../slack/utils/updateAppHome.ts');
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 
