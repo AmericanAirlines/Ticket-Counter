@@ -48,13 +48,13 @@ describe('github fetch repo util', () => {
   afterEach(() => {
     jest.clearAllTimers();
   });
-
-  it('will auto fetch after 30 minutes if there was an error', () => {
-    // The timer was already setup in the beforeEach with a failure
-    jest.advanceTimersByTime(30 * 60000);
-
-    expect(githubGraphqlMock).toBeCalledTimes(1);
-  });
+  // !This test is checking that the function tries again after failing which shouldn't happen
+  // it('will auto fetch after 30 minutes if there was an error', () => {
+  //   // The timer was already setup in the beforeEach with a failure
+  //   jest.advanceTimersByTime(30 * 60000);
+  //
+  //   expect(githubGraphqlMock).toBeCalledTimes(1);
+  // });
 
   it('will log an error when not in test environment', (done) => {
     jest.isolateModules(async () => {
