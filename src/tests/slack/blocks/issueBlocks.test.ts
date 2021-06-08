@@ -4,11 +4,11 @@ import { issueBlocks } from '../../../slack/blocks/issueBlocks';
 
 const mockPermalink = 'chat-permalink';
 
-const mockClient = ({
+const mockClient = {
   chat: {
     getPermalink: jest.fn().mockResolvedValue({ permalink: mockPermalink }),
   },
-} as unknown) as WebClient;
+} as unknown as WebClient;
 
 const mockOpenGithubIssue = [
   {

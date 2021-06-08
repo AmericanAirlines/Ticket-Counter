@@ -21,14 +21,14 @@ jest.mock('../../../../src/entities/Ticket.ts', () => ({
 jest.mock('../../../env.ts');
 
 const mockSlackId = 'SLACK_ID';
-const mockClient = ({
+const mockClient = {
   views: {
     publish: jest.fn(),
   },
   chat: {
     getPermalink: jest.fn(() => 'slack://link'),
   },
-} as unknown) as WebClient;
+} as unknown as WebClient;
 
 const mockUrl = 'TEST_URL.com';
 const mockGitHubIssuesPayload = {

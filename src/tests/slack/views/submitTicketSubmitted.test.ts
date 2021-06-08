@@ -56,7 +56,7 @@ describe('submit ticket view submission handler', () => {
     // Get a clean copy of the module to avoid state being an issue
     jest.isolateModules(() => {
       submitTicketSubmittedHandler = require('../../../slack/views/submitTicketSubmitted').submitTicketSubmitted(
-        (mockApp as unknown) as App,
+        mockApp as unknown as App,
       );
     });
   });
