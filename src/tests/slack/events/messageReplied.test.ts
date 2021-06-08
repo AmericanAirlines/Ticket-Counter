@@ -1,5 +1,5 @@
+import { AllMiddlewareArgs, Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
 import 'jest';
-import { AllMiddlewareArgs, App, Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
 import logger from '../../../logger';
 
 const loggerInfoSpy = jest.spyOn(logger, 'info').mockImplementation();
@@ -35,17 +35,15 @@ const mockPermalink = 'chat-permalink';
 const reactionsAddMock = jest.fn();
 const authTestMock = jest.fn(() => ({ user_id: mockAppId }));
 const getPermalinkMock = jest.fn(() => ({ permalink: mockPermalink }));
-const mockApp = {
-  client: {
-    reactions: {
-      add: reactionsAddMock,
-    },
-    auth: {
-      test: authTestMock,
-    },
-    chat: {
-      getPermalink: getPermalinkMock,
-    },
+const mockClient = {
+  reactions: {
+    add: reactionsAddMock,
+  },
+  auth: {
+    test: authTestMock,
+  },
+  chat: {
+    getPermalink: getPermalinkMock,
   },
 };
 
@@ -87,15 +85,16 @@ describe('messageReplied event listener', () => {
 
     // Get a clean copy of the module to avoid state being an issue
     jest.isolateModules(() => {
-      messageRepliedHandler = require('../../../slack/events/messageReplied').messageReplied(
-        (mockApp as unknown) as App,
-      );
+      messageRepliedHandler = require('../../../slack/events/messageReplied').messageReplied;
     });
   });
 
   it('adds a reaction to the message sent by a user', async () => {
     const mockMessageEvent = getMockMessageEvent(mockAppId, 'Hello world!', mockTs, mockChannel);
-    await messageRepliedHandler(mockMessageEvent);
+    await messageRepliedHandler({
+      ...mockMessageEvent,
+      client: mockClient,
+    } as any);
 
     expect(authTestMock).toBeCalled();
     expect(reactionsAddMock).toBeCalled();
@@ -110,7 +109,10 @@ describe('messageReplied event listener', () => {
   it('throws an error if it cannot react to the message', async () => {
     const mockMessageEvent = getMockMessageEvent(mockAppId, 'Hello world!', mockTs, mockChannel);
     reactionsAddMock.mockRejectedValueOnce(new Error('Oof!'));
-    await messageRepliedHandler(mockMessageEvent);
+    await messageRepliedHandler({
+      ...mockMessageEvent,
+      client: mockClient,
+    } as any);
 
     expect(authTestMock).toBeCalled();
     expect(reactionsAddMock).toBeCalled();
@@ -120,8 +122,14 @@ describe('messageReplied event listener', () => {
   it('caches auth info after one call', async () => {
     const mockMessageEvent = getMockMessageEvent(mockAppId, 'Hello world!', mockTs, mockChannel);
     reactionsAddMock.mockRejectedValueOnce(new Error('Unable to add reaction!'));
-    await messageRepliedHandler(mockMessageEvent);
-    await messageRepliedHandler(mockMessageEvent);
+    await messageRepliedHandler({
+      ...mockMessageEvent,
+      client: mockClient,
+    } as any);
+    await messageRepliedHandler({
+      ...mockMessageEvent,
+      client: mockClient,
+    } as any);
 
     expect(authTestMock).toBeCalledTimes(1);
   });
@@ -130,7 +138,10 @@ describe('messageReplied event listener', () => {
     const anotherUserId = `NOT ${mockAppId}`;
     const mockMessageEvent = getMockMessageEvent(anotherUserId, 'Hello world!', mockTs, mockChannel);
     reactionsAddMock.mockRejectedValueOnce(new Error('Unable to add reaction!'));
-    await messageRepliedHandler(mockMessageEvent);
+    await messageRepliedHandler({
+      ...mockMessageEvent,
+      client: mockClient,
+    } as any);
 
     expect(reactionsAddMock).not.toBeCalled();
   });
@@ -138,14 +149,20 @@ describe('messageReplied event listener', () => {
   it('ignores replies from other bots', async () => {
     const mockMessageEvent = getMockMessageEvent(mockAppId, 'Hello world!', mockTs, mockChannel, 'bot_message');
     reactionsAddMock.mockRejectedValueOnce(new Error('Unable to add reaction!'));
-    await messageRepliedHandler(mockMessageEvent);
+    await messageRepliedHandler({
+      ...mockMessageEvent,
+      client: mockClient,
+    } as any);
 
     expect(reactionsAddMock).not.toBeCalled();
   });
 
   it('defaults to an error text if no message is found', async () => {
     const mockMessageEvent = getMockMessageEvent(mockAppId, undefined, mockTs, mockChannel);
-    await messageRepliedHandler(mockMessageEvent);
+    await messageRepliedHandler({
+      ...mockMessageEvent,
+      client: mockClient,
+    } as any);
 
     expect(commentOnIssueMock).toBeCalledTimes(1);
     const { message } = commentOnIssueMock.mock.calls[0][1];
@@ -161,7 +178,10 @@ describe('messageReplied event listener', () => {
       undefined,
       ['some file URL'],
     );
-    await messageRepliedHandler(mockMessageEvent);
+    await messageRepliedHandler({
+      ...mockMessageEvent,
+      client: mockClient,
+    } as any);
 
     expect(commentOnIssueMock).toBeCalledTimes(1);
     const { message } = commentOnIssueMock.mock.calls[0][1];
@@ -171,7 +191,10 @@ describe('messageReplied event listener', () => {
   it('logs info and does not respond if an associated ticket cannot be found', async () => {
     const mockMessageEvent = getMockMessageEvent(mockAppId, 'This message has a file!', mockTs, mockChannel);
     ticketFindOneMock.mockResolvedValueOnce(undefined);
-    await messageRepliedHandler(mockMessageEvent);
+    await messageRepliedHandler({
+      ...mockMessageEvent,
+      client: mockClient,
+    } as any);
 
     expect(commentOnIssueMock).not.toBeCalled();
     expect(loggerInfoSpy).toBeCalled();

@@ -1,17 +1,17 @@
-import { SlackShortcutMiddlewareArgs, SlackShortcut } from '@slack/bolt';
+import { SlackShortcutMiddlewareArgs, SlackShortcut, Middleware } from '@slack/bolt';
 import logger from '../../logger';
 import { getSubmitTicketModalBlocks } from '../blocks/getSubmitTicketModalBlocks';
 import { callbackIds } from '../constants';
 import { env } from '../../env';
-import { AppMiddlewareFunction } from '../types';
 
-export const submitTicket: AppMiddlewareFunction<SlackShortcutMiddlewareArgs<SlackShortcut>> = (app) => async ({
+export const submitTicket: Middleware<SlackShortcutMiddlewareArgs<SlackShortcut>> = async ({
   shortcut,
   ack,
+  client,
 }) => {
   void ack();
   try {
-    await app.client.views.open({
+    await client.views.open({
       token: env.slackBotToken,
       trigger_id: shortcut.trigger_id,
       view: {

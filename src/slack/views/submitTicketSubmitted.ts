@@ -1,16 +1,18 @@
-import { ViewSubmitAction, SlackViewMiddlewareArgs, App } from '@slack/bolt';
+import { ViewSubmitAction, SlackViewMiddlewareArgs, Middleware } from '@slack/bolt';
 import logger from '../../logger';
 import { env } from '../../env';
-import { AppMiddlewareFunction } from '../types';
 import { githubGraphql } from '../../github/graphql';
 import { Platform, Ticket } from '../../entities/Ticket';
 import { fetchRepo } from '../../github/utils/fetchRepo';
 import { ViewOutputUtils } from '../utils/ViewOutputUtils';
 import { SubmitTicketModalElement } from '../blocks/getSubmitTicketModalBlocks';
 
-export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArgs<ViewSubmitAction>> = (
-  app: App,
-) => async ({ ack, body, view }) => {
+export const submitTicketSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmitAction>> = async ({
+  ack,
+  client,
+  body,
+  view,
+}) => {
   try {
     const viewUtils = new ViewOutputUtils(view);
     const { trigger_id: triggerId } = (body as unknown) as { [id: string]: string };
@@ -58,7 +60,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
 *Title:* ${title}
 >${truncatedDescription}`;
 
-    const result: { ts: string } = (await app.client.chat.postMessage({
+    const result: { ts: string } = (await client.chat.postMessage({
       token: env.slackBotToken,
       channel: env.slackSupportChannel,
       text,
@@ -66,7 +68,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
 
     void ack();
 
-    await app.client.views.open({
+    await client.views.open({
       view: {
         type: 'modal',
         title: {
@@ -101,7 +103,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
       threadResponse += `\n\nFYI ${formattedStakeholders}`;
     }
 
-    await app.client.chat.postMessage({
+    await client.chat.postMessage({
       token: env.slackBotToken,
       channel: env.slackSupportChannel,
       text: threadResponse,
@@ -124,7 +126,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
     const { trigger_id: triggerId } = (body as unknown) as { [id: string]: string };
     logger.error('Something went wrong trying to create a ticket: ', error);
     try {
-      await app.client.views.open({
+      await client.views.open({
         trigger_id: triggerId,
         token: env.slackBotToken,
         view: {

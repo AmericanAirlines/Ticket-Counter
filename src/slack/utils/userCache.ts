@@ -1,4 +1,4 @@
-import { App } from '@slack/bolt';
+import { WebClient } from '@slack/web-api';
 import { env } from '../../env';
 import { UserInfo } from '../types';
 
@@ -10,11 +10,11 @@ interface UserCache {
 
 const userCache: UserCache = {};
 
-export async function getUserDetails(userId: string, app: App): Promise<UserInfo> {
+export async function getUserDetails(userId: string, client: WebClient): Promise<UserInfo> {
   userCache[userId] =
     userCache[userId] ??
     ((
-      await app.client.users.info({
+      await client.users.info({
         user: userId,
         token: env.slackBotToken,
       })

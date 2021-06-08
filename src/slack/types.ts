@@ -1,7 +1,3 @@
-import { App, Middleware } from '@slack/bolt';
-
-export type AppMiddlewareFunction<Args> = (app: App) => Middleware<Args>;
-
 export interface UserInfo {
   id: string;
   name: string;

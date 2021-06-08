@@ -36,14 +36,12 @@ const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 const viewsOpenMock = jest.fn();
 const chatPostMessageMock = jest.fn();
-const mockApp = {
-  client: {
-    views: {
-      open: jest.fn((...args) => viewsOpenMock(...args)),
-    },
-    chat: {
-      postMessage: jest.fn((...args) => chatPostMessageMock(...args)),
-    },
+const mockClient = {
+  views: {
+    open: jest.fn((...args) => viewsOpenMock(...args)),
+  },
+  chat: {
+    postMessage: jest.fn((...args) => chatPostMessageMock(...args)),
   },
 };
 
@@ -55,16 +53,14 @@ describe('submit ticket view submission handler', () => {
 
     // Get a clean copy of the module to avoid state being an issue
     jest.isolateModules(() => {
-      submitTicketSubmittedHandler = require('../../../slack/views/submitTicketSubmitted').submitTicketSubmitted(
-        (mockApp as unknown) as App,
-      );
+      submitTicketSubmittedHandler = require('../../../slack/views/submitTicketSubmitted').submitTicketSubmitted;
     });
   });
 
   it('logs an error and pops and error modal if there is a mismatch in submission fields', async () => {
     const viewSubmission = getMockViewSubmission({});
     const ack = (viewSubmission as any).ack as jest.Mock;
-    await submitTicketSubmittedHandler(viewSubmission);
+    await submitTicketSubmittedHandler({ ...viewSubmission, client: mockClient } as any);
     expect(ack).toBeCalled();
     expect(viewsOpenMock).toBeCalledTimes(1);
     expect(viewsOpenMock.mock.calls[0][0].view.title.text).toEqual('Error');
@@ -74,7 +70,7 @@ describe('submit ticket view submission handler', () => {
     const viewSubmission = getMockViewSubmission({});
     const ack = (viewSubmission as any).ack as jest.Mock;
     viewsOpenMock.mockRejectedValueOnce("You didn't say the magic word!");
-    await submitTicketSubmittedHandler(viewSubmission);
+    await submitTicketSubmittedHandler({ ...viewSubmission, client: mockClient } as any);
     expect(ack).toBeCalled();
     expect(viewsOpenMock).toBeCalledTimes(1);
     expect(loggerErrorSpy).toBeCalled();
@@ -87,7 +83,7 @@ describe('submit ticket view submission handler', () => {
     });
     const ack = (viewSubmission as any).ack as jest.Mock;
     fetchRepoMock.mockResolvedValueOnce(undefined);
-    await submitTicketSubmittedHandler(viewSubmission);
+    await submitTicketSubmittedHandler({ ...viewSubmission, client: mockClient } as any);
     expect(ack).toBeCalled();
     expect(viewsOpenMock).toBeCalledTimes(1);
     expect(viewsOpenMock.mock.calls[0][0].view.title.text).toEqual('Error');
@@ -114,7 +110,7 @@ describe('submit ticket view submission handler', () => {
     });
     chatPostMessageMock.mockResolvedValueOnce({ ts: '123123.34545' });
 
-    await submitTicketSubmittedHandler(viewSubmission);
+    await submitTicketSubmittedHandler({ ...viewSubmission, client: mockClient } as any);
     // TODO: Improve this to check values
     expect(graphqlMock).toBeCalled();
     expect(ticketSaveMock).toBeCalled();
@@ -144,7 +140,7 @@ describe('submit ticket view submission handler', () => {
     });
     chatPostMessageMock.mockResolvedValueOnce({ ts: '123123.34545' });
 
-    await submitTicketSubmittedHandler(viewSubmission);
+    await submitTicketSubmittedHandler({ ...viewSubmission, client: mockClient } as any);
     const { text } = chatPostMessageMock.mock.calls[0][0];
     const extraCharsAdded = '...\n_(Full description can be found on the issue)_';
     expect(text).toContain(extraCharsAdded);
@@ -178,7 +174,7 @@ describe('submit ticket view submission handler', () => {
     });
     chatPostMessageMock.mockResolvedValueOnce({ ts: '123123.34545' });
 
-    await submitTicketSubmittedHandler(viewSubmission);
+    await submitTicketSubmittedHandler({ ...viewSubmission, client: mockClient } as any);
     const { input } = graphqlMock.mock.calls[0][1];
     expect(input.issueTemplate).toEqual(type);
   });
@@ -205,7 +201,7 @@ describe('submit ticket view submission handler', () => {
     });
     chatPostMessageMock.mockResolvedValueOnce({ ts: '123123.34545' });
 
-    await submitTicketSubmittedHandler(viewSubmission);
+    await submitTicketSubmittedHandler({ ...viewSubmission, client: mockClient } as any);
     const { text } = chatPostMessageMock.mock.calls[1][0];
     const formattedStakeholders = stakeholders.map((stakeholder: string) => `<@${stakeholder}>`).join(', ');
     expect(text).toContain(`FYI ${formattedStakeholders}`);
