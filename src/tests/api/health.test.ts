@@ -12,6 +12,7 @@ jest.mock('../../env.ts', () => {
       githubAppInstallationId: 'INSTALLATION_ID',
       githubAppWebhookSecret: 'GITHUB_WEBHOOK_SECRET',
       slackSigningSecret: 'SLACK_SIGNING_SECRET',
+      nodeEnv: 'test',
     },
   };
 });

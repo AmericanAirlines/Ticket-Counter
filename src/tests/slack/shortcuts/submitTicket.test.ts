@@ -10,14 +10,12 @@ jest.mock('../../../github/utils/fetchIssueTemplates.ts', () => ({
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 const viewsOpenMock = jest.fn();
-const mockApp = {
-  client: {
-    views: {
-      open: jest.fn((args) => viewsOpenMock(args)),
-    },
+const mockClient = {
+  views: {
+    open: jest.fn((args) => viewsOpenMock(args)),
   },
 };
-const submitTicketHandler: Middleware<SlackShortcutMiddlewareArgs<SlackShortcut>> = submitTicket(mockApp as any);
+const submitTicketHandler: Middleware<SlackShortcutMiddlewareArgs<SlackShortcut>> = submitTicket;
 
 describe('submit ticket shortcut handler', () => {
   beforeEach(() => {
@@ -31,6 +29,7 @@ describe('submit ticket shortcut handler', () => {
       shortcut: {
         trigger_id: '',
       },
+      client: mockClient,
     } as any);
     expect(ack).toBeCalled();
     expect(viewsOpenMock).toBeCalled();
@@ -44,6 +43,7 @@ describe('submit ticket shortcut handler', () => {
       shortcut: {
         trigger_id: '',
       },
+      client: mockClient,
     } as any);
     expect(ack).toBeCalled();
     expect(viewsOpenMock).toBeCalled();
