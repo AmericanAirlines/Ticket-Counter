@@ -1,5 +1,5 @@
 import 'jest';
-import { AllMiddlewareArgs, App, Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
+import { AllMiddlewareArgs, Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
 import logger from '../../../logger';
 
 const loggerInfoSpy = jest.spyOn(logger, 'info').mockImplementation();
@@ -35,17 +35,15 @@ const mockPermalink = 'chat-permalink';
 const reactionsAddMock = jest.fn();
 const authTestMock = jest.fn(() => ({ user_id: mockAppId }));
 const getPermalinkMock = jest.fn(() => ({ permalink: mockPermalink }));
-const mockApp = {
-  client: {
-    reactions: {
-      add: reactionsAddMock,
-    },
-    auth: {
-      test: authTestMock,
-    },
-    chat: {
-      getPermalink: getPermalinkMock,
-    },
+const mockClient = {
+  reactions: {
+    add: reactionsAddMock,
+  },
+  auth: {
+    test: authTestMock,
+  },
+  chat: {
+    getPermalink: getPermalinkMock,
   },
 };
 
@@ -76,6 +74,7 @@ function getMockMessageEvent(
 ) {
   return {
     message: { parent_user_id: parentUserId, text, ts, channel, subtype, files },
+    client: mockClient,
   } as unknown as SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs;
 }
 
@@ -87,7 +86,7 @@ describe('messageReplied event listener', () => {
 
     // Get a clean copy of the module to avoid state being an issue
     jest.isolateModules(() => {
-      messageRepliedHandler = require('../../../slack/events/messageReplied').messageReplied(mockApp as unknown as App);
+      messageRepliedHandler = require('../../../slack/events/messageReplied').messageReplied;
     });
   });
 

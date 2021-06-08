@@ -1,4 +1,4 @@
-import { App } from '@slack/bolt';
+import { WebClient } from '@slack/web-api';
 
 jest.mock('../../../env.ts');
 
@@ -11,13 +11,12 @@ const mockUser = {
 const userInfoMock = jest.fn(() => ({
   user: mockUser,
 }));
-const mockApp = {
-  client: {
-    users: {
-      info: userInfoMock,
-    },
+const mockClient = {
+  users: {
+    info: userInfoMock,
   },
 };
+
 describe('user cache', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -27,7 +26,7 @@ describe('user cache', () => {
   it('uses the user info api method to retrieve details', (done) => {
     jest.isolateModules(async () => {
       const { getUserDetails } = require('../../../slack/utils/userCache');
-      const user = await getUserDetails('ABC123', mockApp as unknown as App);
+      const user = await getUserDetails('ABC123', mockClient as unknown as WebClient);
       expect(userInfoMock).toBeCalledTimes(1);
       expect(user).toEqual(mockUser);
       done();
@@ -36,8 +35,8 @@ describe('user cache', () => {
   it('subsequent calls for the same user will not result in multiple API calls', (done) => {
     jest.isolateModules(async () => {
       const { getUserDetails } = require('../../../slack/utils/userCache');
-      const user = await getUserDetails('ABC123', mockApp as unknown as App);
-      const user2 = await getUserDetails('ABC123', mockApp as unknown as App);
+      const user = await getUserDetails('ABC123', mockClient as unknown as WebClient);
+      const user2 = await getUserDetails('ABC123', mockClient as unknown as WebClient);
       expect(userInfoMock).toBeCalledTimes(1);
       expect(user).toEqual(mockUser);
       expect(user2).toEqual(mockUser);
