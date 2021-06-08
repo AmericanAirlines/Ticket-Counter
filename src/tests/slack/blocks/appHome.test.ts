@@ -7,6 +7,9 @@ import { getMock } from '../../test-utils/getMock';
 import { problemLoadingIssuesBlock } from '../../../slack/common/blocks/errors/corruptIssueError';
 import { noIssuesBlock } from '../../../slack/blocks/noIssuesOpen';
 import { GithubIssueInfo } from '../../../github/types';
+import logger from '../../../logger';
+
+jest.spyOn(logger, 'error').mockImplementation();
 
 jest.mock('../../../github/graphql.ts', () => ({
   githubGraphql: jest.fn(),
