@@ -61,7 +61,6 @@ export const submitTicketSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
 >${truncatedDescription}`;
 
     const result: { ts: string } = (await client.chat.postMessage({
-      token: env.slackBotToken,
       channel: env.slackSupportChannel,
       text,
     })) as any;
@@ -94,7 +93,6 @@ export const submitTicketSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
         ],
       },
       trigger_id: triggerId,
-      token: env.slackBotToken,
     });
 
     let threadResponse = `<@${body.user.id}>, please monitor this thread for updates. If you need to add more information or if you want to respond to the support team, add a message to this thread.`;
@@ -104,7 +102,6 @@ export const submitTicketSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
     }
 
     await client.chat.postMessage({
-      token: env.slackBotToken,
       channel: env.slackSupportChannel,
       text: threadResponse,
       thread_ts: result.ts,
@@ -128,7 +125,6 @@ export const submitTicketSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
     try {
       await client.views.open({
         trigger_id: triggerId,
-        token: env.slackBotToken,
         view: {
           type: 'modal',
           title: {

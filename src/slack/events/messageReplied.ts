@@ -23,7 +23,7 @@ export const messageReplied: Middleware<SlackEventMiddlewareArgs<'message'>> = a
     files,
   } = message as GenericMessageEvent;
 
-  appUserId = appUserId ?? ((await client.auth.test({ token: env.slackBotToken })) as any).user_id;
+  appUserId = appUserId ?? ((await client.auth.test()) as any).user_id;
   if (parentUserId !== appUserId || message.subtype === 'bot_message') {
     // The parent message is not something the bot wrote OR the reply is from a bot
     // -> ignore the event entirely
@@ -48,7 +48,6 @@ export const messageReplied: Middleware<SlackEventMiddlewareArgs<'message'>> = a
     const user = await getUserDetails(slackUserId, client);
 
     const { permalink } = (await client.chat.getPermalink({
-      token: env.slackBotToken,
       channel: env.slackSupportChannel,
       message_ts: ts,
     })) as Record<string, any>;
@@ -69,7 +68,6 @@ export const messageReplied: Middleware<SlackEventMiddlewareArgs<'message'>> = a
     });
 
     await client.reactions.add({
-      token: env.slackBotToken,
       timestamp: ts,
       channel,
       name: 'eyes',

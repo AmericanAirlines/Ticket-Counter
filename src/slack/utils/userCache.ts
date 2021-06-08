@@ -16,7 +16,6 @@ export async function getUserDetails(userId: string, client: WebClient): Promise
     ((
       await client.users.info({
         user: userId,
-        token: env.slackBotToken,
       })
     ).user as UserInfo);
   return userCache[userId];
