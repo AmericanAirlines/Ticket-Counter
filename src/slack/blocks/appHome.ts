@@ -12,8 +12,6 @@ import { getUserDetails } from '../utils/userCache';
 import { UserInfo } from '../types';
 
 export const appHomeBlocks = async (slackId: string, client: WebClient): Promise<KnownBlock[]> => {
-  // TODO Use the users.info slack api method to get the timezone information
-  // TODO Figure out how to format human readable date for each timezone
 
   const homeBlocks: KnownBlock[] = [headerBlock('Open Tickets :ticket:', true)];
   const tickets = await Ticket.find({ where: { authorId: slackId, status: 'Open' } });
