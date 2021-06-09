@@ -25,7 +25,7 @@ describe('github fetch repo util', () => {
     });
     expect(createAppAuthMock).toBeCalled();
     const { privateKey } = createAppAuthMock.mock.calls[0][0];
-    expect(privateKey).toEqual('');
+    expect(privateKey).toEqual('super secret key');
   });
 
   it('uses a private key if one is provided', () => {

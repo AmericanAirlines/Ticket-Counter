@@ -1,19 +1,8 @@
 import 'jest';
 import { isMessageReply } from '../../../slack/events';
 
-jest.mock('../../../env.ts', () => {
-  const actualEnv = jest.requireActual('../../../env.ts');
-  return {
-    env: {
-      ...actualEnv,
-      githubAppId: 'APP_ID',
-      githubAppPrivateKey: 'super secret key',
-      githubAppInstallationId: 'INSTALLATION_ID',
-      githubAppWebhookSecret: 'GITHUB_WEBHOOK_SECRET',
-      slackSigningSecret: 'SLACK_SIGNING_SECRET',
-    },
-  };
-});
+jest.mock('../../../env');
+
 jest.mock('../../../slack/utils/makeUserMentionsReadable.ts');
 
 describe('slack events registration', () => {

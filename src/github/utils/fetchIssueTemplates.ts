@@ -48,8 +48,7 @@ const autoFetchTemplates = async () => {
     if (env.nodeEnv !== 'test') {
       logger.error('Unable to fetch new templates, please check environment variables and try again', err);
     }
-    // I don't think we should try again if the environment variable is incorrect the first time
-    // setTimeout(() => autoFetchTemplates(), 30 * 60000);
+    setTimeout(() => autoFetchTemplates(), 30 * 60000);
   }
 };
 
