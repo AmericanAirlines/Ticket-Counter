@@ -4,5 +4,5 @@ import { submitTicket } from './submitTicket';
 
 export function shortcuts(bolt: App): void {
   // Register all action listeners
-  bolt.shortcut(callbackIds.submitTicket, submitTicket(bolt));
+  bolt.shortcut(callbackIds.submitTicket, submitTicket);
 }

@@ -1,5 +1,4 @@
 import 'jest';
-import { Middleware, SlackShortcut, SlackShortcutMiddlewareArgs } from '@slack/bolt';
 import { submitTicket } from '../../../slack/shortcuts/submitTicket';
 import logger from '../../../logger';
 
@@ -10,14 +9,11 @@ jest.mock('../../../github/utils/fetchIssueTemplates.ts', () => ({
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 const viewsOpenMock = jest.fn();
-const mockApp = {
-  client: {
-    views: {
-      open: jest.fn((args) => viewsOpenMock(args)),
-    },
+const mockClient = {
+  views: {
+    open: jest.fn((args) => viewsOpenMock(args)),
   },
 };
-const submitTicketHandler: Middleware<SlackShortcutMiddlewareArgs<SlackShortcut>> = submitTicket(mockApp as any);
 
 describe('submit ticket shortcut handler', () => {
   beforeEach(() => {
@@ -26,11 +22,12 @@ describe('submit ticket shortcut handler', () => {
 
   it('opens a view with editable blocks', async () => {
     const ack = jest.fn();
-    await submitTicketHandler({
+    await submitTicket({
       ack,
       shortcut: {
         trigger_id: '',
       },
+      client: mockClient,
     } as any);
     expect(ack).toBeCalled();
     expect(viewsOpenMock).toBeCalled();
@@ -39,11 +36,12 @@ describe('submit ticket shortcut handler', () => {
   it("logs an error if the modal can't be opened", async () => {
     const ack = jest.fn();
     viewsOpenMock.mockRejectedValueOnce("Can't open me!");
-    await submitTicketHandler({
+    await submitTicket({
       ack,
       shortcut: {
         trigger_id: '',
       },
+      client: mockClient,
     } as any);
     expect(ack).toBeCalled();
     expect(viewsOpenMock).toBeCalled();

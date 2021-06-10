@@ -1,6 +1,5 @@
 import 'jest';
 import { AllMiddlewareArgs, Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
-import { WebClient } from '@slack/web-api';
 import logger from '../../../logger';
 
 const loggerInfoSpy = jest.spyOn(logger, 'info').mockImplementation();
@@ -75,6 +74,7 @@ function getMockMessageEvent(
 ) {
   return {
     message: { parent_user_id: parentUserId, text, ts, channel, subtype, files },
+    client: mockClient,
   } as unknown as SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs;
 }
 
@@ -86,9 +86,7 @@ describe('messageReplied event listener', () => {
 
     // Get a clean copy of the module to avoid state being an issue
     jest.isolateModules(() => {
-      messageRepliedHandler = require('../../../slack/events/messageReplied').messageReplied(
-        mockClient as unknown as WebClient,
-      );
+      messageRepliedHandler = require('../../../slack/events/messageReplied').messageReplied;
     });
   });
 

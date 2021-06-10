@@ -18,28 +18,7 @@ jest.mock('../../../../src/entities/Ticket.ts', () => ({
   },
 }));
 
-jest.mock('../../../env', () => {
-  const actualEnv = jest.requireActual('../../../env');
-  return {
-    env: {
-      ...actualEnv,
-      githubAppId: 'APP_ID',
-      githubAppPrivateKey: 'super secret key',
-      githubAppInstallationId: 'INSTALLATION_ID',
-      githubAppWebhookSecret: 'GITHUB_WEBHOOK_SECRET',
-      slackSigningSecret: 'SLACK_SIGNING_SECRET',
-    },
-  };
-});
-const mockUser = {
-  user: {
-    real_name: 'Test Name',
-    name: 'Test Name',
-    id: 'UserId',
-    profile: { real_name: 'Test Name', display_name: 'Test Display' },
-    tz: 'America/Los_Angeles',
-  },
-};
+jest.mock('../../../env.ts');
 
 const mockSlackId = 'SLACK_ID';
 const mockClient = {
@@ -48,9 +27,6 @@ const mockClient = {
   },
   chat: {
     getPermalink: jest.fn(() => 'slack://link'),
-  },
-  users: {
-    info: jest.fn(() => mockUser),
   },
 } as unknown as WebClient;
 

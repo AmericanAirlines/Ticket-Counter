@@ -16,6 +16,7 @@ const mockClient = {
     info: userInfoMock,
   },
 };
+
 describe('user cache', () => {
   beforeEach(() => {
     jest.clearAllMocks();

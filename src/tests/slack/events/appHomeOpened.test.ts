@@ -6,6 +6,7 @@ import { appHomeOpened } from '../../../slack/events/appHomeOpened';
 import { updateAppHome } from '../../../slack/utils/updateAppHome';
 
 jest.mock('../../../env');
+
 jest.mock('../../../slack/utils/updateAppHome.ts');
 jest.mock('../../../env', () => {
   const actualEnv = jest.requireActual('../../../env');
