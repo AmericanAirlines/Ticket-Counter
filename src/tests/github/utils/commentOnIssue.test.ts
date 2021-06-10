@@ -7,7 +7,7 @@ jest.mock('../../../github/graphql.ts', () => ({
   githubGraphql: jest.fn(),
 }));
 
-const mockGraphql = (githubGraphql as unknown) as jest.Mock<any, any>;
+const mockGraphql = githubGraphql as unknown as jest.Mock<any, any>;
 
 const issueId = 'ISSUE_ID';
 const name = 'Jane Doe';

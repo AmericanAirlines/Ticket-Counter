@@ -6,12 +6,13 @@ import { appHomeOpened } from '../../../slack/events/appHomeOpened';
 import { updateAppHome } from '../../../slack/utils/updateAppHome';
 
 jest.mock('../../../env');
+
 jest.mock('../../../slack/utils/updateAppHome.ts');
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 
-const mockClient = ({} as unknown) as WebClient;
+const mockClient = {} as unknown as WebClient;
 const mockUser = {} as any;
-const mockEvent = ({ user: mockUser } as unknown) as AppHomeOpenedEvent;
+const mockEvent = { user: mockUser } as unknown as AppHomeOpenedEvent;
 
 describe('app home opened event handler', () => {
   beforeEach(() => {

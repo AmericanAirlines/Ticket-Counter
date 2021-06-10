@@ -10,11 +10,11 @@ jest.mock('../../../slack/blocks/appHome.ts', () => ({
   appHomeBlocks: jest.fn().mockResolvedValue([]),
 }));
 
-const mockClient = ({
+const mockClient = {
   views: {
     publish: jest.fn(),
   },
-} as unknown) as WebClient;
+} as unknown as WebClient;
 
 describe('update app home util', () => {
   beforeEach(() => {
