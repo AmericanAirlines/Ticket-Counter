@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import 'jest';
+import { env } from '../../env';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const createAppAuthMock = jest.fn((args) => ({ auth: {} }));
@@ -15,17 +16,26 @@ jest.mock('fs', () => ({
 describe('github fetch repo util', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (env as any as jest.Mock).mockRestore
   });
 
-  it('uses a private key if one is provided', () => {
-    jest.mock('../../env');
+  it('defaults to an empty string if private key is not provided', () => {
+    jest.mock('../../env', () => {
+      const actualEnv = jest.requireActual('../../env');
+      return {
+        env: {
+          ...actualEnv,
+          githubPrivateKey: '',
+        },
+      };
+    });
 
     jest.isolateModules(() => {
       require('../../github/graphql').githubGraphql;
     });
     expect(createAppAuthMock).toBeCalled();
     const { privateKey } = createAppAuthMock.mock.calls[0][0];
-    expect(privateKey).toEqual('super secret key');
+    expect(privateKey).toEqual('');
   });
 
   it('uses a private key if one is provided', () => {

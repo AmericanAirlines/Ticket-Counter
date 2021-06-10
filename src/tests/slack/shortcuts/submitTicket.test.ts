@@ -1,5 +1,4 @@
 import 'jest';
-import { Middleware, SlackShortcut, SlackShortcutMiddlewareArgs } from '@slack/bolt';
 import { submitTicket } from '../../../slack/shortcuts/submitTicket';
 import logger from '../../../logger';
 
@@ -15,7 +14,6 @@ const mockClient = {
     open: jest.fn((args) => viewsOpenMock(args)),
   },
 };
-const submitTicketHandler: Middleware<SlackShortcutMiddlewareArgs<SlackShortcut>> = submitTicket;
 
 describe('submit ticket shortcut handler', () => {
   beforeEach(() => {
@@ -24,7 +22,7 @@ describe('submit ticket shortcut handler', () => {
 
   it('opens a view with editable blocks', async () => {
     const ack = jest.fn();
-    await submitTicketHandler({
+    await submitTicket({
       ack,
       shortcut: {
         trigger_id: '',
@@ -38,7 +36,7 @@ describe('submit ticket shortcut handler', () => {
   it("logs an error if the modal can't be opened", async () => {
     const ack = jest.fn();
     viewsOpenMock.mockRejectedValueOnce("Can't open me!");
-    await submitTicketHandler({
+    await submitTicket({
       ack,
       shortcut: {
         trigger_id: '',
