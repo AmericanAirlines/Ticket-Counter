@@ -28,6 +28,9 @@ const mockClient = {
   chat: {
     getPermalink: jest.fn(() => 'slack://link'),
   },
+  users: {
+    info: jest.fn().mockResolvedValue({ user: { tz: '2021-05-19 16:49:39.609229' } }),
+  },
 } as unknown as WebClient;
 
 const mockUrl = 'TEST_URL.com';
