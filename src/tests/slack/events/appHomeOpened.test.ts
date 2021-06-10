@@ -8,17 +8,6 @@ import { updateAppHome } from '../../../slack/utils/updateAppHome';
 jest.mock('../../../env');
 
 jest.mock('../../../slack/utils/updateAppHome.ts');
-jest.mock('../../../env', () => {
-  const actualEnv = jest.requireActual('../../../env');
-  return {
-    env: {
-      ...actualEnv,
-      githubAppId: 'APP_ID',
-      githubAppPrivateKey: 'super secret key',
-      githubAppInstallationId: 'INSTALLATION_ID',
-    },
-  };
-});
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 const mockClient = {} as unknown as WebClient;

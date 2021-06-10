@@ -2,6 +2,7 @@ import { WebClient } from '@slack/web-api';
 import { UserInfo } from '../types';
 
 // TODO: Implement cache timeout
+
 interface UserCache {
   [id: string]: UserInfo;
 }
