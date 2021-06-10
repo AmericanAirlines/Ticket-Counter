@@ -3,6 +3,7 @@ import supertest from 'supertest';
 import { receiver } from '../../app';
 
 jest.mock('../../env.ts');
+
 describe('/api/health', () => {
   it('returns status, details, and timestamp', async () => {
     const healthResponse = await supertest(receiver.app).get('/api/health');

@@ -48,6 +48,7 @@ describe('github fetch repo util', () => {
   afterEach(() => {
     jest.clearAllTimers();
   });
+  
   it('will auto fetch after 30 minutes if there was an error', () => {
     // The timer was already setup in the beforeEach with a failure
     jest.advanceTimersByTime(30 * 60000);
