@@ -8,6 +8,8 @@ jest.mock('@octokit/auth', () => ({
   createAppAuth: jest.fn((args) => createAppAuthMock(args)),
 }));
 
+jest.mock('../../env');
+
 const fsReadFileSyncMock = jest.fn();
 jest.mock('fs', () => ({
   readFileSync: jest.fn((...args) => fsReadFileSyncMock(...args)),
@@ -16,23 +18,15 @@ jest.mock('fs', () => ({
 describe('github fetch repo util', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    (env as any as jest.Mock).mockRestore;
+    (env.githubAppPrivateKey as any) = undefined;
+    (env.githubAppPemFile as any) = '';
   });
 
   it('defaults to an empty string if private key is not provided', () => {
-    jest.mock('../../env', () => {
-      const actualEnv = jest.requireActual('../../env');
-      return {
-        env: {
-          ...actualEnv,
-          githubPrivateKey: '',
-        },
-      };
-    });
-
     jest.isolateModules(() => {
       require('../../github/graphql').githubGraphql;
     });
+
     expect(createAppAuthMock).toBeCalled();
     const { privateKey } = createAppAuthMock.mock.calls[0][0];
     expect(privateKey).toEqual('');
@@ -40,15 +34,7 @@ describe('github fetch repo util', () => {
 
   it('uses a private key if one is provided', () => {
     const mockPrivateKey = 'something super secretive';
-    jest.mock('../../env', () => {
-      const actualEnv = jest.requireActual('../../env');
-      return {
-        env: {
-          ...actualEnv,
-          githubAppPrivateKey: mockPrivateKey,
-        },
-      };
-    });
+    (env.githubAppPrivateKey as any) = mockPrivateKey;
 
     jest.isolateModules(() => {
       require('../../github/graphql').githubGraphql;
@@ -61,15 +47,7 @@ describe('github fetch repo util', () => {
   it('uses a pem file if one is provided', () => {
     const mockPemContents = 'super secret file contents';
     fsReadFileSyncMock.mockReturnValueOnce(mockPemContents);
-    jest.mock('../../env', () => {
-      const actualEnv = jest.requireActual('../../env');
-      return {
-        env: {
-          ...actualEnv,
-          githubAppPemFile: mockPemContents,
-        },
-      };
-    });
+    (env.githubAppPemFile as any) = mockPemContents;
 
     jest.isolateModules(() => {
       require('../../github/graphql').githubGraphql;
