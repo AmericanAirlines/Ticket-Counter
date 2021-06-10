@@ -16,7 +16,7 @@ jest.mock('fs', () => ({
 describe('github fetch repo util', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    (env as any as jest.Mock).mockRestore
+    (env as any as jest.Mock).mockRestore;
   });
 
   it('defaults to an empty string if private key is not provided', () => {
