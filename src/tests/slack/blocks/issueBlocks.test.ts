@@ -14,7 +14,6 @@ const mockClient = {
 const mockTimeZone = 'America/Los_Angeles';
 const MOCK_DATE_STRING = 'June 3, 2021, 2:28 PM PDT';
 
-
 const mockOpenGithubIssue = [
   {
     id: 'ISSUE_ID',

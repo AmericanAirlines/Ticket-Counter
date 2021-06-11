@@ -9,7 +9,6 @@ import logger from '../../logger';
 import { issueBlocks } from './issueBlocks';
 import { GithubIssueInfo } from '../../github/types';
 import { getUserDetails } from '../utils/userCache';
-import { UserInfo } from '../types';
 
 export const appHomeBlocks = async (slackId: string, client: WebClient): Promise<KnownBlock[]> => {
   const homeBlocks: KnownBlock[] = [headerBlock('Open Tickets :ticket:', true)];
