@@ -35,8 +35,7 @@ export const appHomeBlocks = async (slackId: string, client: WebClient): Promise
     );
     const issueInfo = issues.nodes.filter((issue) => issue !== null) as GithubIssueInfo[];
     try {
-      const userInfo = await getUserDetails(slackId, client);
-      const { tz: timezone } = userInfo as UserInfo;
+      const { tz: timezone } = await getUserDetails(slackId, client);
       const blocks = await issueBlocks(issueInfo, tickets, client, timezone);
       homeBlocks.push(...blocks);
     } catch (err) {
