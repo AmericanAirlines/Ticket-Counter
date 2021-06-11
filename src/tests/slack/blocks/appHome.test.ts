@@ -18,6 +18,10 @@ jest.mock('../../../../src/entities/Ticket.ts', () => ({
   },
 }));
 
+jest.mock('../../../../src/slack/utils/userCache.ts', () => ({
+  getUserDetails: jest.fn().mockResolvedValue({ user: { tz: '2021-06-03T21:28:55Z' } }),
+}));
+
 jest.mock('../../../env.ts');
 
 const mockSlackId = 'SLACK_ID';
@@ -27,9 +31,6 @@ const mockClient = {
   },
   chat: {
     getPermalink: jest.fn(() => 'slack://link'),
-  },
-  users: {
-    info: jest.fn().mockResolvedValue({ user: { tz: '2021-05-19 16:49:39.609229' } }),
   },
 } as unknown as WebClient;
 

@@ -6,13 +6,13 @@ import { env } from '../../env';
 import { dividerBlockWithPadding } from '../common/blocks/commonBlocks';
 import logger from '../../logger';
 import { GithubIssueInfo } from '../../github/types';
-import { formatDate } from '../utils/dateFormatter';
+import { relativeDateFromTimestamp } from '../../utils/dateFormatter';
 
 const issueBlock = (ticket: GithubIssueInfo, threadLink: string, timezone: string): KnownBlock[] => {
-  const issueText = `*Title:* <${ticket.url}|${ticket.title}>\n *Opened At:*  ${formatDate(
+  const issueText = `*Title:* <${ticket.url}|${ticket.title}>\n *Opened At:*  ${relativeDateFromTimestamp(
     ticket.createdAt,
     timezone,
-  )}\n*Last Updated:*  ${formatDate(ticket.updatedAt, timezone)}\n*State:* ${ticket.state}`;
+  )}\n*Last Updated:*  ${relativeDateFromTimestamp(ticket.updatedAt, timezone)}\n*State:* ${ticket.state}`;
   const description = `*Description:* ${ticket.body.split('\n')[0]}`;
   const truncatedDescriptionLength = 300;
   return [
