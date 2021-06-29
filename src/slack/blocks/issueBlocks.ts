@@ -6,9 +6,13 @@ import { env } from '../../env';
 import { dividerBlockWithPadding } from '../common/blocks/commonBlocks';
 import logger from '../../logger';
 import { GithubIssueInfo } from '../../github/types';
+import { relativeDateFromTimestamp } from '../../utils/dateFormatter';
 
-const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] => {
-  const issueText = `*Title:* ${ticket.title}\n *Issue Number:*  ${ticket.number}\n*Opened At:*  ${ticket.createdAt}\n*Last Updated:*  ${ticket.updatedAt}\n*State:* ${ticket.state}`;
+const issueBlock = (ticket: GithubIssueInfo, threadLink: string, timezone: string): KnownBlock[] => {
+  const issueText = `*Title:* <${ticket.url}|${ticket.title}>\n *Opened At:*  ${relativeDateFromTimestamp(
+    ticket.createdAt,
+    timezone,
+  )}\n*Last Updated:*  ${relativeDateFromTimestamp(ticket.updatedAt, timezone)}\n*State:* ${ticket.state}`;
   const description = `*Description:* ${ticket.body.split('\n')[0]}`;
   const truncatedDescriptionLength = 300;
   return [
@@ -41,7 +45,7 @@ const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] =
           type: 'button',
           text: {
             type: 'plain_text',
-            text: 'Go to Issue :memo:',
+            text: `Go to Issue #${ticket.number} :memo:`,
             emoji: true,
           },
           url: ticket.url,
@@ -52,7 +56,12 @@ const issueBlock = (ticket: GithubIssueInfo, threadLink: string): KnownBlock[] =
   ];
 };
 
-export const issueBlocks = async (githubIssuesInfo: GithubIssueInfo[], storedTickets: Ticket[], client: WebClient) =>
+export const issueBlocks = async (
+  githubIssuesInfo: GithubIssueInfo[],
+  storedTickets: Ticket[],
+  client: WebClient,
+  timezone: string,
+) =>
   Promise.all(
     githubIssuesInfo
       .sort((a, b) => (a.number > b.number ? 1 : -1))
@@ -63,7 +72,7 @@ export const issueBlocks = async (githubIssuesInfo: GithubIssueInfo[], storedTic
           message_ts: threadTs,
         })) as unknown as { permalink: string };
 
-        return issueBlock(issue, thread.permalink);
+        return issueBlock(issue, thread.permalink, timezone);
       }),
   )
     .then((arr) => arr.flat())

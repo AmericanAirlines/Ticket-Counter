@@ -10,4 +10,5 @@ export interface UserInfo {
     real_name: string;
     display_name: string;
   };
+  tz: string;
 }

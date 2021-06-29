@@ -8,6 +8,7 @@ import { noIssuesBlock } from './noIssuesOpen';
 import logger from '../../logger';
 import { issueBlocks } from './issueBlocks';
 import { GithubIssueInfo } from '../../github/types';
+import { getUserDetails } from '../utils/userCache';
 
 export const appHomeBlocks = async (slackId: string, client: WebClient): Promise<KnownBlock[]> => {
   const homeBlocks: KnownBlock[] = [headerBlock('Open Tickets :ticket:', true)];
@@ -33,7 +34,8 @@ export const appHomeBlocks = async (slackId: string, client: WebClient): Promise
     );
     const issueInfo = issues.nodes.filter((issue) => issue !== null) as GithubIssueInfo[];
     try {
-      const blocks = await issueBlocks(issueInfo, tickets, client);
+      const { tz: timezone } = await getUserDetails(slackId, client);
+      const blocks = await issueBlocks(issueInfo, tickets, client, timezone);
       homeBlocks.push(...blocks);
     } catch (err) {
       logger.error('Something went wrong trying to create issue blocks:', err);
