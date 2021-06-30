@@ -1,10 +1,9 @@
-import { App, SlackEventMiddlewareArgs } from '@slack/bolt';
+import { Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
 import { GenericMessageEvent } from '@slack/bolt/dist/types/events/message-events';
 import { Platform, Ticket } from '../../entities/Ticket';
 import { env } from '../../env';
 import { commentOnIssue } from '../../github/utils/commentOnIssue';
 import logger from '../../logger';
-import { AppMiddlewareFunction } from '../types';
 import { getExternalUserDisplayText } from '../utils/getExternalUserDisplayText';
 import { makeUserMentionsReadable } from '../utils/makeUserMentionsReadable';
 import { getUserDetails } from '../utils/userCache';
@@ -13,9 +12,7 @@ let appUserId: string;
 const getViewInSlackLink = (link: string) =>
   ` - [View in <img width="55" alt="Slack" src="https://assets.brandfolder.com/pljt3c-dcwb20-c19uuy/v/2995547/view@2x.png?v=1611630737" />](${link})`;
 
-export const messageReplied: AppMiddlewareFunction<SlackEventMiddlewareArgs<'message'>> = (app: App) => async ({
-  message,
-}) => {
+export const messageReplied: Middleware<SlackEventMiddlewareArgs<'message'>> = async ({ message, client }) => {
   const {
     parent_user_id: parentUserId,
     text,
@@ -26,7 +23,7 @@ export const messageReplied: AppMiddlewareFunction<SlackEventMiddlewareArgs<'mes
     files,
   } = message as GenericMessageEvent;
 
-  appUserId = appUserId ?? ((await app.client.auth.test({ token: env.slackBotToken })) as any).user_id;
+  appUserId = appUserId ?? ((await client.auth.test()) as any).user_id;
   if (parentUserId !== appUserId || message.subtype === 'bot_message') {
     // The parent message is not something the bot wrote OR the reply is from a bot
     // -> ignore the event entirely
@@ -48,15 +45,14 @@ export const messageReplied: AppMiddlewareFunction<SlackEventMiddlewareArgs<'mes
   }
 
   try {
-    const user = await getUserDetails(slackUserId, app);
+    const user = await getUserDetails(slackUserId, client);
 
-    const { permalink } = (await app.client.chat.getPermalink({
-      token: env.slackBotToken,
+    const { permalink } = (await client.chat.getPermalink({
       channel: env.slackSupportChannel,
       message_ts: ts,
     })) as Record<string, any>;
 
-    let messageText = await makeUserMentionsReadable(text ?? '', app);
+    let messageText = await makeUserMentionsReadable(text ?? '', client);
     messageText = messageText.replace(/```/g, '\n```\n');
 
     if (files?.length) {
@@ -71,8 +67,7 @@ export const messageReplied: AppMiddlewareFunction<SlackEventMiddlewareArgs<'mes
       platformText: getViewInSlackLink(permalink),
     });
 
-    await app.client.reactions.add({
-      token: env.slackBotToken,
+    await client.reactions.add({
       timestamp: ts,
       channel,
       name: 'eyes',
