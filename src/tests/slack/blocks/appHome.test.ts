@@ -27,14 +27,14 @@ jest.mock('../../../env.ts');
 jest.spyOn(logger, 'error').mockImplementation();
 
 const mockSlackId = 'SLACK_ID';
-const mockClient = ({
+const mockClient = {
   views: {
     publish: jest.fn(),
   },
   chat: {
     getPermalink: jest.fn(() => 'slack://link'),
   },
-} as unknown) as WebClient;
+} as unknown as WebClient;
 
 const mockUrl = 'TEST_URL.com';
 const mockGitHubIssuesPayload = {
