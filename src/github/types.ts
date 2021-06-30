@@ -1,4 +1,4 @@
-export interface GithubIssueInfo {
+export interface GitHubIssueInfo {
   id: string;
   url: string;
   body: string;

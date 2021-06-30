@@ -5,10 +5,10 @@ import { actionIds } from '../constants';
 import { env } from '../../env';
 import { dividerBlockWithPadding } from '../common/blocks/commonBlocks';
 import logger from '../../logger';
-import { GithubIssueInfo } from '../../github/types';
+import { GitHubIssueInfo } from '../../github/types';
 import { relativeDateFromTimestamp } from '../../utils/dateFormatter';
 
-const issueBlock = (ticket: GithubIssueInfo, threadLink: string, timezone: string): KnownBlock[] => {
+const issueBlock = (ticket: GitHubIssueInfo, threadLink: string, timezone: string): KnownBlock[] => {
   const issueText = `*Title:* <${ticket.url}|${ticket.title}>\n *Opened At:*  ${relativeDateFromTimestamp(
     ticket.createdAt,
     timezone,
@@ -57,7 +57,7 @@ const issueBlock = (ticket: GithubIssueInfo, threadLink: string, timezone: strin
 };
 
 export const issueBlocks = async (
-  githubIssuesInfo: GithubIssueInfo[],
+  githubIssuesInfo: GitHubIssueInfo[],
   storedTickets: Ticket[],
   client: WebClient,
   timezone: string,
@@ -67,10 +67,10 @@ export const issueBlocks = async (
       .sort((a, b) => (a.number > b.number ? 1 : -1))
       .map(async (issue) => {
         const threadTs = storedTickets.find((ticket) => ticket.issueId === issue.id)?.platformPostId!;
-        const thread: { permalink: string } = (await client.chat.getPermalink({
+        const thread: { permalink: string } = ((await client.chat.getPermalink({
           channel: env.slackSupportChannel,
           message_ts: threadTs,
-        })) as unknown as { permalink: string };
+        })) as unknown) as { permalink: string };
 
         return issueBlock(issue, thread.permalink, timezone);
       }),
