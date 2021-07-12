@@ -10,7 +10,7 @@ export const issueReopened = (webhooks: Webhooks) => {
   webhooks.on(['issues.reopened', 'issues.transferred'], async (event) => {
     logger.info(`Received an issue reopened event`);
 
-    const supportMembers = (event.payload.issue.assignees ?? []).map((user) => user.login);
+    const supportMembers = event.payload.issue.assignees?.map((user) => user.login) ?? [];
 
     await Ticket.update(event.payload.issue.node_id, {
       status: supportMembers.length > 0 ? Status.InProgress : Status.Open,
@@ -30,7 +30,9 @@ export const issueReopened = (webhooks: Webhooks) => {
           text: `:${Emoji.Reopened}: ${user?.name ?? user?.login ?? 'Someone'} reopened this ticket`,
           thread_ts: ticket.platformPostId,
         })
-        .catch(() => {});
+        .catch((err: Error) => {
+          logger.error('Could not post message to Slack', err);
+        });
       await updatePostReactions(ticket.status, ticket.platformPostId, true);
     }
   });
