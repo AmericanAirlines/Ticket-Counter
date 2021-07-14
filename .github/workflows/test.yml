@@ -39,4 +39,4 @@ jobs:
         if: steps.restore-node-modules.outputs.cache-hit != 'true'
         run: npm ci
       - name: Run tests
-        run: npm run test
+        run: npm run test:coverage
