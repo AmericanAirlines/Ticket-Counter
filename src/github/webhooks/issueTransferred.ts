@@ -9,6 +9,7 @@ export const issueTransferred = (webhooks: Webhooks) => {
   webhooks.on('issues.transferred', async (event) => {
     logger.info(`Received an issue ${event.payload.action} event`);
 
+    // Need to have the type here so that we can use the type of the payload
     type IssueTransferredEventWithChanges = typeof event.payload & {
       changes: {
         new_issue: typeof event.payload.issue;
@@ -45,7 +46,12 @@ export const issueTransferred = (webhooks: Webhooks) => {
           text: `:${Emoji.Transferred}: ${eventUser} transferred this issue to ${newUrl}`,
           thread_ts: ticket.platformPostId,
         })
-        .catch(() => {});
+        .catch((err) => {
+          logger.error(
+            `Could not send message to thread for issue transferred event for Ticket ${ticket.issueId}`,
+            err,
+          );
+        });
     }
   });
 };
