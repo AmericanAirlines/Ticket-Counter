@@ -7,6 +7,7 @@ import logger from '../../../logger';
 import { getMock } from '../../utils/getMock';
 
 jest.mock('../../../env');
+const mockLoggerInfo = jest.spyOn(logger, 'info').mockImplementation();
 const mockLoggerError = jest.spyOn(logger, 'error').mockImplementation();
 
 const webhooksMock = {
@@ -55,7 +56,7 @@ const mockWebhookEvent = {
 };
 
 const ticket = getMockTicket();
-const ticketUpdateMock = getMock(Ticket.update);
+const ticketUpdateMock = getMock(Ticket.update).mockResolvedValue({} as any);
 const ticketFindOneMock = getMock(Ticket.findOne).mockResolvedValue(ticket as any);
 jest.mock('../../../entities/Ticket.ts', () => {
   const { Status: actualStatus } = jest.requireActual('../../../entities/Ticket.ts');
@@ -85,10 +86,14 @@ describe('issue transferred webhook handler', () => {
     expect(webhooksMock.on).toHaveBeenCalledWith('issues.transferred', expect.any(Function));
   });
 
-  it('updates tickets in database', async () => {
-    ticketUpdateMock.mockResolvedValueOnce({ affected: 0 } as any);
-    ticketFindOneMock.mockResolvedValueOnce(undefined);
+  it('logs when webhook is called', async () => {
+    await webhook(mockWebhookEvent as any);
 
+    expect(mockLoggerInfo).toHaveBeenCalledTimes(1);
+    expect(mockLoggerInfo).toHaveBeenCalledWith(expect.stringContaining('transferred event'));
+  });
+
+  it('updates tickets in database', async () => {
     await webhook(mockWebhookEvent as any);
 
     expect(ticketUpdateMock).toHaveBeenCalledTimes(1);
