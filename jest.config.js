@@ -18,6 +18,8 @@ module.exports = {
     '!./src/logger.ts',
     '!./src/index.ts',
     '!./src/app.ts',
+    '!./src/env.ts',
+    '!./src/database.ts',
     '!./src/migrations/**',
     '!./src/entities/*.ts',
   ],

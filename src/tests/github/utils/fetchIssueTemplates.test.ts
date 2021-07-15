@@ -11,6 +11,7 @@ jest.mock('../../../env.ts', () => {
     },
   };
 });
+jest.spyOn(logger, 'debug').mockImplementation();
 const errorLoggerSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 const githubGraphqlMock = jest.fn().mockResolvedValue({
