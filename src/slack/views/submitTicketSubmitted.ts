@@ -12,12 +12,14 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
   (app: App) =>
   async ({ ack, body, view }) => {
     try {
+      await ack();
+
       const viewUtils = new ViewOutputUtils(view);
       const { trigger_id: triggerId } = body as unknown as { [id: string]: string };
 
       const title = viewUtils.getInputValue(SubmitTicketModalElement.Title)!.value!;
       const description = viewUtils.getInputValue(SubmitTicketModalElement.Description)!.value!;
-      const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)!.selected_option!.value.trim();
+      const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)!.selected_option!.text!.text.trim();
       const stakeholders = viewUtils.getInputValue(SubmitTicketModalElement.Stakeholders)!.selected_users ?? [];
 
       if (!title || !description || !type) {
@@ -25,8 +27,6 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
       }
 
       try {
-        await ack();
-
         await app.client.views.open({
           view: {
             type: 'modal',

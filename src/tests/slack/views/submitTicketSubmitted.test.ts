@@ -37,18 +37,20 @@ const mockViewStakeholders = jest.fn().mockReturnValue([]);
 jest.mock('../../../slack/utils/ViewOutputUtils.ts', () => ({
   ViewOutputUtils: jest.fn(() => ({
     getInputValue: jest.fn(
-      (actionId: string): { value: string } | { selected_users: string[] } | { selected_option: { value: string } } => {
+      (
+        actionId: string,
+      ): { value: string } | { selected_users: string[] } | { selected_option: { text: { text: string } } } => {
         switch (actionId) {
           case SubmitTicketModalElement.Title:
             return { value: mockViewTitle() };
           case SubmitTicketModalElement.Description:
             return { value: mockViewDescription() };
           case SubmitTicketModalElement.Type:
-            return { selected_option: { value: mockViewType() } };
+            return { selected_option: { text: { text: mockViewType() } } };
           case SubmitTicketModalElement.Stakeholders:
             return { selected_users: mockViewStakeholders() };
           default:
-            return { value: '' };
+            return { value: ' ' };
         }
       },
     ),
@@ -57,7 +59,6 @@ jest.mock('../../../slack/utils/ViewOutputUtils.ts', () => ({
 
 jest.spyOn(logger, 'info').mockImplementation();
 const loggerErrorSpy = jest.spyOn(logger, 'error');
-// const loggerErrorSpy = jest.spyOn(logger, 'error')//TODO add mockImplementation back;
 
 const viewsOpenMock = jest.fn();
 const chatPostMessageMock = jest.fn();
