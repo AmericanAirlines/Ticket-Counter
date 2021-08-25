@@ -22,7 +22,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
       const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)?.selected_option?.value?.trim();
       const stakeholders = viewUtils.getInputValue(SubmitTicketModalElement.Stakeholders)?.selected_users ?? [];
 
-      if (!title || !description || (!type && type !== '')) {
+      if (!title || !description || typeof type !== 'string') {
         throw new Error('Missing required fields');
       }
 
