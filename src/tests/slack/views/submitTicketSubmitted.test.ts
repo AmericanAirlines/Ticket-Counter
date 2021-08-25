@@ -30,25 +30,23 @@ jest.mock('../../../entities/Ticket.ts', () => {
   };
 });
 
-const mockViewDescription = jest.fn().mockReturnValue('Description');
-const mockViewTitle = jest.fn().mockReturnValue('Title');
-const mockViewType = jest.fn().mockReturnValue('Type');
-const mockViewStakeholders = jest.fn().mockReturnValue([]);
+const mockViewDescription = jest.fn().mockReturnValue({ value: 'Description' });
+const mockViewTitle = jest.fn().mockReturnValue({ value: 'Title' });
+const mockViewType = jest.fn().mockReturnValue({ selected_option: { value: 'Type' } });
+const mockViewStakeholders = jest.fn().mockReturnValue({ selected_users: [] });
 jest.mock('../../../slack/utils/ViewOutputUtils.ts', () => ({
   ViewOutputUtils: jest.fn(() => ({
     getInputValue: jest.fn(
-      (
-        actionId: string,
-      ): { value: string } | { selected_users: string[] } | { selected_option: { text: { text: string } } } => {
+      (actionId: string): { value: string } | { selected_users: string[] } | { selected_option: { value: string } } => {
         switch (actionId) {
           case SubmitTicketModalElement.Title:
-            return { value: mockViewTitle() };
+            return mockViewTitle();
           case SubmitTicketModalElement.Description:
-            return { value: mockViewDescription() };
+            return mockViewDescription();
           case SubmitTicketModalElement.Type:
-            return { selected_option: { text: { text: mockViewType() } } };
+            return mockViewType();
           case SubmitTicketModalElement.Stakeholders:
-            return { selected_users: mockViewStakeholders() };
+            return mockViewStakeholders();
           default:
             return { value: ' ' };
         }
@@ -122,9 +120,6 @@ describe('submit ticket view submission handler', () => {
   });
 
   it("throws an error if the support repo can't be found", async () => {
-    mockViewDescription.mockReturnValueOnce('Description');
-    mockViewTitle.mockReturnValueOnce('Title');
-
     const viewSubmission = getMockViewSubmission();
     const ack = (viewSubmission as any).ack as jest.Mock;
     fetchRepoMock.mockResolvedValueOnce(undefined);
@@ -135,10 +130,6 @@ describe('submit ticket view submission handler', () => {
   });
 
   it('handles submission, creates a new ticket, saves it, and notifies the user', async () => {
-    const title = 'Something broke!';
-    const description = 'Lorem ipsum!';
-    mockViewDescription.mockReturnValueOnce(description);
-    mockViewTitle.mockReturnValueOnce(title);
     const viewSubmission = getMockViewSubmission();
     const ack = (viewSubmission as any).ack as jest.Mock;
 
@@ -164,11 +155,9 @@ describe('submit ticket view submission handler', () => {
   });
 
   it('truncates the displayed description if the user is feeling verbose', async () => {
-    const title = 'Something broke!';
     const description =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
-    mockViewTitle.mockReturnValueOnce(title);
-    mockViewDescription.mockReturnValueOnce(description);
+    mockViewDescription.mockReturnValueOnce({ value: description });
     const viewSubmission = getMockViewSubmission();
 
     fetchRepoMock.mockResolvedValueOnce({ id: '456' });
@@ -194,11 +183,9 @@ describe('submit ticket view submission handler', () => {
   });
 
   it('does not mention github if the issue does not get created', async () => {
-    const title = 'Something broke!';
     const description =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
-    mockViewTitle.mockReturnValueOnce(title);
-    mockViewDescription.mockReturnValueOnce(description);
+    mockViewDescription.mockReturnValueOnce({ value: description });
     const viewSubmission = getMockViewSubmission();
 
     fetchRepoMock.mockResolvedValueOnce({ id: '456' });
@@ -212,14 +199,6 @@ describe('submit ticket view submission handler', () => {
   });
 
   it('sends an issue template if there is one', async () => {
-    const title = 'Something broke!';
-    const description = 'Lorem ipsum!';
-    const type = 'Sev 1';
-    const stakeholders: string[] = [];
-    mockViewTitle.mockReturnValueOnce(title);
-    mockViewDescription.mockReturnValueOnce(description);
-    mockViewType.mockReturnValueOnce(type);
-    mockViewStakeholders.mockReturnValueOnce(stakeholders);
     const viewSubmission = getMockViewSubmission();
 
     fetchRepoMock.mockResolvedValueOnce({ id: '456' });
@@ -236,17 +215,11 @@ describe('submit ticket view submission handler', () => {
 
     await submitTicketSubmittedHandler(viewSubmission);
     const { input } = graphqlMock.mock.calls[0][1];
-    expect(input.issueTemplate).toEqual(type);
+    expect(input.issueTemplate).toEqual('Type');
   });
 
   it('sends an issue template with no stakeholders', async () => {
-    const title = 'Something broke!';
-    const description = 'Lorem ipsum!';
-    const type = 'Sev 1';
-    mockViewTitle.mockReturnValueOnce(title);
-    mockViewDescription.mockReturnValueOnce(description);
-    mockViewType.mockReturnValueOnce(type);
-    mockViewStakeholders.mockReturnValueOnce(undefined);
+    mockViewStakeholders.mockReturnValueOnce({ selected_users: undefined });
     const viewSubmission = getMockViewSubmission();
 
     fetchRepoMock.mockResolvedValueOnce({ id: '456' });
@@ -263,32 +236,14 @@ describe('submit ticket view submission handler', () => {
 
     await submitTicketSubmittedHandler(viewSubmission);
     const { input } = graphqlMock.mock.calls[0][1];
-    expect(input.issueTemplate).toEqual(type);
-  });
-
-  it("throws an error if title isn't defined", async () => {
-    const description = 'Lorem ipsum!';
-    const type = 'Sev 1';
-    const stakeholders: string[] = [];
-    mockViewTitle.mockReturnValueOnce(undefined);
-    mockViewDescription.mockReturnValueOnce(description);
-    mockViewType.mockReturnValueOnce(type);
-    mockViewStakeholders.mockReturnValueOnce(stakeholders);
-    const viewSubmission = getMockViewSubmission();
-
-    await submitTicketSubmittedHandler(viewSubmission);
-    expect(loggerErrorSpy).toBeCalled();
+    expect(input.issueTemplate).toEqual('Type');
   });
 
   it("tags stakeholders in a thread if they're provided", async () => {
-    const title = 'Something broke!';
-    const description = 'Lorem ipsum!';
     const stakeholders = ['JohnDoe', 'JaneSmith'];
     const viewSubmission = getMockViewSubmission();
 
-    mockViewTitle.mockReturnValueOnce(title);
-    mockViewDescription.mockReturnValueOnce(description);
-    mockViewStakeholders.mockReturnValueOnce(stakeholders);
+    mockViewStakeholders.mockReturnValueOnce({ selected_users: stakeholders });
 
     fetchRepoMock.mockResolvedValueOnce({ id: '456' });
     graphqlMock.mockResolvedValueOnce({
@@ -306,6 +261,98 @@ describe('submit ticket view submission handler', () => {
     const { text } = chatPostMessageMock.mock.calls[1][0];
     const formattedStakeholders = stakeholders.map((stakeholder: string) => `<@${stakeholder}>`).join(', ');
     expect(text).toContain(`FYI ${formattedStakeholders}`);
+  });
+
+  it('throws an error if title is undefined', async () => {
+    mockViewTitle.mockReturnValueOnce(undefined);
+    const viewSubmission = getMockViewSubmission();
+
+    fetchRepoMock.mockResolvedValueOnce({ id: '456' });
+    graphqlMock.mockResolvedValueOnce({
+      createIssue: {
+        issue: {
+          url: 'mockUrl',
+          number: '123',
+          id: '456',
+        },
+      },
+    });
+    chatPostMessageMock.mockResolvedValueOnce({ ts: '123123.34545' });
+
+    await submitTicketSubmittedHandler(viewSubmission);
+    expect(loggerErrorSpy).toBeCalled();
+  });
+
+  it('throws an error if description is undefined', async () => {
+    mockViewDescription.mockReturnValueOnce(undefined);
+    const viewSubmission = getMockViewSubmission();
+
+    fetchRepoMock.mockResolvedValueOnce({ id: '456' });
+    graphqlMock.mockResolvedValueOnce({
+      createIssue: {
+        issue: {
+          url: 'mockUrl',
+          number: '123',
+          id: '456',
+        },
+      },
+    });
+    chatPostMessageMock.mockResolvedValueOnce({ ts: '123123.34545' });
+
+    await submitTicketSubmittedHandler(viewSubmission);
+    expect(loggerErrorSpy).toBeCalled();
+  });
+
+  it('throws an error if type is undefined', async () => {
+    mockViewType.mockReturnValueOnce(undefined);
+    const viewSubmission = getMockViewSubmission();
+
+    fetchRepoMock.mockResolvedValueOnce({ id: '456' });
+    graphqlMock.mockResolvedValueOnce({
+      createIssue: {
+        issue: {
+          url: 'mockUrl',
+          number: '123',
+          id: '456',
+        },
+      },
+    });
+    chatPostMessageMock.mockResolvedValueOnce({ ts: '123123.34545' });
+
+    await submitTicketSubmittedHandler(viewSubmission);
+    expect(loggerErrorSpy).toBeCalled();
+  });
+
+  it('does not throws an error if selected_users is undefined', async () => {
+    mockViewStakeholders.mockReturnValueOnce(undefined);
+    const viewSubmission = getMockViewSubmission();
+
+    fetchRepoMock.mockResolvedValueOnce({ id: '456' });
+    graphqlMock.mockResolvedValueOnce(undefined);
+    chatPostMessageMock.mockResolvedValueOnce({ ts: '123123.34545' });
+
+    await submitTicketSubmittedHandler(viewSubmission);
+    expect(loggerErrorSpy).not.toBeCalled();
+  });
+
+  it('does not throw an error if type is is generic or empty string', async () => {
+    mockViewType.mockReturnValueOnce({ selected_option: { value: ' ' } });
+    const viewSubmission = getMockViewSubmission();
+
+    fetchRepoMock.mockResolvedValueOnce({ id: '456' });
+    graphqlMock.mockResolvedValueOnce({
+      createIssue: {
+        issue: {
+          url: 'mockUrl',
+          number: '123',
+          id: '456',
+        },
+      },
+    });
+    chatPostMessageMock.mockResolvedValueOnce({ ts: '123123.34545' });
+
+    await submitTicketSubmittedHandler(viewSubmission);
+    expect(loggerErrorSpy).not.toBeCalled();
   });
 });
 

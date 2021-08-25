@@ -19,10 +19,10 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
 
       const title = viewUtils.getInputValue(SubmitTicketModalElement.Title)?.value ?? '';
       const description = viewUtils.getInputValue(SubmitTicketModalElement.Description)?.value ?? '';
-      const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)?.selected_option?.value?.trim() || undefined;
+      const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)?.selected_option?.value?.trim();
       const stakeholders = viewUtils.getInputValue(SubmitTicketModalElement.Stakeholders)?.selected_users ?? [];
 
-      if (!title || !description || !type) {
+      if (!title || !description || (!type && type !== '')) {
         throw new Error('Missing required fields');
       }
 
