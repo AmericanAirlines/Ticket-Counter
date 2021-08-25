@@ -17,10 +17,10 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
       const viewUtils = new ViewOutputUtils(view);
       const { trigger_id: triggerId } = body as unknown as { [id: string]: string };
 
-      const title = viewUtils.getInputValue(SubmitTicketModalElement.Title)!.value!;
-      const description = viewUtils.getInputValue(SubmitTicketModalElement.Description)!.value!;
-      const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)!.selected_option!.text!.text.trim();
-      const stakeholders = viewUtils.getInputValue(SubmitTicketModalElement.Stakeholders)!.selected_users ?? [];
+      const title = viewUtils.getInputValue(SubmitTicketModalElement.Title)?.value ?? '';
+      const description = viewUtils.getInputValue(SubmitTicketModalElement.Description)?.value ?? '';
+      const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)?.selected_option?.value?.trim() || undefined;
+      const stakeholders = viewUtils.getInputValue(SubmitTicketModalElement.Stakeholders)?.selected_users ?? [];
 
       if (!title || !description || !type) {
         throw new Error('Missing required fields');
