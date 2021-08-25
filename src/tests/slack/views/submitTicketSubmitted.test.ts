@@ -237,7 +237,7 @@ describe('submit ticket view submission handler', () => {
     const { input } = graphqlMock.mock.calls[0][1];
     expect(input.issueTemplate).toEqual(type);
   });
-  
+
   it('sends an issue template with no stakeholders', async () => {
     const title = 'Something broke!';
     const description = 'Lorem ipsum!';
