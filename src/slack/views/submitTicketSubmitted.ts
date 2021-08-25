@@ -15,10 +15,49 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
       const viewUtils = new ViewOutputUtils(view);
       const { trigger_id: triggerId } = body as unknown as { [id: string]: string };
 
-      const title = viewUtils.getInputValue(SubmitTicketModalElement.Title)?.value ?? '';
-      const description = viewUtils.getInputValue(SubmitTicketModalElement.Description)?.value ?? '';
-      const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)?.selected_option?.value?.trim() || undefined;
-      const stakeholders = viewUtils.getInputValue(SubmitTicketModalElement.Stakeholders)?.selected_users ?? [];
+      const title = viewUtils.getInputValue(SubmitTicketModalElement.Title)!.value!;
+      const description = viewUtils.getInputValue(SubmitTicketModalElement.Description)!.value!;
+      const type = viewUtils.getInputValue(SubmitTicketModalElement.Type)!.selected_option!.value.trim();
+      const stakeholders = viewUtils.getInputValue(SubmitTicketModalElement.Stakeholders)!.selected_users ?? [];
+
+      if (!title || !description || !type) {
+        throw new Error('Missing required fields');
+      }
+
+      try {
+        await ack();
+
+        await app.client.views.open({
+          view: {
+            type: 'modal',
+            title: {
+              type: 'plain_text',
+              text: `We're working on it!`,
+            },
+            blocks: [
+              {
+                type: 'header',
+                text: {
+                  type: 'plain_text',
+                  text: ":white_check_mark: You've successfully submitted your ticket",
+                  emoji: true,
+                },
+              },
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `Someone will help you shortly!\nSee <#${env.slackSupportChannel}> for more details. Keep an eye on your Direct Messages in case something goes wrong`,
+                },
+              },
+            ],
+          },
+          trigger_id: triggerId,
+          token: env.slackBotToken,
+        });
+      } catch (e) {
+        logger.error('Unable to ack modal or open a new one', e);
+      }
 
       const repository = await fetchRepo();
 
@@ -27,34 +66,42 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
       }
 
       const githubBody = `${description}\n\n> Opened in Slack by \`@${body.user.name}\`\n_Comments will be synced automatically between this Issue and the Slack thread_`;
-      const { createIssue } = await githubGraphql(
-        `mutation newIssue($input: CreateIssueInput!) {
-          createIssue(input: $input) {
-            issue {
-              id
-              url
-              number
-            }
-          }
-        }`,
-        {
-          input: {
-            title,
-            body: githubBody,
-            repositoryId: repository.id,
-            issueTemplate: type,
+      let createIssue: { issue: { id: string; url: string; number: number } } | undefined;
+      try {
+        const response: { createIssue: { issue: { id: string; url: string; number: number } } } = await githubGraphql(
+          `mutation newIssue($input: CreateIssueInput!) {
+           createIssue(input: $input) {
+             issue {
+               id
+               url
+               number
+             }
+           }
+         }`,
+          {
+            input: {
+              title,
+              body: githubBody,
+              repositoryId: repository.id,
+              issueTemplate: type,
+            },
           },
-        },
-      );
+        );
+        createIssue = response.createIssue;
+      } catch (error) {
+        logger.error('Unable to create issue', error);
+      }
 
       const truncatedDescription =
         description.length > 200
-          ? `${description.substr(
-              0,
-              Math.min(description.length, 200),
-            )}...\n_(Full description can be found on the issue)_`
+          ? `${description.substr(0, Math.min(description.length, 200))}...${
+              createIssue ? '\n_(Full description can be found on the issue)_' : ''
+            }`
           : description;
-      const text = `*_<${createIssue.issue.url}|Ticket #${createIssue.issue.number} Opened> by <@${body.user.id}>_*
+      const headerText = createIssue
+        ? `<${createIssue.issue.url}|Ticket #${createIssue.issue.number} Opened> by <@${body.user.id}>`
+        : `:warning: Something went wrong opening a ticket from <@${body.user.id}>`;
+      const text = `*_${headerText}_*
 *Title:* ${title}
 >${truncatedDescription}`;
 
@@ -64,36 +111,17 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
         text,
       })) as any;
 
-      void ack();
-
-      await app.client.views.open({
-        view: {
-          type: 'modal',
-          title: {
-            type: 'plain_text',
-            text: `Ticket #${createIssue.issue.number} Opened`,
-          },
-          blocks: [
-            {
-              type: 'header',
-              text: {
-                type: 'plain_text',
-                text: ':white_check_mark: Your ticket was opened successfully',
-                emoji: true,
-              },
-            },
-            {
-              type: 'section',
-              text: {
-                type: 'mrkdwn',
-                text: `Someone will help you shortly!\nSee <#${env.slackSupportChannel}> for more details.`,
-              },
-            },
-          ],
-        },
-        trigger_id: triggerId,
-        token: env.slackBotToken,
-      });
+      if (createIssue) {
+        const ticket = new Ticket(
+          createIssue.issue.id,
+          createIssue.issue.number,
+          body.user.id,
+          body.user.name,
+          Platform.Slack,
+          result.ts,
+        );
+        await ticket.save();
+      }
 
       let threadResponse = `<@${body.user.id}>, please monitor this thread for updates. If you need to add more information or if you want to respond to the support team, add a message to this thread.`;
       if (stakeholders.length > 0) {
@@ -108,45 +136,8 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
         thread_ts: result.ts,
       });
 
-      const ticket = new Ticket(
-        createIssue.issue.id,
-        createIssue.issue.number,
-        body.user.id,
-        body.user.name,
-        Platform.Slack,
-        result.ts,
-      );
-      await ticket.save();
-
       logger.info(`Ticket opened by ${body.user.name}/${body.user.id}: ${description}`);
     } catch (error) {
-      void ack();
-      const { trigger_id: triggerId } = body as unknown as { [id: string]: string };
       logger.error('Something went wrong trying to create a ticket: ', error);
-      try {
-        await app.client.views.open({
-          trigger_id: triggerId,
-          token: env.slackBotToken,
-          view: {
-            type: 'modal',
-            title: {
-              type: 'plain_text',
-              text: 'Error',
-            },
-            blocks: [
-              {
-                type: 'section',
-                text: {
-                  type: 'mrkdwn',
-                  text: `:warning: Unable to open ticket.
-                \nWe're not totally sure what happened, but this issue has been logged.`,
-                },
-              },
-            ],
-          },
-        });
-      } catch (err) {
-        logger.error("Something went really wrong and the error modal couldn't be opened");
-      }
     }
   };
