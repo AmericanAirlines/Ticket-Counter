@@ -2,7 +2,7 @@ import { ViewOutput } from '@slack/bolt';
 
 interface BlockInputValue {
   value?: string;
-  selected_option?: { value: string; text?: { emoji: boolean; text: string; type: string } };
+  selected_option?: { value: string };
   selected_users?: string[];
 }
 
