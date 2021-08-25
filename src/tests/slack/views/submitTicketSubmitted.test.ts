@@ -58,7 +58,7 @@ jest.mock('../../../slack/utils/ViewOutputUtils.ts', () => ({
 }));
 
 jest.spyOn(logger, 'info').mockImplementation();
-const loggerErrorSpy = jest.spyOn(logger, 'error');
+const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 const viewsOpenMock = jest.fn();
 const chatPostMessageMock = jest.fn();

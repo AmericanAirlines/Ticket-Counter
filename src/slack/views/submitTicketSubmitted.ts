@@ -56,7 +56,7 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
           token: env.slackBotToken,
         });
       } catch (e) {
-        logger.error('Unable to ack modal or open a new one', e);
+        logger.error('Unable to open the confirmation modal', e);
       }
 
       const repository = await fetchRepo();
@@ -111,17 +111,17 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
         text,
       })) as any;
 
-      if (createIssue) {
-        const ticket = new Ticket(
-          createIssue.issue.id,
-          createIssue.issue.number,
-          body.user.id,
-          body.user.name,
-          Platform.Slack,
-          result.ts,
-        );
-        await ticket.save();
-      }
+      if (!createIssue) return;
+
+      const ticket = new Ticket(
+        createIssue.issue.id,
+        createIssue.issue.number,
+        body.user.id,
+        body.user.name,
+        Platform.Slack,
+        result.ts,
+      );
+      await ticket.save();
 
       let threadResponse = `<@${body.user.id}>, please monitor this thread for updates. If you need to add more information or if you want to respond to the support team, add a message to this thread.`;
       if (stakeholders.length > 0) {
