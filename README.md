@@ -1,5 +1,5 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-![Build and Deploy](https://github.com/AmericanAirlines/Ticket-Counter/workflows/Build%20and%20Deploy/badge.svg)
+![Build](https://github.com/AmericanAirlines/Ticket-Counter/workflows/Build/badge.svg)
 <!-- [![codecov](https://codecov.io/gh/AmericanAirlines/Ticket-Counter/branch/main/graph/badge.svg)](https://codecov.io/gh/AmericanAirlines/Ticket-Counter) -->
 <!-- [![Total alerts](https://img.shields.io/lgtm/alerts/g/AmericanAirlines/Ticket-Counter.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Ticket-Counter/alerts/) -->
 <!-- [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AmericanAirlines/Ticket-Counter.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Ticket-Counter/context:javascript) -->
