@@ -130,16 +130,21 @@ Before being able to run the app locally, you'll need to create a Slack app and 
     - `reactions:read`
 
 - Using the sidebar, navigate to "_Event Subscriptions_" enable them
+  - For the `Request URL` field, use your [ngrok URL] and then append `/slack/events`
   - Under "_Subscribe to bot Events_", add the following scopes:
     - `message.channels`
     - `app_home_opened`
   - Click  "_Save Changes_" at the bottom of the page
+
 - Using the sidebar, navigate to "_App Home_"
-  - Scroll to "_Your App's Presence in Slack" and click "_Edit_" next to "_App Display Name_" (e.g., using `Ticket Counter` for the name and `Ticket-Counter` for the username is recommended)
+  - Scroll to "_Your App's Presence in Slack_" and click "_Edit_" next to "_App Display Name_" (e.g., using `Ticket Counter` for the name and `Ticket-Counter` for the username is recommended)
   - We also recommend enabling "Always Show My Bot as Online"
   - Enable the home tab in the _Show Tabs_ section
   - Finally, in the _Show Tabs_ section, disable the _Messages Tab_
-- Using the sidebar, navigate to "_Basic Information_", scroll down, copy the `Signing Secret` value and use it to replace the `SLACK_SIGNING_SECRET` value in your `.env`
+  
+- Using the sidebar, navigate to "_Basic Information_"
+  - scroll to, to "_App Credentials_" and copy the `Signing Secret` value and use it to replace the `SLACK_SIGNING_SECRET` value in your `.env`
+  
 - Using the sidebar, navigate to "_Install App_" and click "Reinstall App"
   - Once finished, copy the `Bot User OAuth Access Token` value and use it to replace the `SLACK_TOKEN` value in your `.env`
 
@@ -189,3 +194,23 @@ This repo utilizes two GitHub Workflows:
 # Contributing
 
 Interested in contributing to the project? Check out our [Contributing Guidelines](./.github/CONTRIBUTING.md).
+
+# ScreenShots
+
+ The main app home page
+ ![App Home](./docs/app_home.png)
+
+  When you want to submit a new ticket
+ ![App Home](./docs/shortcut.png)
+
+  Here you can provide details about the ticket
+ ![App Home](./docs/submit_ticket.png)
+
+  Once you submit the ticket successfully, you'll see a message saying "Ticket submitted successfully"
+ ![App Home](./docs/successful_submission.png)
+
+  Created tickets are posted in your specified support channel
+ ![App Home](./docs/post.png)
+
+  Additional information about the ticket is posted in a thread of the posted ticket in channel
+ ![App Home](./docs/threads.png)
