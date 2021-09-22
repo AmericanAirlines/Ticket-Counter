@@ -29,9 +29,6 @@ describe('update app home util', () => {
       view: {
         type: 'home',
         callback_id: actionIds.ignore,
-        title: {
-          text: 'Ticket Counter',
-        },
       },
     });
   });
