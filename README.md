@@ -119,14 +119,21 @@ Before being able to run the app locally, you'll need to create a Slack app and 
 
 - Create an app on the [Slack API Site](https://api.slack.com/apps)
 - Using the sidebar, navigate to "_OAuth & Permissions_" and enable them
-  - Under '_Scopes_' --> '_Bot Token Scopes_' click `Add an OAuth Scope` and add the following scope:
+  - Under '_Scopes_' --> '_Bot Token Scopes_' click `Add an OAuth Scope` and add the following scopes:
+    - `channels:history`
+    - `channels:manage`
     - `chat:write`
     - `chat:write.public`
-    - `channels:history`
+    - `commands`
     - `reactions:write`
-    - `users:read` (needed to obtain the bot's user ID)
+    - `users:read`
+    - `reactions:read`
+
 - Using the sidebar, navigate to "_Event Subscriptions_" enable them
-  - Under "_Subscribe to bot Events_", add the `message.channels` scope
+  - Under "_Subscribe to bot Events_", add the following scopes:
+    - `message.channels`
+    - `app_home_opened`
+  - Click  "_Save Changes_" at the bottom of the page
 - Using the sidebar, navigate to "_App Home_"
   - Scroll to "_Your App's Presence in Slack" and click "_Edit_" next to "_App Display Name_" (e.g., using `Ticket Counter` for the name and `Ticket-Counter` for the username is recommended)
   - We also recommend enabling "Always Show My Bot as Online"
