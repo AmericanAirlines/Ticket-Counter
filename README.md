@@ -70,9 +70,9 @@ You will get this output after running. You'll want to use the `Forwarding https
 ![ngrok output showing the URL](./docs/ngrok-output.png)
 
 ---
+
 ### Create a GitHub App
 Before being able to run the app locally, you'll need to create a Slack app and configure it with the appropriate permissions:
-
 - Go to github.com
 - Go to your Settings
 - Go to Developer Settings
