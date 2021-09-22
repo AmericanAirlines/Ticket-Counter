@@ -39,7 +39,7 @@ async function updateReactions(threadTs: string, { remove, add }: { remove: Emoj
         channel: env.slackSupportChannel,
       });
     } catch (err: any) {
-      if (!['no_reaction', 'already_reacted'].includes(err.data?.error)) {
+      if (!['no_reaction', 'already_reacted'].includes(err?.error)) {
         logger.error(`Unable to ${action} emoji: ${name}`, err);
       }
     }
