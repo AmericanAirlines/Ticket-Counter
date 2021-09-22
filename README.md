@@ -5,27 +5,36 @@
 <!-- [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AmericanAirlines/Ticket-Counter.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Ticket-Counter/context:javascript) -->
 
 # Ticket Counter 🎟
+
 Getting tech support should be easy
 
-### Let's get started...
+### Let's get started
+
   1. [Using Ticket Counter](#using-ticket-counter)
   1. [Local Development](#local-development)
   1. [CI/CD](#cicd)
   1. [Contributing](#contributing)
 
 ## Using Ticket Counter
+
 # `DOCS NEEDED`
 
 ---
+
 ## Local Development
+
 Before getting started, make sure to install [Node (LTS)](https://nodejs.org/en/download/) (v14.0+) and run `npm i` to install all necessary dependencies.
 
 ---
+
 ### Environment Variables
+
 Project environment variables should first be defined in `.env.sample` without real values for their data (that file is tracked by git). After cloning, make sure to duplicate `.env.sample` as `.env` and then fill in all required variables using the details provided in the section below.
 
 ---
+
 ### Postgres
+
 Ticket Counter uses Postgres 11, so you'll need to set it up on your machine. If you don't have Postgres installed already, see the [Installation and Use](#installation-and-use) section below.
 
 Create a database (we suggest `ticket-counter`, if you chose something else or are running your server on a different port, make sure to create a `DATABASE_URL` value in `.env` with your override URL) in the PostgreSQL 11 server (do not make a new server), and then run the app. If your Postgres server is protected by a password, you'll need to add `PGUSER` and `PGPASSWORD` to your `.env` file where `PGUSER` will be `postgres` and `PGPASSWORD` will be the Postgres server password entered during installation.
@@ -35,13 +44,16 @@ When the app is deployed to a cloud environment, the `DATABASE_URL` `.env` var w
 <details>
   <summary><strong>Postgres Installation and Use</strong></summary>
 
-  #### macOS
+#### macOS
+
   We recommend using [Postgres.app](https://postgresapp.com/) as the installation doesn't require a password and is generally easier to use that the traditional Postgres app below.
 
-  #### Windows/macOS/Linux
+#### Windows/macOS/Linux
+
   During the installation process (if you follow the steps on [postgresql.org](https://www.postgresql.org/download/)), you will be prompted to set a password - make sure to use something you'll remember.
 
-  #### Viewing/Editing the DB
+#### Viewing/Editing the DB
+
   If you'd like a visual way of viewing or editing your local database, try using [TablePlus](https://tableplus.com).
 </details>
 
@@ -71,7 +83,9 @@ You will get this output after running. You'll want to use the `Forwarding https
 ---
 
 ### Create a GitHub App
+
 Before being able to run the app locally, you'll need to create a Slack app and configure it with the appropriate permissions:
+
 - Go to github.com
 - Go to your Settings
 - Go to Developer Settings
@@ -86,10 +100,10 @@ Before being able to run the app locally, you'll need to create a Slack app and 
   - Create a secret and put it in `Webhook Secret`
     - You'll also want to put this in your `.env` file for `GITHUB_APP_WEBHOOK_SECRET`
   - Change these settings on `Permissions`
-    - Set Issues to `Read & write`
     - Set Contents to `Read-only`
-  - Check the box next to `Issues` under `Subscribe to events`
-  - Check the box next to `Issue comment` under `Subscribe to events`
+    - Set Issues to `Read & write`
+  - Check the box next to `Issues` under the `Subscribe to events` section
+  - Check the box next to `Issue comment` under the `Subscribe to events` section
 - Click Create GitHub App
 - Copy the App ID into your `.env` file
 - Generate a private key and move the downloaded file to the root of the project
@@ -100,7 +114,9 @@ Before being able to run the app locally, you'll need to create a Slack app and 
 ---
 
 ### Create a Slack App
+
 Before being able to run the app locally, you'll need to create a Slack app and configure it with the appropriate permissions:
+
 - Create an app on the [Slack API Site](https://api.slack.com/apps)
 - Using the sidebar, navigate to "_OAuth & Permissions_" and enable them
   - Under '_Scopes_' --> '_Bot Token Scopes_' click `Add an OAuth Scope` and add the following scope:
@@ -114,33 +130,40 @@ Before being able to run the app locally, you'll need to create a Slack app and 
 - Using the sidebar, navigate to "_App Home_"
   - Scroll to "_Your App's Presence in Slack" and click "_Edit_" next to "_App Display Name_" (e.g., using `Ticket Counter` for the name and `Ticket-Counter` for the username is recommended)
   - We also recommend enabling "Always Show My Bot as Online"
+  - Enable the home tab in the _Show Tabs_ section
   - Finally, in the _Show Tabs_ section, disable the _Messages Tab_
 - Using the sidebar, navigate to "_Basic Information_", scroll down, copy the `Signing Secret` value and use it to replace the `SLACK_SIGNING_SECRET` value in your `.env`
 - Using the sidebar, navigate to "_Install App_" and click "Reinstall App"
   - Once finished, copy the `Bot User OAuth Access Token` value and use it to replace the `SLACK_TOKEN` value in your `.env`
 
 Once the above steps are finished, you'll need to connect your Slack app to your app running locally. Follow the steps in the [Starting the App](#starting-the-app) section below. After the app is running, you can use [ngrok](#ngrok) to create a publicly accessible URL. Copy that URL and head back to your app's settings:
+
 - Using the sidebar, navigate to "_Interactivity & Shortcuts_" and enable them
   - For the `Request URL` field, use your [ngrok URL] and then append `/slack/events`
   - Under Shortcuts, chose "_Create New Shortcut_", chose "_Global_", and use the following values:
     - Name: `New support ticket`
     - Short Description: `Opens a support ticket and posts details in Slack`
     - Callback ID: `submitTicket`
-  - Click "_Save Changes_" at the bottom
-- After clicking save, you should see a banner at the top of the page suggesting you reinstall the app; click `Reinstall`
+    - Click "_Create_" at the bottom of the popup
+  - Click "_Save Changes_" at the bottom of the page
+- After clicking save, using the sidebar, navigate to "_Install App_" you should see a banner at the top of the page suggesting you reinstall the app; click `Reinstall your app` or `Reinstall to Workspace`
 
 ---
 
 ### Advanced
 
 #### Database Changes
+
 If database schema is changed, the migrations must be changed accordingly. After starting the app (or using `npm run typeorm migration:run`), make changes to files in the `src/entities` directory as needed and then run `npm run typeorm migration:generate -- -n MigrationName` where `MigrationName` is the name of the migration (without the timestamp).
 
 #### Migrations
+
 Do not update or remove an existing migration, as this can cause unexpected issues with local and production data. All database schema changes must be made in a new migration.
 
 ---
+
 ### Starting the App
+
 The best way to start the app and work on it is by using `npm run dev`, which will start the app and then restart the app whenever a TypeScript file changes. After modifying a non-Typescript file, restart the app by typing `rs` into the same terminal you ran `npm run dev` from and then hitting return.
 
 After the app starts, it will be accessible on `localhost:3000` (unless the port was modified via `.env`).
@@ -148,10 +171,14 @@ After the app starts, it will be accessible on `localhost:3000` (unless the port
 ---
 
 ## CI/CD
+
 This repo utilizes two GitHub Workflows:
+
 - `Build and Deploy`: Builds the app for all PRs and deploys when a `push` event (merge) occurs on the `main` branch (Default deployment environment is IBM Cloud Foundry, but the workflow can be modified to deploy to other environments)
 - `Test`: Runs the full `jest` test suite and evaluates coverage
 
 ---
+
 # Contributing
+
 Interested in contributing to the project? Check out our [Contributing Guidelines](./.github/CONTRIBUTING.md).

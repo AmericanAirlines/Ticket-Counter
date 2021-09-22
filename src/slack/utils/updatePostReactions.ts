@@ -38,7 +38,7 @@ async function updateReactions(threadTs: string, { remove, add }: { remove: Emoj
         timestamp: threadTs,
         channel: env.slackSupportChannel,
       });
-    } catch (err) {
+    } catch (err: any) {
       if (!['no_reaction', 'already_reacted'].includes(err.data?.error)) {
         logger.error(`Unable to ${action} emoji: ${name}`, err);
       }
