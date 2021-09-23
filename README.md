@@ -3,8 +3,10 @@
 <!-- [![codecov](https://codecov.io/gh/AmericanAirlines/Ticket-Counter/branch/main/graph/badge.svg)](https://codecov.io/gh/AmericanAirlines/Ticket-Counter) -->
 <!-- [![Total alerts](https://img.shields.io/lgtm/alerts/g/AmericanAirlines/Ticket-Counter.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Ticket-Counter/alerts/) -->
 <!-- [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AmericanAirlines/Ticket-Counter.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Ticket-Counter/context:javascript) -->
+
 # Ticket Counter 🎟
 Getting tech support should be easy
+
 ### Let's get started...
   1. [Using Ticket Counter](#using-ticket-counter)
   2. [Local Development](#local-development)
@@ -14,13 +16,15 @@ Getting tech support should be easy
 ## Using Ticket Counter
 # `DOCS NEEDED`
 
- ---
+---
+
 ## Local Development
 Before getting started, make sure to install [Node (LTS)](https://nodejs.org/en/download/) (v14.0+) and run `npm i` to install all necessary dependencies.
 
 ---
 ### Environment Variables
 Project environment variables should first be defined in `.env.sample` without real values for their data (that file is tracked by git). After cloning, make sure to duplicate `.env.sample` as `.env` and then fill in all required variables using the details provided in the section below.
+
 ---
 
 ### Postgres
@@ -30,28 +34,28 @@ Create a database (we suggest `ticket-counter`, if you chose something else or a
 
 When the app is deployed to a cloud environment, the `DATABASE_URL` `.env` var will be used (and is automatically set in Heroku when an associated service is connected to your app).
 
-
-
 <details>
-   <summary><strong>Postgres Installation and Use</strong></summary>
+  <summary><strong>Postgres Installation and Use</strong></summary>
 
-#### macOS
-We recommend using [Postgres.app](https://postgresapp.com/) as the installation doesn't require a password and is generally easier to use that the traditional Postgres app below.
+  #### macOS
+  We recommend using [Postgres.app](https://postgresapp.com/) as the installation doesn't require a password and is generally easier to use that the traditional Postgres app below.
 
-#### Windows/macOS/Linux
-During the installation process (if you follow the steps on [postgresql.org](https://www.postgresql.org/download/)), you will be prompted to set a password - make sure to use something you'll remember.
+  #### Windows/macOS/Linux
+  During the installation process (if you follow the steps on [postgresql.org](https://www.postgresql.org/download/)), you will be prompted to set a password - make sure to use something you'll remember.
 
-#### Viewing/Editing the DB
-If you'd like a visual way of viewing or editing your local database, try using [TablePlus](https://tableplus.com).
+  #### Viewing/Editing the DB
+  If you'd like a visual way of viewing or editing your local database, try using [TablePlus](https://tableplus.com).
 </details>
 
 ---
+
 ### [ngrok]
 
 [ngrok]: https://ngrok.com
 [ngrok URL]: #ngrok
 
 Both GitHub and Slack require that they can call your app for webhooks. To do this in local development a tool like [ngrok] is required to tunnel requests to your local instance.
+
 > ❗ If you are using the free version of [ngrok] then each time you run it you will be given a different URL. This means you will need to update both GitHub and Slack with your new URL every time.
 
 #### Run this to start your ngrok tunnel
@@ -59,11 +63,14 @@ Both GitHub and Slack require that they can call your app for webhooks. To do th
 ```bash
 ngrok http 3000 # Use whatever port your app is listening on
 ```
+
 You will get this output after running. You'll want to use the `Forwarding https` URL on the left side of the arrow.
 
 > Going forward when this documentation says "ngrok URL" it is referring to that URL.
 ![ngrok output showing the URL](./docs/ngrok-output.png)
+
 ---
+
 ### Create a GitHub App
 Before being able to run the app locally, you'll need to create a Slack app and configure it with the appropriate permissions:
 - Go to github.com
@@ -90,7 +97,9 @@ Before being able to run the app locally, you'll need to create a Slack app and 
 - Set `GITHUB_APP_PEM_FILE` to the name of the file
 - Click `Install App` on the left side and install it to a repo (create a demo one if you don't have one)
 - After installing copy the number in the URL bar to `GITHUB_APP_INSTALLATION_ID` in your `.env` file
+
 ---
+
 ### Create a Slack App
 Before being able to run the app locally, you'll need to create a Slack app and configure it with the appropriate permissions:
 - Create an app on the [Slack API Site](https://api.slack.com/apps)
