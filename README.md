@@ -173,12 +173,5 @@ The best way to start the app and work on it is by using `npm run dev`, which wi
 After the app starts, it will be accessible on `localhost:3000` (unless the port was modified via `.env`).
 
 ---
-
-## CI/CD
-This repo utilizes two GitHub Workflows:
-- `Build and Deploy`: Builds the app for all PRs and deploys when a `push` event (merge) occurs on the `main` branch (Default deployment environment is IBM Cloud Foundry, but the workflow can be modified to deploy to other environments)
-- `Test`: Runs the full `jest` test suite and evaluates coverage
-
----
 # Contributing
 Interested in contributing to the project? Check out our [Contributing Guidelines](./.github/CONTRIBUTING.md).
