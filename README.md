@@ -14,7 +14,22 @@ Getting tech support should be easy
   1. [Contributing](#contributing)
 
 ## Using Ticket Counter
-# `DOCS NEEDED`
+
+<details>
+  <summary><strong>Submitting a Ticket and Communicating with Support Team</strong></summary>
+  
+  Users can stay in Slack after they submit their ticket and communicate with the support team.
+
+  https://user-images.githubusercontent.com/7807353/134736923-ead811f4-0e98-443f-aba4-afa4f665674c.mov
+</details>
+
+<details>
+  <summary><strong>Support Team Experience</strong></summary>
+  
+  The support team can work in GitHub, assigning users, and communicating with the other party back in Slack.
+
+  https://user-images.githubusercontent.com/7807353/134736887-79c201ac-63d9-41d5-8ee3-f2d8e51c0811.mov
+</details>
 
 ---
 ## Local Development
@@ -107,7 +122,6 @@ Before being able to run the app locally, you'll need to create a Slack app and 
     - `channels:history`
     - `channels:manage`
     - `chat:write`
-    - `chat:write.public`
     - `commands`
     - `reactions:write`
     - `users:read`
@@ -138,6 +152,9 @@ Once the above steps are finished, you'll need to connect your Slack app to your
     - Click "_Create_" at the bottom of the popup
   - Click "_Save Changes_" at the bottom of the page
 - After clicking save, using the sidebar, navigate to "_Install App_" you should see a banner at the top of the page suggesting you reinstall the app; click `Reinstall your app` or `Reinstall to Workspace`
+
+#### IMPORTANT
+The bot must be in the channel you want it to use for support requests
 
 ---
 
