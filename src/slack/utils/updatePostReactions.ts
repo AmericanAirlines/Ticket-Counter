@@ -40,8 +40,8 @@ async function updateReactions(threadTs: string, { remove, add }: { remove: Emoj
         channel: env.slackSupportChannel,
       });
     } catch (err) {
-      const error = err as WebAPIPlatformError;
-      if (!['no_reaction', 'already_reacted'].includes(error.data.error)) {
+      const error = err as WebAPIPlatformError | Error;
+      if (!(('data' in error) && ['no_reaction', 'already_reacted'].includes(error.data.error))) {
         logger.error(`Unable to ${action} emoji: ${name}`, err);
       }
     }

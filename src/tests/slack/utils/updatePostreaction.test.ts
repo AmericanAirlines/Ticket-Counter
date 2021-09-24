@@ -87,23 +87,17 @@ describe('update post reactions util', () => {
   });
 
   it('will ignore errors if no_reaction is returned from Slack', async () => {
-    addReactionMock.mockRejectedValueOnce({ error: 'no_reaction' });
+    addReactionMock.mockRejectedValueOnce({ data: { error: 'no_reaction' } });
     await updatePostReactions(Status.InProgress, mockTs);
     expect(loggerErrorSpy).not.toBeCalled();
   });
 
   it('will ignore errors if already_reacted is returned from Slack', async () => {
-    addReactionMock.mockRejectedValueOnce({ error: 'already_reacted' });
+    addReactionMock.mockRejectedValueOnce({ data: { error: 'already_reacted' } });
     await updatePostReactions(Status.InProgress, mockTs);
     expect(loggerErrorSpy).not.toBeCalled();
   });
-
-  it('will log errors if error message is not returned from Slack', async () => {
-    addReactionMock.mockRejectedValueOnce(null);
-    await updatePostReactions(Status.InProgress, mockTs);
-    expect(loggerErrorSpy).toBeCalledTimes(1);
-  });
-
+  
   it('will log errors legitimate error', async () => {
     addReactionMock.mockRejectedValueOnce(new Error("I'm legit, I swear!"));
     await updatePostReactions(Status.InProgress, mockTs);
