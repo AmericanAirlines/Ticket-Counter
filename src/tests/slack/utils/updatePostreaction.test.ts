@@ -97,7 +97,7 @@ describe('update post reactions util', () => {
     await updatePostReactions(Status.InProgress, mockTs);
     expect(loggerErrorSpy).not.toBeCalled();
   });
-  
+
   it('will log errors legitimate error', async () => {
     addReactionMock.mockRejectedValueOnce(new Error("I'm legit, I swear!"));
     await updatePostReactions(Status.InProgress, mockTs);

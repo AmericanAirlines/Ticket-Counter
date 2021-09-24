@@ -41,7 +41,7 @@ async function updateReactions(threadTs: string, { remove, add }: { remove: Emoj
       });
     } catch (err) {
       const error = err as WebAPIPlatformError | Error;
-      if (!(('data' in error) && ['no_reaction', 'already_reacted'].includes(error.data.error))) {
+      if (!('data' in error && ['no_reaction', 'already_reacted'].includes(error.data.error))) {
         logger.error(`Unable to ${action} emoji: ${name}`, err);
       }
     }
