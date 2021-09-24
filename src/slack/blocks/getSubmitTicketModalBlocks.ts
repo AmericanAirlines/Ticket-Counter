@@ -1,4 +1,4 @@
-import { KnownBlock, InputBlock, Option } from '@slack/types';
+import { KnownBlock, InputBlock, PlainTextOption } from '@slack/types';
 import { getIssueTemplates } from '../../github/utils/fetchIssueTemplates';
 
 export enum SubmitTicketModalElement {
@@ -16,7 +16,7 @@ export async function getSubmitTicketModalBlocks(): Promise<KnownBlock[]> {
     templates.unshift({ name: 'Generic', about: '', title: '', body: '' });
   }
 
-  const options: Option[] = templates.map((template) => ({
+  const options: PlainTextOption[] = templates.map((template) => ({
     text: {
       type: 'plain_text',
       text: template.name,
