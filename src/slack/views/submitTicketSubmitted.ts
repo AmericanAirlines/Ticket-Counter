@@ -26,6 +26,8 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
         throw new Error('Missing required fields');
       }
 
+      const issueTemplate = type.trim() || undefined;
+
       try {
         await app.client.views.open({
           view: {
@@ -81,9 +83,9 @@ export const submitTicketSubmitted: AppMiddlewareFunction<SlackViewMiddlewareArg
           {
             input: {
               title,
+              issueTemplate,
               body: githubBody,
               repositoryId: repository.id,
-              issueTemplate: type,
             },
           },
         );
