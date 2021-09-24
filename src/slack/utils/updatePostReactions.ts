@@ -1,3 +1,4 @@
+import { WebAPIPlatformError } from '@slack/web-api';
 import { app } from '../../app';
 import { Status } from '../../entities/Ticket';
 import { env } from '../../env';
@@ -38,8 +39,9 @@ async function updateReactions(threadTs: string, { remove, add }: { remove: Emoj
         timestamp: threadTs,
         channel: env.slackSupportChannel,
       });
-    } catch (err: any) {
-      if (!['no_reaction', 'already_reacted'].includes(err?.error)) {
+    } catch (err) {
+      const error = err as WebAPIPlatformError;
+      if (!['no_reaction', 'already_reacted'].includes(error.data.error)) {
         logger.error(`Unable to ${action} emoji: ${name}`, err);
       }
     }
