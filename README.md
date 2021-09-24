@@ -1,8 +1,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 ![Build](https://github.com/AmericanAirlines/Ticket-Counter/workflows/Build/badge.svg)
-<!-- [![codecov](https://codecov.io/gh/AmericanAirlines/Ticket-Counter/branch/main/graph/badge.svg)](https://codecov.io/gh/AmericanAirlines/Ticket-Counter) -->
-<!-- [![Total alerts](https://img.shields.io/lgtm/alerts/g/AmericanAirlines/Ticket-Counter.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Ticket-Counter/alerts/) -->
-<!-- [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AmericanAirlines/Ticket-Counter.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Ticket-Counter/context:javascript) -->
+[![CodeCov](https://codecov.io/gh/AmericanAirlines/Ticket-Counter/branch/main/graph/badge.svg)](https://codecov.io/gh/AmericanAirlines/Ticket-Counter)
+[![CodeQL](https://github.com/AmericanAirlines/Ticket-Counter/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/AmericanAirlines/Ticket-Counter/actions/workflows/codeql-analysis.yml)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AmericanAirlines/Ticket-Counter.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Ticket-Counter/context:javascript)
 
 # Ticket Counter 🎟
 Getting tech support should be easy
