@@ -86,10 +86,10 @@ Before being able to run the app locally, you'll need to create a Slack app and 
   - Create a secret and put it in `Webhook Secret`
     - You'll also want to put this in your `.env` file for `GITHUB_APP_WEBHOOK_SECRET`
   - Change these settings on `Permissions`
-    - Set Issues to `Read & write`
     - Set Contents to `Read-only`
-  - Check the box next to `Issues` under `Subscribe to events`
-  - Check the box next to `Issue comment` under `Subscribe to events`
+    - Set Issues to `Read & write`
+  - Check the box next to `Issues` under the `Subscribe to events` section
+  - Check the box next to `Issue comment` under the `Subscribe to events` section
 - Click Create GitHub App
 - Copy the App ID into your `.env` file
 - Generate a private key and move the downloaded file to the root of the project
@@ -103,19 +103,28 @@ Before being able to run the app locally, you'll need to create a Slack app and 
 Before being able to run the app locally, you'll need to create a Slack app and configure it with the appropriate permissions:
 - Create an app on the [Slack API Site](https://api.slack.com/apps)
 - Using the sidebar, navigate to "_OAuth & Permissions_" and enable them
-  - Under '_Scopes_' --> '_Bot Token Scopes_' click `Add an OAuth Scope` and add the following scope:
+  - Under '_Scopes_' --> '_Bot Token Scopes_' click `Add an OAuth Scope` and add the following scopes:
+    - `channels:history`
+    - `channels:manage`
     - `chat:write`
     - `chat:write.public`
-    - `channels:history`
+    - `commands`
     - `reactions:write`
-    - `users:read` (needed to obtain the bot's user ID)
+    - `users:read`
+    - `reactions:read`
 - Using the sidebar, navigate to "_Event Subscriptions_" enable them
-  - Under "_Subscribe to bot Events_", add the `message.channels` scope
+  - For the `Request URL` field, use your [ngrok URL] and then append `/slack/events`
+  - Under "_Subscribe to bot Events_", add the following scopes:
+    - `message.channels`
+    - `app_home_opened`
+  - Click  "_Save Changes_" at the bottom of the page
 - Using the sidebar, navigate to "_App Home_"
-  - Scroll to "_Your App's Presence in Slack" and click "_Edit_" next to "_App Display Name_" (e.g., using `Ticket Counter` for the name and `Ticket-Counter` for the username is recommended)
+  - Scroll to "_Your App's Presence in Slack_" and click "_Edit_" next to "_App Display Name_" (e.g., using `Ticket Counter` for the name and `Ticket-Counter` for the username is recommended)
   - We also recommend enabling "Always Show My Bot as Online"
+  - Enable the home tab in the _Show Tabs_ section
   - Finally, in the _Show Tabs_ section, disable the _Messages Tab_
-- Using the sidebar, navigate to "_Basic Information_", scroll down, copy the `Signing Secret` value and use it to replace the `SLACK_SIGNING_SECRET` value in your `.env`
+- Using the sidebar, navigate to "_Basic Information_"
+  - scroll to, to "_App Credentials_" and copy the `Signing Secret` value and use it to replace the `SLACK_SIGNING_SECRET` value in your `.env`
 - Using the sidebar, navigate to "_Install App_" and click "Reinstall App"
   - Once finished, copy the `Bot User OAuth Access Token` value and use it to replace the `SLACK_TOKEN` value in your `.env`
 
@@ -126,8 +135,9 @@ Once the above steps are finished, you'll need to connect your Slack app to your
     - Name: `New support ticket`
     - Short Description: `Opens a support ticket and posts details in Slack`
     - Callback ID: `submitTicket`
-  - Click "_Save Changes_" at the bottom
-- After clicking save, you should see a banner at the top of the page suggesting you reinstall the app; click `Reinstall`
+    - Click "_Create_" at the bottom of the popup
+  - Click "_Save Changes_" at the bottom of the page
+- After clicking save, using the sidebar, navigate to "_Install App_" you should see a banner at the top of the page suggesting you reinstall the app; click `Reinstall your app` or `Reinstall to Workspace`
 
 ---
 
