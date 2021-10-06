@@ -120,7 +120,6 @@ Before being able to run the app locally, you'll need to create a Slack app and 
 - Using the sidebar, navigate to "_OAuth & Permissions_" and enable them
   - Under '_Scopes_' --> '_Bot Token Scopes_' click `Add an OAuth Scope` and add the following scopes:
     - `channels:history`
-    - `channels:manage`
     - `chat:write`
     - `commands`
     - `reactions:write`
