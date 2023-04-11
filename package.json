@@ -54,7 +54,7 @@
     "express": "^4.17.1",
     "luxon": "^1.27.0",
     "pg": "^8.5.1",
-    "typeorm": "^0.2.31",
+    "typeorm": "^0.3.14",
     "winston": "^3.3.3"
   },
   "devDependencies": {
